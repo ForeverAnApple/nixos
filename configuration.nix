@@ -89,6 +89,14 @@
     };
   };
 
+  # God bless home-manager
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      "faa" = import ./home.nix;
+    };
+  };
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
