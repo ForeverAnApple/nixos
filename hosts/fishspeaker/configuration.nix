@@ -2,15 +2,15 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, flake, lib, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./users/faa.nix
+      ".${flake}/users/faa.nix"
       inputs.home-manager.nixosModules.default
-    ];
+    ] ++ (builtins.attrValues flake.nixosModules);
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

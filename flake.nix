@@ -14,7 +14,7 @@
     nixosConfigurations.fishspeaker = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
-        ./configuration.nix
+        ./hosts/fishspeaker/configuration.nix
         inputs.home-manager.nixosModules.default
       ];
     };
