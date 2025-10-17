@@ -14,8 +14,11 @@
         options = [ "fmask=0077" "dmask=0077" ];
       };
 
+    # swapDevices =
+    #   [ { device = "/dev/disk/by-uuid/5f9d9d02-845c-4857-b771-a453a32c6f9a"; }
+    #   ];
     swapDevices =
-      [ { device = "/dev/disk/by-uuid/5f9d9d02-845c-4857-b771-a453a32c6f9a"; }
+      [ { device = "/dev/mapper/swap"; }
       ];
 
   };
