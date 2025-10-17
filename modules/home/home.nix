@@ -5,7 +5,7 @@
       homeDirectory = "/home/${config.home.username}";
 
       # IMPORTANT - Read release notes before updating this value.
-      stateVersion = "25.05";
+      stateVersion = "25.11";
 
       # Test to make sure home manager is working.
       packages = [ pkgs.hello ];
