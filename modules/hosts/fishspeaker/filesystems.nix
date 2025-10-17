@@ -17,6 +17,12 @@
     # swapDevices =
     #   [ { device = "/dev/disk/by-uuid/5f9d9d02-845c-4857-b771-a453a32c6f9a"; }
     #   ];
+    environment.etc.crypttab = {
+      mode = "0600";
+      text = ''
+        swap UUID=71c7df5a-2fe5-4a2d-8de0-5b251cefedde /root/swappart.key swap
+      '';
+    };
     swapDevices =
       [ { device = "/dev/mapper/swap"; }
       ];
