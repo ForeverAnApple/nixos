@@ -1,10 +1,6 @@
 # An attempt at the Nixos dendrix setup
 {
-  description = "My nixos config file."
-
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { 
-    inherit inputs; 
-  } (inputs.import-tree ./modules);
+  description = "My nixos config file.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -21,4 +17,8 @@
 
     import-tree.url = "github:vic/import-tree";
   };
+
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { 
+    inherit inputs; 
+  } (inputs.import-tree ./modules);
 }
