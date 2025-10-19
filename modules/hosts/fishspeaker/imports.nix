@@ -4,8 +4,10 @@
     unstable = true;
   };
 
-  flake.modules.nixos."nixosConfigurations/fishspeaker".imports = with config.flake.modules.nixos; [
+  flake.modules.nixos."hosts/fishspeaker".imports = with config.flake.modules.nixos; [
     networking
     bootloader
+
+    dev
   ];
 }

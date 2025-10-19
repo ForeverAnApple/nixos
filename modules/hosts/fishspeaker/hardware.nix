@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos."nixosConfigurations/fishspeaker" =
+  flake.modules.nixos."hosts/fishspeaker" =
     {
       config,
       lib,

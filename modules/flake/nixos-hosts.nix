@@ -42,7 +42,7 @@ in
             specialArgs.inputs = inputs;
             modules = [
               config.flake.modules.nixos.core
-              (config.flake.modules.nixos."nixosConfigurations/${hostname}" or { })
+              (config.flake.modules.nixos."hosts/${hostname}" or { })
             ];
           };
       in

@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos."nixosConfigurations/fishspeaker" = { ... } : {
+  flake.modules.nixos."hosts/fishspeaker" = { ... } : {
     
     fileSystems."/" =
       { device = "/dev/disk/by-uuid/105ec169-951f-44be-a5a1-4d02a358a960";
