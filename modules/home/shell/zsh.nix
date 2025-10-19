@@ -5,11 +5,11 @@
       syntaxHighlighting.enable = true;
     };
 
-    programs.zsh.oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" ];
-      theme = "";
-    };
+    # programs.zsh.oh-my-zsh = {
+    #   enable = true;
+    #   plugins = [ "git" ];
+    #   theme = "";
+    # };
 
     programs.starship = {
       enable = true;
