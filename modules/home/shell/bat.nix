@@ -8,7 +8,6 @@
       shellAliases = {
         cat = "bat";
 	less = "bat --plain";
-	bigcat = "bat";
       };
     };
     programs.bat = {
