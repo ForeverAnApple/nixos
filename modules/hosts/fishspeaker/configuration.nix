@@ -1,6 +1,6 @@
 {
   flake.modules.nixos."hosts/fishspeaker" = {
     networking.hostName = "fishspeaker";
-    system.stateVersion = "25.05";
+    system.stateVersion = "25.11";
   };
 }
