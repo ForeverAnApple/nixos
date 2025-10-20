@@ -1,4 +1,4 @@
-# A [Dentritic](https://github.com/mightyiam/dendritic) NixOs configuration
+# A [Dendritic](https://github.com/mightyiam/dendritic) NixOs configuration
 
 NixOS is extremly complicated for a beginner like me, I've tried to keep everything as minimal as possible for ease of readability within my configurations. Hope this helps you.
 
