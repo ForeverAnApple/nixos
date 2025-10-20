@@ -5,5 +5,6 @@
     niri
     waybar
     fuzzel
+    firefox
   ];
 }

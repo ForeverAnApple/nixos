@@ -8,7 +8,7 @@
       shellIntegration.enableZshIntegration = true;
       font = {
         name = "Hack Nerd Font";
-	size = 12;
+	size = 10;
       };
       quickAccessTerminalConfig = {
         start_as_hidden = true;
