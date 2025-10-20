@@ -12,6 +12,10 @@
       # System monitoring
       btop
       htop
+
+      # lmao
+      fastfetch
+      cowsay
     ];
 
     programs = {

@@ -13,7 +13,7 @@
       clean = {
         enable = true;
         dates = "daily";
-        extraArgs = "--keep 5 --keep-since 8d";
+        extraArgs = "--keep 6 --keep-since 8d";
       };
     };
   };

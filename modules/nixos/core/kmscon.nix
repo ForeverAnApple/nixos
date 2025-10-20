@@ -19,5 +19,12 @@
         }];
       };
     };
+
+    # Also add the pretty fonts
+    fonts.packages = with pkgs; [
+      nerd-fonts.symbols-only
+      powerline-symbols
+      noto-fonts-emoji
+    ];
   };
 }

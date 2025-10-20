@@ -9,5 +9,6 @@
     bootloader
 
     dev
+    desktop
   ];
 }
