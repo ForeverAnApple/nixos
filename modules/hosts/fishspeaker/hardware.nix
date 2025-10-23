@@ -14,22 +14,22 @@
 
       boot = {
         # Use latest linux kernel
-	kernelPackages = pkgs.linuxPackages_latest;
+        kernelPackages = pkgs.linuxPackages_6_16;
 
-	initrd = {
-	  availableKernelModules = [
-	    "xhci_pci"
-	    "thunderbolt"
-	    "nvme"
-	    "usb_storage"
-	    "sd_mod"
-	  ];
-
-	  kernelModules = [ ];
-	};
-
-	kernelModules = [ "kvm-intel" ];
-	extraModulePackages = [ ];
+	    initrd = {
+		  availableKernelModules = [
+		    "xhci_pci"
+		    "thunderbolt"
+		    "nvme"
+		    "usb_storage"
+		    "sd_mod"
+		  ];
+	
+		  kernelModules = [ ];
+		};
+	
+		kernelModules = [ "kvm-intel" ];
+		extraModulePackages = [ ];
       };
 
       networking.useDHCP = lib.mkDefault true;
