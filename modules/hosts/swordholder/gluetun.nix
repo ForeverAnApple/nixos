@@ -29,8 +29,8 @@
               --device=/dev/net/tun:/dev/net/tun \
               --env-file ${config.sops.secrets."gluetun/env".path} \
               -e VPN_SERVICE_PROVIDER=surfshark \
-              -e VPN_TYPE=openvpn \
-              -e SERVER_COUNTRIES="United States" \
+              -e VPN_TYPE=wireguard \
+              -e SERVER_COUNTRIES="Japan" \
               -e TZ=America/Chicago \
               -p 127.0.0.1:8080:8080/tcp \
               qmcgaw/gluetun:latest
