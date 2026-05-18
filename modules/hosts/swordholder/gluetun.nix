@@ -6,13 +6,13 @@
         owner = "faa";
         group = "users";
         mode = "0400";
-        restartUnits = [ "gluetun.service" ];
       };
 
       systemd.user.services.gluetun = {
         description = "gluetun";
         wantedBy = [ "default.target" ];
         after = [ "default.target" ];
+        restartTriggers = [ ./secrets.yaml ];
         unitConfig = {
           ConditionUser = "faa";
         };
