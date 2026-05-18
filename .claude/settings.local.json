@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:wiki.nixos.org)",
+      "WebSearch",
+      "Bash(git log:*)",
+      "Bash(nix flake:*)",
+      "Bash(nix build:*)",
+      "Bash(nix eval:*)",
+      "Bash(git:*)",
+      "Bash(find /home/faa/Projects/nixos -type f -name \"*.nix\" -exec grep -l \"gtk\\\\|dconf\\\\|colorScheme\" {} \\\\;)",
+      "Bash(xargs -I {} sh -c 'echo \"=== {} ===\" && grep -A 5 -B 2 \"gtk\\\\|dconf\\\\|colorScheme\" \"{}\"')",
+      "Bash(find:*)"
+    ]
+  }
+}

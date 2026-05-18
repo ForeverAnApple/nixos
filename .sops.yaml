@@ -1,0 +1,26 @@
+keys:
+  - &faa-catjailer age12anqv3j7eslknghzcz3phddrd04ztwgpeugm70ce2dq8lxumvfgs6swl3k
+  - &faa-wallfacer age1hrvqjzj7xvymf7ch3ssmgguqx7wgcw5s9we8err6mg2ltdjr4c2ss2hf3n
+  - &sisyphus age1y09h8gk5mapfy0ue0zertmyrjfem4z38ycugwrvek2zg9arafp6qp6wqhx
+  - &catjailer age1x4sw5pmeeucagnylta0fmauhaeywun0yxf9szksk3wz2rt98qayquwmdhu
+  - &swordholder age1cthjfwacsh0kwhnlkqgrdrgxq7qy6c0cx6m59aldgdtsxuu7ue0sn0zyka
+
+creation_rules:
+  - path_regex: modules/hosts/sisyphus/secrets\.yaml$
+    key_groups:
+      - age:
+          - *faa-catjailer
+          - *faa-wallfacer
+          - *sisyphus
+  - path_regex: modules/hosts/catjailer/secrets\.yaml$
+    key_groups:
+      - age:
+          - *faa-catjailer
+          - *faa-wallfacer
+          - *catjailer
+  - path_regex: modules/hosts/swordholder/secrets\.yaml$
+    key_groups:
+      - age:
+          - *faa-catjailer
+          - *faa-wallfacer
+          - *swordholder
