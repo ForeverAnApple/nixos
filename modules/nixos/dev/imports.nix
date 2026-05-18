@@ -1,7 +1,7 @@
 { config, inputs, ... }:
 {
   flake.modules.nixos.dev.imports = with config.flake.modules.nixos; [
-    users
+    human-user
     dev-overlays
     wireguard
     openvpn

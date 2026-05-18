@@ -17,10 +17,6 @@ in
               type = types.str;
               default = "x86_64-linux";
             };
-
-            unstable = lib.mkOption {
-              type = types.bool;
-            };
           };
         };
       in
@@ -34,10 +30,7 @@ in
       let
         mkHost =
           hostname: options:
-          let
-            nixpkgs' = if options.unstable then inputs.nixpkgs else inputs.nixpkgs-stable;
-          in
-          nixpkgs'.lib.nixosSystem {
+          inputs.nixpkgs.lib.nixosSystem {
             inherit (options) system;
             specialArgs.inputs = inputs;
             modules = [

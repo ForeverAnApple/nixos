@@ -14,8 +14,8 @@ let
   ];
 
   # Hosts with no interactive faa user; deploy-rs ssh's as the dedicated
-  # `deploy` account defined in modules/nixos/worker/.
-  workerHosts = [
+  # `deploy` account defined in modules/nixos/service/.
+  serviceHosts = [
     "sisyphus"
     "swordholder"
   ];
@@ -26,14 +26,14 @@ in
   flake.deploy.nodes = lib.mapAttrs (
     hostname: nixos:
     let
-      isWorker = builtins.elem hostname workerHosts;
+      isService = builtins.elem hostname serviceHosts;
       system = nixos.config.nixpkgs.hostPlatform.system;
     in
     {
       inherit hostname;
       profilesOrder = [ "system" ];
       profiles.system = {
-        sshUser = if isWorker then "deploy" else "faa";
+        sshUser = if isService then "deploy" else "faa";
         user = "root";
         path = inputs.deploy-rs.lib.${system}.activate.nixos nixos;
         magicRollback = true;

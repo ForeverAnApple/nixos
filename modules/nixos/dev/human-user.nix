@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.users =
+  flake.modules.nixos.human-user =
     { pkgs, ... }:
     let
       fishspeakerKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkJnLL3cD38k0Tgfn2NI4QjjBddCfOgPGOMWATl5A3U faa@fishspeaker";

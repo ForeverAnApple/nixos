@@ -1,15 +1,10 @@
 { config, ... }:
 {
-  nixosHosts.catjailer = {
-    unstable = true;
-  };
+  nixosHosts.catjailer = { };
 
   flake.modules.nixos."hosts/catjailer".imports = with config.flake.modules.nixos; [
-    networking
-    bootloader
-    docker
-    nix-ld
-    envfs
+    workstation
+
     nvidia
     gaming
     obs
@@ -19,8 +14,5 @@
     caddy
     home-assistant
     audiobookshelf
-
-    dev
-    desktop
   ];
 }

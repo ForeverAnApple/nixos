@@ -14,9 +14,9 @@
         port = 22022;
         user = "faa";
       };
-      # Worker hosts (sisyphus, swordholder) have no interactive faa user;
+      # Service hosts (sisyphus, swordholder) have no interactive faa user;
       # the deploy account is the only login path.
-      matchBlocks.nixos-workers = {
+      matchBlocks.nixos-services = {
         host = "sisyphus sisyphus.* swordholder swordholder.*";
         port = 22022;
         user = "deploy";

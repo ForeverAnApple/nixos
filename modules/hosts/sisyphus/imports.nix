@@ -1,16 +1,10 @@
 { config, ... }:
 {
-  nixosHosts.sisyphus = {
-    unstable = true;
-  };
+  nixosHosts.sisyphus = { };
 
   flake.modules.nixos."hosts/sisyphus".imports = with config.flake.modules.nixos; [
-    networking
-    bootloader
-    docker
+    service
 
-    server
-    worker
     endlessh
     initrd-unlock
     derper
