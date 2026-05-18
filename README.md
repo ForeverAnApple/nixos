@@ -1,6 +1,6 @@
 # nixos
 
-My NixOS configurations for five machines. Three are workstations I use directly: a Linux laptop, a Linux desktop, and a Mac. Two are servers that run unattended. The repo is public because I learned NixOS by reading other people's configs.
+My NixOS configurations for five machines. Three are workstations I use directly: a Linux laptop, a Linux desktop, and a Mac. Two are servers that run unattended. The repo is public because I learned NixOS by reading other people's repos, and I hope this will help you as well.
 
 ## Hosts
 
