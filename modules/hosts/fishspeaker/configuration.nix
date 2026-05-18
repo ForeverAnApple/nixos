@@ -36,5 +36,20 @@
       };
 
       boot.kernel.sysctl."vm.swappiness" = 10;
+
+      # `nix run .#deploy` (see modules/flake/deploy.nix) forces builders to
+      # catjailer so this 16GB laptop doesn't OOM building several host
+      # closures in a row. The nix daemon runs as root and doesn't read
+      # ~faa/.ssh/config, so wire up port + user + key system-wide. Mirrors
+      # the wallfacer setup in modules/darwin/core/nix.nix.
+      environment.etc."ssh/ssh_config.d/100-nix-builders.conf".text = ''
+        Host catjailer catjailer.*
+          Port 22022
+          User faa
+          IdentityFile /home/faa/.ssh/id_ed25519
+          StrictHostKeyChecking accept-new
+      '';
+
+      nix.settings.builders-use-substitutes = true;
     };
 }
