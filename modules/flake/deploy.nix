@@ -55,6 +55,11 @@ in
       # are x86_64-linux, so catjailer alone covers them — the aarch64-darwin
       # box (wallfacer) is deliberately not a deploy target.
       #
+      # `i686-linux` is advertised alongside x86_64-linux because NixOS
+      # x86_64 hosts auto-add it to `extra-platforms`; a handful of 32-bit
+      # derivations in the closure (eg. perl builder hooks) require it and
+      # otherwise stall with "Failed to find a machine for remote build".
+      #
       # Skip the override when the deploy is run *on* catjailer; it builds
       # locally and doesn't need to ssh into itself.
       apps.deploy = {
@@ -62,7 +67,7 @@ in
         program = "${pkgs.writeShellScript "deploy" ''
           if [ "$(${pkgs.coreutils}/bin/uname -n)" != "catjailer" ]; then
             export NIX_CONFIG=$(${pkgs.coreutils}/bin/printf '%s\n' \
-              'builders = ssh-ng://catjailer x86_64-linux' \
+              'builders = ssh-ng://catjailer x86_64-linux,i686-linux' \
               'max-jobs = 0' \
               'builders-use-substitutes = true')
           fi
