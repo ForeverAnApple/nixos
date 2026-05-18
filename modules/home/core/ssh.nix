@@ -9,13 +9,17 @@
         user = "root";
       };
       # Real sshd on these hosts lives on :22022 — endlessh holds :22.
-      # Default to user `faa` so `rsync host:path/` and `ssh host` from
-      # a different local username (daaaa on the Mac) don't try to auth
-      # as a nonexistent user.
-      matchBlocks.nixos-hosts = {
-        host = "catjailer catjailer.* sisyphus sisyphus.* swordholder swordholder.*";
+      matchBlocks.nixos-dev = {
+        host = "catjailer catjailer.*";
         port = 22022;
         user = "faa";
+      };
+      # Worker hosts (sisyphus, swordholder) have no interactive faa user;
+      # the deploy account is the only login path.
+      matchBlocks.nixos-workers = {
+        host = "sisyphus sisyphus.* swordholder swordholder.*";
+        port = 22022;
+        user = "deploy";
       };
       matchBlocks.dreameater = {
         hostname = "dreameater.davec.xyz";

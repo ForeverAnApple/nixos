@@ -4,7 +4,6 @@
     {
       users.groups.media.gid = 8675309;
       users.groups.plex.gid = 193;
-      users.users.faa.extraGroups = [ "plex" ];
 
       users.users = {
         plex = {

@@ -8,7 +8,10 @@
     }:
     {
       home = {
-        packages = [ pkgs.bat-extras.batpipe pkgs.bat-extras.batgrep ];
+        packages = [
+          pkgs.bat-extras.batpipe
+          pkgs.bat-extras.batgrep
+        ];
         sessionVariables = {
           PAGER = "bat --plain";
         };

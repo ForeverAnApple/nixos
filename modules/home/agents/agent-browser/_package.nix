@@ -41,15 +41,14 @@ rustPlatform.buildRustPackage {
   # AGENT_BROWSER_SKILLS_DIR. Without this, every skills subcommand fails
   # with "Skills directory not found. Set AGENT_BROWSER_SKILLS_DIR or
   # reinstall via npm." even though skills ship in the upstream repo.
-  postInstall =
-    ''
-      cp -r ${src}/skills      $out/skills
-      cp -r ${src}/skill-data  $out/skill-data
-    ''
-    + lib.optionalString (chromeBin != null) ''
-      wrapProgram $out/bin/agent-browser \
-        --set-default AGENT_BROWSER_EXECUTABLE_PATH ${lib.escapeShellArg chromeBin}
-    '';
+  postInstall = ''
+    cp -r ${src}/skills      $out/skills
+    cp -r ${src}/skill-data  $out/skill-data
+  ''
+  + lib.optionalString (chromeBin != null) ''
+    wrapProgram $out/bin/agent-browser \
+      --set-default AGENT_BROWSER_EXECUTABLE_PATH ${lib.escapeShellArg chromeBin}
+  '';
 
   meta = {
     description = "Fast browser-automation CLI for AI coding agents";

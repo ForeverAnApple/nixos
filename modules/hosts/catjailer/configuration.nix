@@ -1,6 +1,11 @@
 {
   flake.modules.nixos."hosts/catjailer" =
-    { config, pkgs, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     {
       networking.hostName = "catjailer";
       system.stateVersion = "25.11";
@@ -8,8 +13,7 @@
       sops.defaultSopsFile = ./secrets.yaml;
       sops.secrets."users/faa/hashedPassword".neededForUsers = true;
 
-      users.users.faa.hashedPasswordFile =
-        config.sops.secrets."users/faa/hashedPassword".path;
+      users.users.faa.hashedPasswordFile = config.sops.secrets."users/faa/hashedPassword".path;
 
       networking.firewall.checkReversePath = "loose";
 

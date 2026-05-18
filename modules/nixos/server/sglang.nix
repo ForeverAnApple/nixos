@@ -1,6 +1,11 @@
 {
   flake.modules.nixos.sglang =
-    { inputs, lib, pkgs, ... }:
+    {
+      inputs,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cudaPkgs = import inputs.nixpkgs {
         system = pkgs.stdenv.hostPlatform.system;
@@ -29,7 +34,9 @@
             export PATH=${cudaToolkit}/bin:$PATH
             export CPATH=${cudaToolkit}/include:''${CPATH:+:$CPATH}
             export LIBRARY_PATH=${cudaToolkit}/lib:${cudaToolkit}/lib/stubs:''${LIBRARY_PATH:+:$LIBRARY_PATH}
-            export LD_LIBRARY_PATH=${lib.makeLibraryPath [ pkgs.stdenv.cc.cc ]}:${cudaToolkit}/lib:''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+            export LD_LIBRARY_PATH=${
+              lib.makeLibraryPath [ pkgs.stdenv.cc.cc ]
+            }:${cudaToolkit}/lib:''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
             export UV_PYTHON_DOWNLOADS=never
 
             exec ${pkgs.uv}/bin/uv tool run \

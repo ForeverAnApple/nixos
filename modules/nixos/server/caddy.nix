@@ -34,8 +34,7 @@
         '';
       };
 
-      systemd.services.caddy.serviceConfig.EnvironmentFile =
-        config.sops.templates."caddy.env".path;
+      systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.templates."caddy.env".path;
 
       # tailscale0 is in trustedInterfaces; the explicit allow keeps :443
       # reachable from tailnet even after we tighten the trust model later.

@@ -10,6 +10,7 @@
     docker
 
     server
+    worker
     endlessh
     initrd-unlock
     derper

@@ -8,6 +8,7 @@
     networking
     bootloader
     server
+    worker
     docker
     caddy
   ];

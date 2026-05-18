@@ -4,7 +4,6 @@
     inputs.disko.nixosModules.disko
 
     nix
-    users
     keyd
     kmscon
     sops

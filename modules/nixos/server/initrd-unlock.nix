@@ -7,8 +7,8 @@
         ssh = {
           enable = true;
           port = 2222;
-          # Same set the stage-2 sshd accepts — single source of truth.
-          authorizedKeys = config.users.users.faa.openssh.authorizedKeys.keys;
+          # Same admin keys as the deploy user — single source of truth.
+          authorizedKeys = config.users.users.deploy.openssh.authorizedKeys.keys;
           hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
         };
       };
