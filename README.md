@@ -1,65 +1,42 @@
-<h1 align="center">nixos</h1>
-<p align="center"><em>Dendritic NixOS configuration for a small fleet. Bauhaus-tight, function-named, growable.</em></p>
+# nixos
 
-<p align="center">
-  <a href="PHILOSOPHY.md">philosophy</a> ·
-  <a href="docs/index.md">wiki</a> ·
-  <a href="docs/hosts.md">hosts</a> ·
-  <a href="docs/tiers.md">tiers</a> ·
-  <a href="docs/dendritic.md">dendritic</a> ·
-  <a href="docs/log.md">log</a>
-</p>
+My NixOS configurations for five machines. Three are workstations I use directly: a Linux laptop, a Linux desktop, and a Mac. Two are servers that run unattended. The repo is public because I learned NixOS by reading other people's configs.
 
----
+## Hosts
 
-## Topology
+| Host | Tier | Platform | Form factor | Role |
+|------|------|----------|-------------|------|
+| fishspeaker | workstation | NixOS (x86_64) | laptop | mobile workstation |
+| catjailer | workstation | NixOS (x86_64) | desktop | primary workstation |
+| wallfacer | workstation | nix-darwin (aarch64) | laptop | macOS workstation |
+| sisyphus | service | NixOS (x86_64) | VM | network utility |
+| swordholder | service | NixOS (x86_64) | bare metal | media / storage |
 
 ```mermaid
 flowchart TB
-    subgraph ws[workstation tier]
+    subgraph ws[workstation]
         direction LR
         fishspeaker["fishspeaker<br/><sub>NixOS · laptop</sub>"]
         catjailer["catjailer<br/><sub>NixOS · desktop</sub>"]
         wallfacer["wallfacer<br/><sub>macOS · laptop</sub>"]
     end
-    subgraph svc[service tier]
+    subgraph svc[service]
         direction LR
-        sisyphus["sisyphus<br/><sub>NixOS · VM · relay</sub>"]
-        swordholder["swordholder<br/><sub>NixOS · bare metal · media</sub>"]
+        sisyphus["sisyphus<br/><sub>NixOS · VM</sub>"]
+        swordholder["swordholder<br/><sub>NixOS · bare metal</sub>"]
     end
-    ws <-->|tailscale mesh| svc
-
-    classDef wsNode fill:#eef6ff,stroke:#3b82f6,color:#1e3a8a;
-    classDef svcNode fill:#fff7ed,stroke:#f97316,color:#7c2d12;
-    class fishspeaker,catjailer,wallfacer wsNode;
-    class sisyphus,swordholder svcNode;
+    ws <-->|tailscale| svc
 ```
 
-## Fleet
+## How it's organized
 
-| Host | Tier | Platform | Form factor | Role |
-|------|------|----------|-------------|------|
-| **fishspeaker** | workstation | NixOS (x86_64) | laptop | mobile workstation |
-| **catjailer** | workstation | NixOS (x86_64) | desktop | primary workstation |
-| **wallfacer** | workstation | nix-darwin (aarch64) | laptop | macOS workstation |
-| **sisyphus** | service | NixOS (x86_64) | VM | network utility |
-| **swordholder** | service | NixOS (x86_64) | bare metal | media / storage |
+This uses the [dendritic](https://github.com/mightyiam/dendritic) pattern. Every `.nix` file under `modules/` is a flake-parts module addressable by name in one flat namespace, not by import path.
 
-Details: [docs/hosts.md](docs/hosts.md).
+Hosts fall into one of two tiers. `workstation` is for machines I use directly. `service` is for machines that run unattended. Each tier is itself a module that bundles the things every host of that tier needs. A host's `imports.nix` picks the tier plus whatever else is specific to that host. You should be able to read the import list and tell what the machine is.
 
-## Principle
+## Installing
 
-One rule governs this repo, spelled out in [PHILOSOPHY.md](PHILOSOPHY.md): **form follows function.** A module's name declares what it does; a host's `imports.nix` should read as a one-sentence description of the machine. Rename when names drift.
-
-## Architecture
-
-This repo follows the [Dendritic](https://github.com/mightyiam/dendritic) pattern: every `.nix` file is a flake-parts module, all addressable via a flat `flake.modules.<system>.<name>` namespace. Hosts compose modules; tier aggregates compose the baseline.
-
-See [docs/dendritic.md](docs/dendritic.md) for what we keep from the spec and what we modify.
-
-## Install
-
-Disko + flake install (fresh machine, partitions a target disk):
+Fresh install onto a disk (uses disko to partition):
 
 ```bash
 sudo nix --extra-experimental-features 'nix-command flakes' run \
@@ -67,52 +44,59 @@ sudo nix --extra-experimental-features 'nix-command flakes' run \
   --write-efi-boot-entries --flake .#<hostname> --disk main /dev/nvme0n1
 ```
 
-If partitions are already mounted at `/mnt`:
+If the partitions are already mounted at `/mnt`:
 
 ```bash
 sudo nixos-install --flake .#<hostname>
 ```
 
-Apply config changes on a running system:
+Apply changes on a running system:
 
 ```bash
 sudo nixos-rebuild switch --flake .#<hostname>
-# or, preferred:
+# or, what I actually use:
 nh os switch
 ```
 
-Remote deploy (service-tier hosts only):
+Deploy to a service host remotely:
 
 ```bash
 nix run .#deploy -- .#<hostname>
 ```
 
-If the installer runs out of RAM during disko-install (everything fits in tmpfs by default):
+If `disko-install` runs out of RAM (it fits the whole install into tmpfs by default), add swap and enlarge the nix store:
 
 ```bash
-sudo swapon /dev/sda1                                  # external swap
-sudo mount -o remount,size=24G,noatime /nix/.rw-store  # enlarge store
-# or temporarily drop `desktop` from the host's imports.nix and add it back post-boot
+sudo swapon /dev/sda1
+sudo mount -o remount,size=24G,noatime /nix/.rw-store
 ```
+
+Or temporarily drop `desktop` from the host's `imports.nix` and add it back after the first boot.
 
 ## Layout
 
 ```
 modules/
-├── flake/    # flake output wiring (host builders, formatters, deploy)
-├── nixos/    # NixOS modules — core, workstation, service, desktop, dev, server (leaves)
-├── home/     # Home Manager modules — core, desktop, dev, linux, darwin, agents
-├── darwin/   # macOS modules — core, dev, workstation
-└── hosts/    # per-host config and imports (one folder per host)
+├── flake/    flake output wiring (host builders, deploy, formatter)
+├── nixos/    NixOS modules: core, workstation, service, desktop, dev, server (leaves)
+├── home/     Home Manager modules: core, desktop, dev, linux, darwin, agents
+├── darwin/   macOS modules: core, dev, workstation
+└── hosts/    per-host config and imports (one folder per host)
 ```
 
-## Acknowledgements
+## More
 
-References and inspiration:
+- [PHILOSOPHY.md](PHILOSOPHY.md) — the one principle the repo is structured around
+- [docs/](docs/) — short pages on dendritic, tiers, hosts, and the change log
+- [AGENTS.md](AGENTS.md) — how the repo and wiki are kept consistent
+
+## References
+
+Configurations I read and copied from:
 
 - [nat543207/nixos](https://github.com/nat543207/nixos)
 - [bivsk/nix-iv](https://github.com/bivsk/nix-iv)
 - [GaetanLepage/nix-config](https://github.com/GaetanLepage/nix-config)
 - [gvolpe/nix-config](https://github.com/gvolpe/nix-config)
-- [badele/nix-homelab](https://github.com/badele/nix-homelab) — README style
 - [mightyiam/dendritic](https://github.com/mightyiam/dendritic) — composition pattern
+- [badele/nix-homelab](https://github.com/badele/nix-homelab) — README ideas
