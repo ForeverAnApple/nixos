@@ -12,20 +12,17 @@ My NixOS configurations for five machines. Three are workstations I use directly
 | sisyphus | service | NixOS (x86_64) | VM | network utility |
 | swordholder | service | NixOS (x86_64) | bare metal | media / storage |
 
-```mermaid
-flowchart TB
-    subgraph ws[workstation]
-        direction LR
-        fishspeaker["fishspeaker<br/><sub>NixOS · laptop</sub>"]
-        catjailer["catjailer<br/><sub>NixOS · desktop</sub>"]
-        wallfacer["wallfacer<br/><sub>macOS · laptop</sub>"]
-    end
-    subgraph svc[service]
-        direction LR
-        sisyphus["sisyphus<br/><sub>NixOS · VM</sub>"]
-        swordholder["swordholder<br/><sub>NixOS · bare metal</sub>"]
-    end
-    ws <-->|tailscale| svc
+```
+workstation
+├── fishspeaker   NixOS · laptop
+├── catjailer     NixOS · desktop
+└── wallfacer     macOS · laptop
+        │
+        ↕  tailscale mesh
+        │
+service
+├── sisyphus      NixOS · VM
+└── swordholder   NixOS · bare metal
 ```
 
 ## How it's organized
