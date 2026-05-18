@@ -4,6 +4,7 @@
     let
       wallfacerKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINBFfp88mw/pc5SWlQh56cnOqWDK0B2QZ4rncqLrUXKL daaaa@wallfacer";
       catjailerKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA9kOV2Q1F92O4tmO9tOZEstJswoRAcVSoU+K81hTxvZ faa@catjailer";
+      fishspeakerKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkJnLL3cD38k0Tgfn2NI4QjjBddCfOgPGOMWATl5A3U faa@fishspeaker";
     in
     {
       users.users.deploy = {
@@ -13,6 +14,7 @@
         openssh.authorizedKeys.keys = [
           wallfacerKey
           catjailerKey
+          fishspeakerKey
         ];
       };
 
