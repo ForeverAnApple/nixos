@@ -49,27 +49,20 @@ in
   perSystem =
     { system, pkgs, ... }:
     {
-      # Pin every closure build to catjailer, regardless of where the deploy
-      # is invoked. Laptops in the fleet (eg. fishspeaker, 16GB) OOM building
-      # several host closures back-to-back. All hosts in `deployHosts` above
-      # are x86_64-linux, so catjailer alone covers them — the aarch64-darwin
-      # box (wallfacer) is deliberately not a deploy target.
+      # Force every closure through whichever remote builder this host has
+      # configured (catjailer, in practice — see nix.buildMachines on
+      # fishspeaker / wallfacer). `max-jobs = 0` makes the local nix daemon
+      # refuse all build slots, so deploy-rs's nix-build hands every drv to
+      # the remote. Laptops (eg. fishspeaker, 16GB) OOM building several
+      # host closures back-to-back without this.
       #
-      # `i686-linux` is advertised alongside x86_64-linux because NixOS
-      # x86_64 hosts auto-add it to `extra-platforms`; a handful of 32-bit
-      # derivations in the closure (eg. perl builder hooks) require it and
-      # otherwise stall with "Failed to find a machine for remote build".
-      #
-      # Skip the override when the deploy is run *on* catjailer; it builds
-      # locally and doesn't need to ssh into itself.
+      # Skip on catjailer itself: it has no buildMachines and *is* the
+      # builder, so it just builds locally.
       apps.deploy = {
         type = "app";
         program = "${pkgs.writeShellScript "deploy" ''
           if [ "$(${pkgs.coreutils}/bin/uname -n)" != "catjailer" ]; then
-            export NIX_CONFIG=$(${pkgs.coreutils}/bin/printf '%s\n' \
-              'builders = ssh-ng://catjailer x86_64-linux,i686-linux' \
-              'max-jobs = 0' \
-              'builders-use-substitutes = true')
+            export NIX_CONFIG='max-jobs = 0'
           fi
           exec ${inputs.deploy-rs.packages.${system}.deploy-rs}/bin/deploy "$@"
         ''}";
