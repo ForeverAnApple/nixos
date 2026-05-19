@@ -21,6 +21,7 @@
         # Shared with opencode + codex so all agents read the same rules.
         context = ../instructions.md;
         settings = {
+          env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
           permissions.defaultMode = "auto";
           # Without this, Claude shows the "make auto mode your default?"
           # opt-in dialog every session: clicking "yes" tries to write
