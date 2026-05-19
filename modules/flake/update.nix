@@ -1,7 +1,7 @@
 { ... }:
 {
   perSystem =
-    { system, pkgs, ... }:
+    { pkgs, ... }:
     {
       apps.update = {
         type = "app";
@@ -9,24 +9,26 @@
           set -euo pipefail
           cd "$HOME/nixos"
           host="$(${pkgs.coreutils}/bin/uname -n)"
-          case "$host" in
-            catjailer)
-              exec nix run .#deploy -- "$@"
+          kernel="$(${pkgs.coreutils}/bin/uname -s)"
+
+          case "$kernel" in
+            Darwin)
+              nh darwin switch .#"$host"
               ;;
-            fishspeaker)
-              nh os switch --build-host catjailer .#fishspeaker
-              exec nix run .#deploy -- "$@"
-              ;;
-            wallfacer)
-              nh darwin switch --build-host catjailer .#wallfacer
-              exec nix run .#deploy -- "$@"
+            Linux)
+              if [ "$host" = "catjailer" ]; then
+                nh os switch .#"$host"
+              else
+                nh os switch --build-host catjailer .#"$host"
+              fi
               ;;
             *)
-              echo "update: '$host' is not a known orchestrator host" >&2
-              echo "expected one of: catjailer, fishspeaker, wallfacer" >&2
+              echo "update: unsupported kernel '$kernel'" >&2
               exit 1
               ;;
           esac
+
+          exec nix run .#deploy -- "$@"
         ''}";
       };
     };

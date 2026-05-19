@@ -52,9 +52,13 @@ in
       apps.deploy = {
         type = "app";
         program = "${pkgs.writeShellScript "deploy" ''
-          if [ "$(${pkgs.coreutils}/bin/uname -n)" != "catjailer" ]; then
+          host="$(${pkgs.coreutils}/bin/uname -n)"
+          kernel="$(${pkgs.coreutils}/bin/uname -s)"
+
+          if [ "$host" != "catjailer" ] && [ "$kernel" != "Darwin" ]; then
             export NIX_CONFIG='max-jobs = 0'
           fi
+
           exec ${inputs.deploy-rs.packages.${system}.deploy-rs}/bin/deploy "$@"
         ''}";
       };
