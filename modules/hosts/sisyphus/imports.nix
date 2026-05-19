@@ -8,5 +8,7 @@
     endlessh
     initrd-unlock
     derper
+    caddy
+    headscale
   ];
 }

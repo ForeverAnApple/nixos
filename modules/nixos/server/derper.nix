@@ -1,34 +1,56 @@
 {
-  flake.modules.nixos.derper = {
-    services.tailscale.derper = {
-      enable = true;
-      domain = "derp.davec.xyz";
+  flake.modules.nixos.derper =
+    { pkgs, ... }:
+    {
+      systemd.services.derper = {
+        description = "Tailscale DERP relay";
+        after = [
+          "network.target"
+          "tailscaled.service"
+        ];
+        wants = [ "tailscaled.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.tailscale.derper}/bin/derper \
+              -a=:8010 \
+              -http-port=-1 \
+              -hostname=derp.davec.xyz \
+              -c=/var/lib/derper/derper.key \
+              -stun \
+              -stun-port=3478 \
+              -verify-clients
+          '';
+          DynamicUser = true;
+          StateDirectory = "derper";
+          Restart = "on-failure";
+          RestartSec = "5s";
 
-      # sisyphus runs tailscaled itself, so derper can ask it whether a
-      # connecting client is actually a member of the tailnet. Without
-      # this the relay is open to anyone on the internet.
-      verifyClients = true;
+          CapabilityBoundingSet = [ "" ];
+          LockPersonality = true;
+          MemoryDenyWriteExecute = true;
+          NoNewPrivileges = true;
+          PrivateDevices = true;
+          PrivateTmp = true;
+          ProtectClock = true;
+          ProtectControlGroups = true;
+          ProtectHome = true;
+          ProtectKernelLogs = true;
+          ProtectKernelModules = true;
+          ProtectKernelTunables = true;
+          ProtectSystem = "strict";
+          RestrictAddressFamilies = [
+            "AF_INET"
+            "AF_INET6"
+            "AF_UNIX"
+          ];
+          RestrictNamespaces = true;
+          RestrictRealtime = true;
+          SystemCallArchitectures = "native";
+          SystemCallFilter = [ "@system-service" ];
+        };
+      };
 
-      # Opens UDP 3478 (STUN). The module leaves TCP 80/443 to nginx, but
-      # services.nginx doesn't touch the firewall on its own — see below.
-      openFirewall = true;
+      networking.firewall.allowedUDPPorts = [ 3478 ];
     };
-
-    networking.firewall.allowedTCPPorts = [
-      80
-      443
-    ];
-
-    # Public-issued cert for the derper vhost. ACME http-01 needs port 80
-    # reachable from the internet and an A/AAAA record for derp.davec.xyz
-    # pointing at sisyphus's public IP.
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "kinbd8@gmail.com";
-    };
-
-    services.nginx.virtualHosts."derp.davec.xyz" = {
-      enableACME = true;
-    };
-  };
 }
