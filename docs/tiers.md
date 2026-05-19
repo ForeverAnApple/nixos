@@ -47,7 +47,7 @@ macOS has no `laptop` analogue because macOS handles laptop concerns natively. w
 
 A host should be one tier. Mixing tiers (workstation that also runs services, service that also has interactive shells) is a smell — but sometimes a transitional one.
 
-Today: `catjailer` is a workstation that also imports `sshd, fail2ban, caddy, home-assistant, audiobookshelf`. Those services are pending migration off catjailer. The mixed state is named honestly in `modules/hosts/catjailer/imports.nix` — first import is `workstation` (its real identity), the rest are the debt.
+Today: `catjailer` is a workstation that also imports `sshd, fail2ban, caddy`. Those services are pending migration off catjailer. The mixed state is named honestly in `modules/hosts/catjailer/imports.nix` — first import is `workstation` (its real identity), the rest are the debt.
 
 When the migration completes, catjailer becomes pure: `[workstation, nvidia, gaming, obs]`.
 

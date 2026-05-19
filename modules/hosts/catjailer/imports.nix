@@ -12,7 +12,5 @@
     sshd
     fail2ban
     caddy
-    home-assistant
-    audiobookshelf
   ];
 }

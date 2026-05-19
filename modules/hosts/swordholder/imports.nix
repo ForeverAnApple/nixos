@@ -6,5 +6,7 @@
     service
 
     caddy
+    home-assistant
+    audiobookshelf
   ];
 }

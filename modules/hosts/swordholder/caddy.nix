@@ -18,6 +18,18 @@
       "plex.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:32400
       '';
+
+      "abs.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:7999 {
+          header_up Host {host}
+        }
+      '';
+
+      "ha.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:8123 {
+          header_up Host {host}
+        }
+      '';
     };
   };
 }

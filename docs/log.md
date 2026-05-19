@@ -6,6 +6,10 @@ Format: `## [YYYY-MM-DD] <short topic>` followed by what changed, why, and what 
 
 ---
 
+## [2026-05-19] audiobookshelf + home-assistant moved to swordholder
+
+`audiobookshelf` and `home-assistant` imports moved from `catjailer` to `swordholder`; `abs.jura.moe` and `ha.jura.moe` caddy vhosts moved with them (no per-vhost `tls` block needed on swordholder — its resolver doesn't intercept). Catjailer still carries `sshd, fail2ban, caddy` (separate migration). Audiobookshelf library data (`processed/`) moved from `/mnt/alpha-oguri/Torrents/Audiobooks/processed` to `/THICC/THICC/Torrents/Audiobooks/processed`; sqlite `libraryFolders.path` rewritten. Home Assistant state copied verbatim — HomeKit pairings keyed off the state dir, not the host, so they survive the move.
+
 ## [2026-05-18] Bauhaus cleanup pass
 
 Four cleanups applied as a single philosophy-tight pass.

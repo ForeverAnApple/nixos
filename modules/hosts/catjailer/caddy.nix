@@ -17,20 +17,6 @@
           ${tlsBlock}
           respond "catjailer caddy ok"
         '';
-
-        "abs.jura.moe".extraConfig = ''
-          ${tlsBlock}
-          reverse_proxy 127.0.0.1:7999 {
-            header_up Host {host}
-          }
-        '';
-
-        "ha.jura.moe".extraConfig = ''
-          ${tlsBlock}
-          reverse_proxy 127.0.0.1:8123 {
-            header_up Host {host}
-          }
-        '';
       };
     };
 }
