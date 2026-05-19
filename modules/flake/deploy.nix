@@ -49,15 +49,6 @@ in
   perSystem =
     { system, pkgs, ... }:
     {
-      # Force every closure through whichever remote builder this host has
-      # configured (catjailer, in practice — see nix.buildMachines on
-      # fishspeaker / wallfacer). `max-jobs = 0` makes the local nix daemon
-      # refuse all build slots, so deploy-rs's nix-build hands every drv to
-      # the remote. Laptops (eg. fishspeaker, 16GB) OOM building several
-      # host closures back-to-back without this.
-      #
-      # Skip on catjailer itself: it has no buildMachines and *is* the
-      # builder, so it just builds locally.
       apps.deploy = {
         type = "app";
         program = "${pkgs.writeShellScript "deploy" ''

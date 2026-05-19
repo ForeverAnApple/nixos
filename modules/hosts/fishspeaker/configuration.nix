@@ -37,27 +37,17 @@
 
       boot.kernel.sysctl."vm.swappiness" = 10;
 
-      # Distributed builds: delegate Linux derivations to catjailer instead
-      # of grinding this 16GB laptop. `nix run .#deploy` additionally forces
-      # `max-jobs = 0` so every closure goes remote; routine local builds
-      # still run here when fishspeaker has the headroom. Mirrors the
-      # wallfacer setup in modules/darwin/core/nix.nix.
-      #
-      # i686-linux is advertised because NixOS x86_64 hosts auto-add it to
-      # extra-platforms; without it 32-bit derivations (nvidia libs, perl
-      # builder hooks) refuse to delegate and stall the build. aarch64-linux
-      # is omitted because catjailer has no binfmt/qemu set up.
       nix.distributedBuilds = true;
       nix.buildMachines = [
         {
           hostName = "catjailer";
+          # i686-linux: NixOS x86_64 hosts auto-add it to extra-platforms;
+          # 32-bit drvs (nvidia, perl builder hooks) stall without it.
           systems = [
             "x86_64-linux"
             "i686-linux"
           ];
           sshUser = "faa";
-          # Root reads through POSIX mode bits on Linux, so faa's key works
-          # directly — no need to provision a separate /root/.ssh key.
           sshKey = "/home/faa/.ssh/id_ed25519";
           maxJobs = 4;
           speedFactor = 2;
@@ -73,10 +63,8 @@
 
       nix.settings.builders-use-substitutes = true;
 
-      # System-wide SSH config for the nix daemon (runs as root, doesn't
-      # read ~faa/.ssh/config). Goes in programs.ssh.extraConfig because
-      # NixOS's /etc/ssh/ssh_config doesn't `Include ssh_config.d/*.conf`
-      # — drop-ins there are silently ignored (differs from macOS).
+      # NixOS /etc/ssh/ssh_config doesn't Include ssh_config.d, so this
+      # can't live as a drop-in (differs from macOS).
       programs.ssh.extraConfig = ''
         Host catjailer catjailer.*
           Port 22022
