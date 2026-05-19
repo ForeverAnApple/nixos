@@ -11,6 +11,12 @@
         type = "app";
         program = "${pkgs.writeShellScript "update" ''
           set -euo pipefail
+          # cd into the flake checkout so the `nru` alias (see
+          # modules/home/core/nh.nix) and any other invocation from an
+          # arbitrary cwd resolves `.#deploy` / `.#fishspeaker` / `.#wallfacer`
+          # against the right tree. ~/nixos is the convention every
+          # human-user host follows (matches programs.nh.flake).
+          cd "$HOME/nixos"
           host="$(${pkgs.coreutils}/bin/uname -n)"
           case "$host" in
             catjailer)

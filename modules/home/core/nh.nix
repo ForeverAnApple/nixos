@@ -15,6 +15,10 @@
         u = "${nhCmd} switch -u";
         t = "${nhCmd} test";
         nrs = "${nhCmd} switch";
+        # Self + fleet rebuild dispatched by hostname; see
+        # modules/flake/update.nix. The script cd's into ~/nixos itself,
+        # so `nru` works from any cwd.
+        nru = "nix run \"$HOME/nixos\"#update";
         lg = "lazygit";
         oc = "opencode";
       };
