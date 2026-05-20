@@ -37,6 +37,7 @@
             browseable = "yes";
             "read only" = "no";
             "guest ok" = "no";
+            "force group" = "+audiobookshelf";
           };
           Plex = {
             path = "/THICC/Plex";

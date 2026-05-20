@@ -7,5 +7,6 @@
   flake.modules.nixos."hosts/swordholder" = {
     users.groups.legacy-users.gid = 1000;
     users.users.audiobookshelf.extraGroups = [ "legacy-users" ];
+    users.users.faa.extraGroups = [ "audiobookshelf" ];
   };
 }
