@@ -34,10 +34,26 @@
             "2606:4700:4700::1001"
           ];
           extra_records = [
-            { name = "qbit.jura.moe"; type = "A"; value = "100.64.0.8"; }
-            { name = "plex.jura.moe"; type = "A"; value = "100.64.0.8"; }
-            { name = "abs.jura.moe"; type = "A"; value = "100.64.0.8"; }
-            { name = "ha.jura.moe"; type = "A"; value = "100.64.0.8"; }
+            {
+              name = "qbit.jura.moe";
+              type = "A";
+              value = "100.64.0.8";
+            }
+            {
+              name = "plex.jura.moe";
+              type = "A";
+              value = "100.64.0.8";
+            }
+            {
+              name = "abs.jura.moe";
+              type = "A";
+              value = "100.64.0.8";
+            }
+            {
+              name = "ha.jura.moe";
+              type = "A";
+              value = "100.64.0.8";
+            }
           ];
         };
 
