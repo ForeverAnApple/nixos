@@ -5,7 +5,8 @@
       programs.codex = {
         enable = true;
         # Writes to ~/.codex/AGENTS.md.
-        context = ../instructions.md;
+        context = ../ALL_AGENTS.md;
+        skills.prose-style = ../skills/prose-style;
         settings = {
           check_for_update_on_startup = false;
           analytics.enabled = false;

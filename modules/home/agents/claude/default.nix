@@ -19,7 +19,8 @@
         enable = true;
         # Writes to ~/.claude/CLAUDE.md (symlink → nix store).
         # Shared with opencode + codex so all agents read the same rules.
-        context = ../instructions.md;
+        context = ../ALL_AGENTS.md;
+        skills.prose-style = ../skills/prose-style;
         settings = {
           env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
           permissions.defaultMode = "auto";
