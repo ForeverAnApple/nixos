@@ -2,7 +2,6 @@
 {
   flake.modules.homeManager.core.imports = with config.flake.modules.homeManager; [
     nh
-    agents
     ssh
   ];
 }
