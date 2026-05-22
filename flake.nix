@@ -65,6 +65,11 @@
       url = "github:vercel-labs/agent-browser";
       flake = false;
     };
+
+    anthropic-skills = {
+      url = "github:anthropics/skills";
+      flake = false;
+    };
   };
 
   outputs =

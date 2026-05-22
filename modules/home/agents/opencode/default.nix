@@ -1,3 +1,4 @@
+{ inputs, ... }:
 {
   flake.modules.homeManager.opencode =
     { lib, ... }:
@@ -7,6 +8,7 @@
         # Writes to $XDG_CONFIG_HOME/opencode/AGENTS.md.
         context = ../ALL_AGENTS.md;
         skills.prose-style = ../skills/prose-style;
+        skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
       };
     };
 }
