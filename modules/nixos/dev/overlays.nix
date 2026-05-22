@@ -15,13 +15,20 @@
               system = final.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             };
+            # codex from nixos-unstable-small: Hydra-built (always cached),
+            # hours behind master. Source builds aren't worth the marginal
+            # freshness for this one.
+            smallPkgs = import inputs.nixpkgs-unstable-small {
+              system = final.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+            };
           in
           {
             inherit (masterPkgs)
               claude-code
               opencode
-              codex
               ;
+            inherit (smallPkgs) codex;
 
             vrcft = final.appimageTools.wrapType2 {
               pname = "VRCFaceTracking";

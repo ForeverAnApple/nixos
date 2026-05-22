@@ -6,10 +6,15 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Bleeding-edge channel used *only* for fast-moving AI CLIs
-    # (claude-code, opencode, codex) via modules/nixos/dev/overlays.nix.
+    # (claude-code, opencode) via modules/nixos/dev/overlays.nix.
     # Unstable lags master by days on these and the AI tools ship daily,
     # so we prefer master for them and unstable for everything else.
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+
+    # Hydra-built small channel: hours behind master, fully cached. Used for
+    # codex, which builds heavy from master and isn't worth the rebuild cost
+    # for "hours fresher" over nixos-unstable-small. See dev/overlays.nix.
+    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
