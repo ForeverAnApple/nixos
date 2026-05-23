@@ -50,7 +50,7 @@
               -v /var/lib/qbittorrent:/config \
               -v /media:/mnt/Plex \
               -v /THICC/THICC/Torrents:/mnt/Torrents \
-              lscr.io/linuxserver/qbittorrent:5.1.2
+              lscr.io/linuxserver/qbittorrent:5.2.0
           '';
           ExecStop = "${pkgs.docker}/bin/docker stop seeder";
           Restart = "on-failure";
