@@ -18,15 +18,6 @@
         ];
       };
 
-      # faa on service hosts is a service-runner identity (rootless docker,
-      # systemd --user services like seeder). No shell, no SSH keys, no sudo —
-      # the dev-tier interactive faa lives in modules/nixos/dev/users.nix.
-      users.users.faa = {
-        isNormalUser = true;
-        description = "Service runner (no interactive access)";
-        shell = "${pkgs.shadow}/bin/nologin";
-      };
-
       # Required so deploy can push closures via nix-copy-closure without being root.
       nix.settings.trusted-users = [ "deploy" ];
 

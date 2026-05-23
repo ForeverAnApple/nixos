@@ -9,6 +9,7 @@
     sops
     substituters
     home-manager
+    human-user
     tailscale
     tmux
     zsh
