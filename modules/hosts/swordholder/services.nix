@@ -96,7 +96,7 @@
       fileSystems."/media" = {
         device = "/THICC/Plex";
         fsType = "none";
-        options = [ "bind" ];
+        options = [ "bind" "x-systemd.automount" ];
       };
 
       systemd.services.plex.serviceConfig = {
