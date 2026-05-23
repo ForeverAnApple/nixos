@@ -100,6 +100,7 @@
       };
 
       systemd.services.plex.serviceConfig = {
+        TimeoutStopSec = 10;
         NoNewPrivileges = lib.mkForce true;
         ProtectSystem = lib.mkForce "strict";
         ProtectHome = lib.mkForce true;
