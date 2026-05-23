@@ -7,6 +7,5 @@
 
     sshd
     fail2ban
-    deploy-user
   ];
 }

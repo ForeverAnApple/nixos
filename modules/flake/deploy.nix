@@ -13,27 +13,19 @@ let
     "swordholder"
   ];
 
-  # Hosts with no interactive faa user; deploy-rs ssh's as the dedicated
-  # `deploy` account defined in modules/nixos/service/.
-  serviceHosts = [
-    "sisyphus"
-    "swordholder"
-  ];
-
   selected = lib.filterAttrs (n: _: builtins.elem n deployHosts) config.flake.nixosConfigurations;
 in
 {
   flake.deploy.nodes = lib.mapAttrs (
     hostname: nixos:
     let
-      isService = builtins.elem hostname serviceHosts;
       system = nixos.config.nixpkgs.hostPlatform.system;
     in
     {
       inherit hostname;
       profilesOrder = [ "system" ];
       profiles.system = {
-        sshUser = if isService then "deploy" else "faa";
+        sshUser = "faa";
         user = "root";
         path = inputs.deploy-rs.lib.${system}.activate.nixos nixos;
         magicRollback = true;

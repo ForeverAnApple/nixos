@@ -8,7 +8,7 @@ This file is the *schema* — how the wiki and the repo are maintained — not t
 - **How do hosts compose?** → [docs/dendritic.md](docs/dendritic.md)
 - **Why are there `workstation` and `service` tiers?** → [docs/tiers.md](docs/tiers.md)
 - **Why is the repo shaped the way it is?** → [PHILOSOPHY.md](PHILOSOPHY.md)
-- **What changed and when?** → [docs/log.md](docs/log.md)
+- **What changed and when?** → `git log`
 
 ## Host cohesion (the central rule)
 
@@ -44,7 +44,6 @@ The wiki (`docs/`) is a navigation overlay on the code, not a separate knowledge
 
 - A page is right-sized when it answers one question. If you need a fact, find the page named for the concept.
 - Add a page when a concept comes up twice. Fold a page back when it's unused for six months.
-- [docs/log.md](docs/log.md) is append-only. New entries on top. Do not edit old entries — if the thinking changed, write a new entry that cites the old one.
 - [PHILOSOPHY.md](PHILOSOPHY.md) grows by accretion. Add principles when a decision teaches you something general. Don't perform philosophical depth — Bauhaus the doc too.
 
 ## This repo is public

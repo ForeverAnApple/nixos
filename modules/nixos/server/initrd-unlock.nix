@@ -7,8 +7,10 @@
         ssh = {
           enable = true;
           port = 2222;
-          # Same admin keys as the deploy user — single source of truth.
-          authorizedKeys = config.users.users.deploy.openssh.authorizedKeys.keys;
+          # Same admin keys as the interactive faa user — single source of truth.
+          # Login is still root@:2222 (stage-1 minimal env, no other users);
+          # only the keys list is sourced from faa.
+          authorizedKeys = config.users.users.faa.openssh.authorizedKeys.keys;
           hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
         };
       };

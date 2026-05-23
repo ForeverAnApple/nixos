@@ -4,17 +4,17 @@ A host is one of two functional classes: **workstation** or **service**. The tie
 
 ## The two tiers
 
+Every NixOS host gets the interactive `faa` user via `core/human-user.nix`: zsh, wheel/sudo NOPASSWD, the operator ssh keys. Tier on top of that.
+
 ### `workstation` — a human creates on it
 
 Provides:
-- Interactive `human-user` (zsh, sudo, ssh keys)
 - Desktop environment (Wayland, niri, fuzzel, …)
 - Development tooling (overlays for fast-moving AI CLIs, wireguard, openvpn)
 - nix-ld, envfs (so pre-built Linux binaries run without packaging effort)
 - Networking, bootloader, docker rootless
 
 Wants:
-- One human as the operator
 - A graphical session
 - Local builds
 
@@ -23,14 +23,12 @@ Hosts: fishspeaker, catjailer, wallfacer.
 ### `service` — it serves something to others, unattended
 
 Provides:
-- No interactive `faa` (nologin shell, no keys)
-- `deploy` user with NOPASSWD sudo for deploy-rs
 - Hardened sshd + fail2ban
 - Networking, bootloader, docker rootless
 
 Wants:
-- No human at the keyboard
-- Remote deploy via deploy-rs as the only push path
+- No graphical session
+- Remote deploy via deploy-rs (as `faa`, same as workstation)
 - Long uptime
 
 Hosts: sisyphus, swordholder.
@@ -60,4 +58,4 @@ When the migration completes, catjailer becomes pure: `[workstation, nvidia, gam
 
 ## Why these names
 
-Function-named, not role-named. `worker` (the deploy account) names the operator. `service` names what the host *does*. Same move as `human-user` and `deploy-user` — the name reveals the function. See [PHILOSOPHY.md](../PHILOSOPHY.md).
+Function-named, not role-named. `service` names what the host *does*, not who logs into it. See [PHILOSOPHY.md](../PHILOSOPHY.md).

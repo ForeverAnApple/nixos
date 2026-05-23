@@ -10,12 +10,11 @@ Navigation catalog for this repo. Each page is atomic — one concept, no preamb
 
 ## Process
 
-- [log.md](log.md) — append-only architectural decisions, dated
 - [../PHILOSOPHY.md](../PHILOSOPHY.md) — principles and tradeoffs we accept
 - [../AGENTS.md](../AGENTS.md) — schema for how this wiki and the repo are maintained
 
 ## How to navigate
 
-A page is right-sized when it answers one question. If you need a fact, find the page named for the concept. If you need rationale, read PHILOSOPHY.md. If you need to know what changed and why, read log.md.
+A page is right-sized when it answers one question. If you need a fact, find the page named for the concept. If you need rationale, read PHILOSOPHY.md. If you need to know what changed and why, read `git log`.
 
 If a page is missing for a concept that comes up twice, add it. If a page is unused after six months, fold it back.
