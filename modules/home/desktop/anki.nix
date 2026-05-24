@@ -7,12 +7,6 @@
 
         theme = "dark";
 
-        profiles = {
-          "ForeverAnApple" = {
-            default = true;
-          };
-        };
-
         addons = [
           (pkgs.anki-utils.buildAnkiAddon {
             pname = "anki-vrc";
