@@ -9,5 +9,6 @@
     caddy
     home-assistant
     audiobookshelf
+    immich
   ];
 }

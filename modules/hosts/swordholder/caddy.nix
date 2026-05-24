@@ -30,6 +30,10 @@
           header_up Host {host}
         }
       '';
+
+      "immich.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:2283
+      '';
     };
   };
 }
