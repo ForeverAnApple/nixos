@@ -55,7 +55,6 @@
         brews = [
           "felixkratz/formulae/borders"
           "felixkratz/formulae/sketchybar"
-          "jackielii/tap/skhd-zig"
           "pnpm"
         ];
 
@@ -80,6 +79,7 @@
           "gstreamer-runtime"
           "hiddenbar"
           "iterm2"
+          "jackielii/tap/skhd-zig" # upstream switched formula→cask in e8fc799
           "linearmouse"
           "font-iosevka-aile" # used by obsidian; no clean nixpkgs equivalent
           "macfuse"
