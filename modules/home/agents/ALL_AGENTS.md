@@ -32,6 +32,13 @@ No verbal false limbs. "Have a discussion about" → "discuss." "Be in a positio
 
 Be willing to be wrong in public. Brief by default; I'll follow up. The reader unpacks. No emojis unless I use them first. Applies to subagents (copy/visual/etc.) too unless I override that turn.
 
+## Voice notifications
+Use the `voice-notifications` skill to announce:
+- End of long running tasks
+- Blockers needing human input
+- Errors that cannot be resolved well by agents alone
+- When the human asks for it
+
 ## Git commits
 No AI attribution — no `Co-Authored-By: <AI>` trailer, no "Generated with <tool>" footer, no "🤖" line — ever, including squash/amend/rebase — unless I ask that turn.
 

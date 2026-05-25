@@ -22,6 +22,7 @@
         # Shared with opencode + codex so all agents read the same rules.
         context = ../ALL_AGENTS.md;
         skills.prose-style = ../skills/prose-style;
+        skills.voice-notifications = ../skills/voice-notifications;
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
         settings = {
           env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
