@@ -26,6 +26,11 @@
           "ctrl+shift+enter" = "new_window_with_cwd";
           "ctrl+shift+t" = "new_tab_with_cwd";
           "ctrl+shift+n" = "new_os_window_with_cwd";
+          # Always emit CSI-u for shift+enter / ctrl+enter so coding agents
+          # (Claude Code, Codex) see them through ssh+tmux without depending
+          # on kitty keyboard-protocol negotiation, which keeps regressing.
+          "shift+enter" = ''send_text all \x1b[13;2u'';
+          "ctrl+enter" = ''send_text all \x1b[13;5u'';
         };
         quickAccessTerminalConfig = {
           start_as_hidden = true;

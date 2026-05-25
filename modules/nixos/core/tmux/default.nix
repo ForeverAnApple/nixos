@@ -20,7 +20,10 @@
         extraConfig = ''
           set -g mouse on
           set -g xterm-keys on
-          set -g extended-keys on
+          # `always` (not `on`) so CSI-u keys like shift+enter reach apps
+          # even when they haven't requested DECSET 2017 — kitty emits the
+          # sequence unconditionally, so don't make tmux gate it.
+          set -g extended-keys always
           set -ga terminal-features ",*:extkeys"
           set -g focus-events on
           set -g set-clipboard on
