@@ -22,16 +22,15 @@
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
-      # Desktop — prefer proprietary NVIDIA kernel module here.
-      # The open module is triggering kernel crashes with Anki/QtWebEngine.
-      hardware.nvidia.open = lib.mkForce false;
+      # Early KMS — avoids the text-mode flash at boot on display-attached GPUs.
+      boot.initrd.kernelModules = [
+        "nvidia"
+        "nvidia_modeset"
+        "nvidia_uvm"
+        "nvidia_drm"
+      ];
 
-      # Desktop — no GPU power management (causes input lag on wake)
-      hardware.nvidia.powerManagement.enable = lib.mkForce false;
-
-      # btop with GPU monitoring and host-specific desktop apps
       environment.systemPackages = [
-        (pkgs.btop.override { cudaSupport = true; })
         pkgs.alcom
         pkgs.vesktop
         pkgs.unityhub

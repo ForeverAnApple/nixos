@@ -19,6 +19,7 @@ Folders in `modules/nixos/`:
 | `service/` | tier aggregate: unattended host |
 | `desktop/` | GUI/Wayland leaves a workstation host pulls in |
 | `dev/` | development tooling + the interactive `human-user` |
+| `hardware/` | driver/firmware leaves that cross tiers (e.g. `nvidia` — shared by a desktop and a service host) |
 | `server/` | server-side service leaves (sshd, fail2ban, caddy, audiobookshelf, …) — no longer an aggregate, just a folder of leaves |
 
 Folders in `modules/home/`:
