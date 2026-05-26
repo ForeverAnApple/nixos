@@ -15,6 +15,7 @@
           analytics.enabled = false;
           feedback.enabled = false;
           otel.metrics_exporter = "none";
+          approvals_reviewer = "auto_review";
         };
       };
     };
