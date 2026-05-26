@@ -49,6 +49,54 @@
             };
           };
         };
+
+        omega-beef = {
+          type = "disk";
+          device = "/dev/disk/by-id/ata-ST2000DM006-2DM164_Z4ZA15NG";
+          content = {
+            type = "gpt";
+            partitions = {
+              data = {
+                size = "100%";
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/mnt/omega-beef";
+                  mountOptions = [
+                    "defaults"
+                    "nofail"
+                    "x-gvfs-show"
+                    "x-gvfs-name=Omega-Beef"
+                  ];
+                };
+              };
+            };
+          };
+        };
+
+        theta-beef = {
+          type = "disk";
+          device = "/dev/disk/by-id/ata-WDC_WD30EZRX-00D8PB0_WD-WCC4N6RUJCRL";
+          content = {
+            type = "gpt";
+            partitions = {
+              data = {
+                size = "100%";
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/mnt/theta-beef";
+                  mountOptions = [
+                    "defaults"
+                    "nofail"
+                    "x-gvfs-show"
+                    "x-gvfs-name=Theta-Beef"
+                  ];
+                };
+              };
+            };
+          };
+        };
       };
     };
 
