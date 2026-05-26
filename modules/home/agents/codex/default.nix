@@ -11,6 +11,7 @@
         skills.voice-notifications = ../skills/voice-notifications;
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
         settings = {
+          approval_policy = "on-request";
           check_for_update_on_startup = false;
           analytics.enabled = false;
           feedback.enabled = false;
