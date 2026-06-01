@@ -2,6 +2,13 @@
   flake.modules.nixos.home-assistant =
     { pkgs, ... }:
     let
+      # NSS 3.123 distrusts DigiCert Global Root CA for serverAuth (Mozilla
+      # phase-out). api.wyzecam.com still chains to it; prepend a clean copy
+      # so OpenSSL sees the trusted entry first.
+      wyzeCaBundle = pkgs.runCommand "wyze-ca-bundle.crt" { } ''
+        cat ${./digicert-global-root-ca.pem} ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt > $out
+      '';
+
       # The Wyze cloud client used by the ha-wyzeapi custom component.
       # Not in nixpkgs, so vendored from PyPI here.
       # Build against HA's bundled Python so the version matches the
@@ -127,5 +134,10 @@
         "f /var/lib/hass/scenes.yaml 0644 hass hass -"
         "f /var/lib/hass/scripts.yaml 0644 hass hass -"
       ];
+
+      systemd.services.home-assistant.environment = {
+        SSL_CERT_FILE = "${wyzeCaBundle}";
+        REQUESTS_CA_BUNDLE = "${wyzeCaBundle}";
+      };
     };
 }

@@ -8,6 +8,7 @@ result-*
 !.env.example
 secrets/
 *.pem
+!modules/nixos/server/digicert-global-root-ca.pem
 *.key
 *.p12
 *.pfx
