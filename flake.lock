@@ -3,11 +3,11 @@
     "agent-browser-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1779916353,
-        "narHash": "sha256-mPtY6X0WwtX6pna47aQr4Rn+dLIWbMzXkObpUTp6Zy8=",
+        "lastModified": 1780343976,
+        "narHash": "sha256-eLtN4ErLaSetEDb/6RMqILDnVua8QnEN6r1VgbwTQBw=",
         "owner": "vercel-labs",
         "repo": "agent-browser",
-        "rev": "b4f2f37d7b4f954022bc77f8d6dce70e07072b00",
+        "rev": "90050f2913159875e2c3719e424746396ccb3cbf",
         "type": "github"
       },
       "original": {
@@ -90,6 +90,32 @@
         "type": "github"
       }
     },
+    "codex-darwin-aarch64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780338935,
+        "narHash": "sha256-tDeO7OurbMS6RiCF/iG0IWVHQccrG5K+QFgQyuzUzTM=",
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz"
+      }
+    },
+    "codex-darwin-x86_64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780339010,
+        "narHash": "sha256-+t5B6CcjJ+fUWahORSLZByYCYyIYgv5iQPLYkVfM2nU=",
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz"
+      }
+    },
     "deploy-rs": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -119,11 +145,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780048612,
-        "narHash": "sha256-Md/eOK5OjmvvHc2H52pLZe4zpP4XyfiS5vHqfRCz2HU=",
+        "lastModified": 1780290312,
+        "narHash": "sha256-eTAlX0CwgB84Ts3GaBd944A3DRXVMzgA0EqroZBISUo=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "caa775cf67bfdc47f940edd96c975b5016df9059",
+        "rev": "115e5211780054d8a890b41f0b7734cafad54dfe",
         "type": "github"
       },
       "original": {
@@ -196,11 +222,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780099287,
-        "narHash": "sha256-efIPwVGtIWIjWcznhaop6XN6HxnOL8800hF6CBNvlqQ=",
+        "lastModified": 1780342707,
+        "narHash": "sha256-wQ56uDoEMaZ9XPHCtSUEGn6beBO7Egy6sCT0N/NM4Fo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "7d8127d308c3fb9664f7e643eec944be74ebb37d",
+        "rev": "5a608a621b001922dd708ca51a6260d5bef9e29b",
         "type": "github"
       },
       "original": {
@@ -236,11 +262,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1780263228,
-        "narHash": "sha256-steWp/l2nhrtnzWk7h9II6zd+58F617XMX9sG5ShgOk=",
+        "lastModified": 1780336909,
+        "narHash": "sha256-oImIjseTTAevypeKKVZCqDuQCBV9wIgA7H+JiYRRnAA=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "22f334071497ce8cfd556a507d7e57fd45d88293",
+        "rev": "b6ed2dab949b5ff15d5ce802ffe8bf12acc0229f",
         "type": "github"
       },
       "original": {
@@ -329,11 +355,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1779560665,
-        "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
+        "lastModified": 1780243769,
+        "narHash": "sha256-x5UQuRsH3MqI0U9afaXSNqzTPSeZlRLvFAav2Ux1pNw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
+        "rev": "331800de5053fcebacf6813adb5db9c9dca22a0c",
         "type": "github"
       },
       "original": {
@@ -345,11 +371,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1780270685,
-        "narHash": "sha256-BsB4laEBEqyegE8+6U4hA9HlRWg84QpbU5qjm1v0HF4=",
+        "lastModified": 1780344091,
+        "narHash": "sha256-JNKaglldSVeqa+gQKJgLlh9IJj1ez4htQHYJxqXTntI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "68b20534dd9cc479f4edf056719efb3194fadf2d",
+        "rev": "dd29396c9e5b23532e07cbe71414b819d6d78a68",
         "type": "github"
       },
       "original": {
@@ -377,11 +403,11 @@
     },
     "nixpkgs-unstable-small": {
       "locked": {
-        "lastModified": 1780206209,
-        "narHash": "sha256-33WNQ5sssy+8+xhUz953aEnjR1Oh828j0DgLU1TfMqE=",
+        "lastModified": 1780338866,
+        "narHash": "sha256-GDJZRXBPTssq1uvqVW4GTLIqo8QNheAsSslPnRTsY/Y=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "45cf63e030188dd38532669b2450182bfc2d4653",
+        "rev": "228ae3b72880c28c3782209fb4cd9f3c99fb8dc8",
         "type": "github"
       },
       "original": {
@@ -395,6 +421,8 @@
       "inputs": {
         "agent-browser-src": "agent-browser-src",
         "anthropic-skills": "anthropic-skills",
+        "codex-darwin-aarch64": "codex-darwin-aarch64",
+        "codex-darwin-x86_64": "codex-darwin-x86_64",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "flake-parts": "flake-parts",
