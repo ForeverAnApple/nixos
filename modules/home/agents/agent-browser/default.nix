@@ -10,10 +10,26 @@ let
     else
       pkgs.lib.getExe pkgs.chromium;
 
+  binaryFor =
+    pkgs:
+    let
+      inherit (pkgs.stdenv.hostPlatform) system;
+      input =
+        {
+          aarch64-darwin = "agent-browser-darwin-aarch64";
+          x86_64-darwin = "agent-browser-darwin-x86_64";
+          aarch64-linux = "agent-browser-linux-aarch64";
+          x86_64-linux = "agent-browser-linux-x86_64";
+        }
+        .${system} or (throw "agent-browser: no prebuilt binary for ${system}");
+    in
+    inputs.${input};
+
   packageFor =
     pkgs:
     pkgs.callPackage ./_package.nix {
       src = inputs.agent-browser-src;
+      binary = binaryFor pkgs;
       chromeBin = chromeBinFor pkgs;
     };
 in

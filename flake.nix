@@ -70,11 +70,32 @@
 
     import-tree.url = "github:vic/import-tree";
 
-    # Tracked as a raw source so `nix flake update` bumps it on the normal
-    # cadence. The Rust crate's lockfile drives cargo vendor — no `cargoHash`
-    # to refresh per release. See modules/home/agents/agent-browser/.
+    # Source tree only supplies the version, skills/, and skill-data/ dirs —
+    # the executable comes from the prebuilt release binaries below. `nix flake
+    # update` bumps both. See modules/home/agents/agent-browser/.
     agent-browser-src = {
       url = "github:vercel-labs/agent-browser";
+      flake = false;
+    };
+
+    # Prebuilt release binaries, one input per platform. `file+https` fetches
+    # the raw executable without tarball unpacking; the hash lands in
+    # flake.lock, so `nix flake update` is the version bump — no hashes to
+    # hand-edit. Only the matching platform's input is fetched at build time.
+    agent-browser-darwin-aarch64 = {
+      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-arm64";
+      flake = false;
+    };
+    agent-browser-darwin-x86_64 = {
+      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-x64";
+      flake = false;
+    };
+    agent-browser-linux-aarch64 = {
+      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-arm64";
+      flake = false;
+    };
+    agent-browser-linux-x86_64 = {
+      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-x64";
       flake = false;
     };
 
