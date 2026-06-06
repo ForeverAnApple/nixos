@@ -31,7 +31,12 @@
           # The stdout payload (LESSOPEN/BATPIPE) is fine, so silence stderr.
           eval "$(batpipe 2>/dev/null)"
           [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
-          if [[ $- == *i* && -n "$SSH_CONNECTION" && -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
+          # tmux is the SSH multiplexer only where herdr isn't installed
+          # (service hosts). On workstations herdr owns this — see
+          # modules/home/desktop/herdr.nix.
+          if [[ $- == *i* && -n "$SSH_CONNECTION" && -z "$TMUX" ]] \
+             && ! command -v herdr >/dev/null 2>&1 \
+             && command -v tmux >/dev/null 2>&1; then
             tmux new-session -A -s "ssh-$USER@$(hostname)"
           fi
         '';

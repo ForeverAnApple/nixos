@@ -51,6 +51,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Agent multiplexer (tmux-like) — built from source, no upstream cache.
+    # Pinned to a release tag; bump the tag here to upgrade.
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.6.8";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
