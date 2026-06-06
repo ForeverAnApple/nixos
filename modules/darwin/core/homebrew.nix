@@ -41,6 +41,9 @@
           autoUpdate = true;
           cleanup = "uninstall";
           upgrade = true;
+          # Homebrew now refuses `brew bundle --cleanup` without an explicit
+          # force flag; nix-darwin doesn't pass one yet, so activation aborts.
+          extraFlags = [ "--force-cleanup" ];
         };
 
         # Third-party taps for brews/casks not on homebrew-core/cask.
