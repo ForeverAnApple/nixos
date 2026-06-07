@@ -7,6 +7,7 @@
       inputs,
       pkgs,
       lib,
+      config,
       ...
     }:
     {
@@ -33,17 +34,35 @@
         fi
       '';
 
+      # config.toml is left unmanaged on purpose. herdr's settings TUI persists
+      # changes (sound, theme, …) back into it, which fails against a read-only
+      # nix-store symlink. Seed a writable copy and re-seed only when this
+      # declarative content changes, so per-host runtime edits survive rebuilds.
+      #
       # Prefix-less nav that clears niri (Super) and kitty (Ctrl+Shift): Alt
       # for tabs, Ctrl+Alt for workspaces. Arrays keep the ctrl+b defaults
       # next to the direct chords. macOS maps left Option to Alt (kitty.nix).
-      xdg.configFile."herdr/config.toml".text = ''
-        [keys]
-        next_tab = ["prefix+n", "alt+]"]
-        previous_tab = ["prefix+p", "alt+["]
-        switch_tab = ["prefix+1..9", "alt+1..9"]
-        next_workspace = "ctrl+alt+]"
-        previous_workspace = "ctrl+alt+["
-        switch_workspace = ["prefix+shift+1..9", "ctrl+alt+1..9"]
-      '';
+      home.activation.herdrConfig =
+        let
+          seed = pkgs.writeText "herdr-config.toml" ''
+            [keys]
+            next_tab = ["prefix+n", "alt+]"]
+            previous_tab = ["prefix+p", "alt+["]
+            switch_tab = ["prefix+1..9", "alt+1..9"]
+            next_workspace = "ctrl+alt+]"
+            previous_workspace = "ctrl+alt+["
+            switch_workspace = ["prefix+shift+1..9", "ctrl+alt+1..9"]
+          '';
+          dir = "${config.xdg.configHome}/herdr";
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          dst="${dir}/config.toml"
+          stamp="${dir}/.config-seed"
+          if [ ! -e "$dst" ] || [ "$(cat "$stamp" 2>/dev/null)" != "${seed}" ]; then
+            run mkdir -p "${dir}"
+            run install -m644 "${seed}" "$dst"
+            run sh -c 'printf %s "${seed}" > "'"$stamp"'"'
+          fi
+        '';
     };
 }
