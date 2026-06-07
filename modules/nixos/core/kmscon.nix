@@ -13,18 +13,20 @@
         kmscon = {
           enable = true;
           useXkbConfig = true;
-          hwRender = true;
-          fonts = [
-            {
-              name = "Hack Nerd Font";
-              package = pkgs.nerd-fonts.hack;
-            }
-          ];
+          config = {
+            hwaccel = true;
+            font-name = "Hack Nerd Font";
+          };
         };
       };
 
+      # hwaccel renders the console via DRM; the new kmscon assert refuses it
+      # without a userspace GL stack.
+      hardware.graphics.enable = true;
+
       # Also add the pretty fonts
       fonts.packages = with pkgs; [
+        nerd-fonts.hack
         nerd-fonts.symbols-only
         powerline-symbols
         noto-fonts-color-emoji

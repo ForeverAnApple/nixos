@@ -8,6 +8,7 @@
         program = "${pkgs.writeShellScript "update" ''
           set -euo pipefail
           cd "$HOME/nixos"
+          nix flake update
           host="$(${pkgs.coreutils}/bin/uname -n)"
           kernel="$(${pkgs.coreutils}/bin/uname -s)"
 

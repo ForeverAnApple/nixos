@@ -14,7 +14,7 @@
       # Build against HA's bundled Python so the version matches the
       # interpreter that loads the custom component (HA tracks ahead of
       # the default python3 in nixpkgs).
-      hassPy = pkgs.home-assistant.python.pkgs;
+      hassPy = pkgs.home-assistant.python3Packages;
       wyzeapy = hassPy.buildPythonPackage rec {
         pname = "wyzeapy";
         version = "0.5.31";
