@@ -13,6 +13,9 @@
         host = "catjailer catjailer.* sisyphus sisyphus.* swordholder swordholder.*";
         port = 22022;
         user = "faa";
+        # Forward the herdr marker (only set inside a herdr pane) so the
+        # remote skips its auto-start instead of nesting herdr in the pane.
+        sendEnv = [ "HERDR_ENV" ];
       };
       settings.dreameater = {
         hostname = "dreameater.davec.xyz";

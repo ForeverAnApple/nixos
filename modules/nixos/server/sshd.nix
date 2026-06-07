@@ -56,6 +56,10 @@
           ClientAliveInterval = 300;
           ClientAliveCountMax = 2;
           UseDns = false;
+
+          # Let a herdr pane forward its marker (ssh.nix sendEnv) so sshing in
+          # from inside herdr lands in a raw shell instead of nesting herdr.
+          AcceptEnv = [ "HERDR_ENV" ];
         };
       };
     };

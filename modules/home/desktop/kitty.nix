@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.kitty =
-    { lib, ... }:
+    { lib, pkgs, ... }:
     {
       home.sessionVariables = {
         TERMINAL = "kitty";
@@ -17,6 +17,12 @@
           hide_window_decorations = "yes";
           tab_title_template = "{tab.active_wd.rsplit('/', 1)[-1]}";
           strip_trailing_spaces = "smart";
+        }
+        # macOS sends Option as a compose key by default, which would swallow
+        # herdr's Alt/Ctrl+Alt nav chords. Map left Option to Alt; right
+        # Option still types special characters. No-op on Linux.
+        // lib.optionalAttrs pkgs.stdenv.isDarwin {
+          macos_option_as_alt = "left";
         };
         # The default new_window / new_tab / new_os_window actions ignore
         # the active shell's cwd and reuse kitty's launch directory; the
