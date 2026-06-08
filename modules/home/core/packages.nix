@@ -18,7 +18,6 @@
           # stopped tracking the GPLv3 upstream — no -A/-X/--info=progress2.
           # Pull modern rsync into PATH for every host.
           rsync
-          silver-searcher
           tldx
           tokei
           wget
