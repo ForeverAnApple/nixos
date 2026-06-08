@@ -8,7 +8,6 @@
     fuzzel
     hypridle
     hyprlock
-    hyprpaper
     kitty
     mako
     nautilus
@@ -16,6 +15,7 @@
     obsidian
     screencast
     spotifyPlayer
+    swaybg
     waybar
     wlsunset
     yazi
