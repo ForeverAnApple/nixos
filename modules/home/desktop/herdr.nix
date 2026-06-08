@@ -17,13 +17,15 @@
       # surfaces tmux used to own. HERDR_ENV=1 marks a pane already inside
       # herdr; it rides SSH via sendEnv (see ssh.nix) so sshing from a herdr
       # pane into another workstation gets a raw shell instead of nesting
-      # herdr. $TMUX means a manual tmux we shouldn't hijack.
+      # herdr. $TMUX means a manual tmux we shouldn't hijack;
+      # $HERDR_NO_AUTOSTART opts a window out (the niri quick-access dropdown
+      # sets it, see niri/config.kdl).
       #
       # herdr sizes one shared runtime to the last-active client and has no
       # per-client size option, so a narrow client (phone) reflows every wide
       # client on the same session. Route narrow clients to their own session.
       programs.zsh.initContent = lib.mkAfter ''
-        if [[ $- == *i* && -z "$HERDR_ENV" && -z "$TMUX" ]] \
+        if [[ $- == *i* && -z "$HERDR_ENV" && -z "$TMUX" && -z "$HERDR_NO_AUTOSTART" ]] \
            && [[ -n "$KITTY_WINDOW_ID" || -n "$SSH_CONNECTION" ]] \
            && command -v herdr >/dev/null 2>&1; then
           if (( ''${COLUMNS:-$(tput cols 2>/dev/null || echo 999)} < 100 )); then
