@@ -43,6 +43,8 @@
           rev = "0.1.36";
           hash = "sha256-4i5Ne3LYV7DXn6F6e5MCVZhIdDYR7fe3tT2GeSmYb/k=";
         };
+        # Second patch: HA 2026.6 made color_temperature_to_rgb return floats,
+        # but color_rgb_to_hex formats with :02x and rejects floats. Round first.
         postPatch = ''
           substituteInPlace custom_components/wyzeapi/light.py \
             --replace-fail \
@@ -50,7 +52,10 @@
               'self._local_control = bool(config_entry.options.get(BULB_LOCAL_CONTROL) and self._bulb.ip)' \
             --replace-fail \
               'self._local_control = self._config_entry.options.get(BULB_LOCAL_CONTROL)' \
-              'self._local_control = bool(self._config_entry.options.get(BULB_LOCAL_CONTROL) and self._bulb.ip)'
+              'self._local_control = bool(self._config_entry.options.get(BULB_LOCAL_CONTROL) and self._bulb.ip)' \
+            --replace-fail \
+              '*color_util.color_temperature_to_rgb(color_temp)' \
+              '*(round(c) for c in color_util.color_temperature_to_rgb(color_temp))'
         '';
         dependencies = [ wyzeapy ];
       };
