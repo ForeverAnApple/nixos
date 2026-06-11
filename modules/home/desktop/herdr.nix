@@ -29,12 +29,13 @@
       # shell. Gate on a live herdr *client* process, not the server daemon
       # (which persists after every client exits). The client command is bare
       # `herdr`; `herdr server` is the daemon, so drop the server line first.
+      # `command grep` bypasses the interactive grep=batgrep alias (zsh.nix).
       programs.zsh.initContent = lib.mkAfter ''
         if [[ $- == *i* && -z "$HERDR_ENV" && -z "$TMUX" && -z "$HERDR_NO_AUTOSTART" ]] \
            && [[ -n "$KITTY_WINDOW_ID" || -n "$SSH_CONNECTION" ]] \
            && command -v herdr >/dev/null 2>&1; then
           if [[ -n "$KITTY_WINDOW_ID" ]] \
-             && ps -axo command= 2>/dev/null | grep -v ' server' | grep -Eq '^(\S*/)?[h]erdr( |$)'; then
+             && ps -axo command= 2>/dev/null | command grep -v ' server' | command grep -Eq '^(\S*/)?[h]erdr( |$)'; then
             :
           elif (( ''${COLUMNS:-$(tput cols 2>/dev/null || echo 999)} < 100 )); then
             HERDR_SESSION=mobile herdr
