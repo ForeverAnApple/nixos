@@ -9,6 +9,7 @@
       imports = with config.flake.modules.homeManager; [
         dev
         kitty
+        spotifyPlayer
       ];
 
       # The shared kitty module sets font_size = 10, which looks fine on the

@@ -4,7 +4,7 @@
     {
       home.packages = [
         (pkgs.spotify-player.override {
-          withAudioBackend = "pulseaudio";
+          withAudioBackend = if pkgs.stdenv.isDarwin then "rodio" else "pulseaudio";
         })
       ];
 
