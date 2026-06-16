@@ -11,6 +11,7 @@
       # Max quality config — requires Spotify Premium
       xdg.configFile."spotify-player/app.toml".text = ''
         enable_streaming = "Always"
+        enable_audio_visualization = true
         enable_media_control = true
         enable_notify = true
         enable_cover_image_cache = true
