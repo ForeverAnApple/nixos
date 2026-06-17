@@ -9,7 +9,6 @@
     { pkgs, ... }:
     {
       home.packages = [
-        pkgs.btop
         pkgs.terminal-notifier
       ];
     };

@@ -10,9 +10,6 @@
 
         # Networking
         dig
-
-        # System monitoring
-        btop
       ];
 
       programs = {
