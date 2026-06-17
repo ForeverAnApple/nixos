@@ -18,6 +18,11 @@
       services.headscale.settings = {
         server_url = "https://headscale.davec.xyz";
 
+        policy = {
+          mode = "file";
+          path = "${./headscale-policy.hujson}";
+        };
+
         prefixes = {
           v4 = "100.64.0.0/10";
           v6 = "fd7a:115c:a1e0::/48";

@@ -1,0 +1,30 @@
+{
+  // Lateral-movement containment.
+  //
+  // Once any ACL loads, headscale default-denies every node-to-node flow
+  // that isn't matched below. sisyphus and swordholder appear in NO `src`
+  // rule, so they can RECEIVE connections (stateful replies still work) but
+  // can never INITIATE one — no SSH into each other, none back into the
+  // admin/human hosts, nothing. A compromise on either stays put.
+  //
+  // catjailer is the deploy/build origin (it SSHes the whole fleet and runs
+  // remote builds), so it lives with the human hosts in group:admins.
+
+  "groups": {
+    "group:admins": [
+      "catjailer@",
+      "wallfacer@",
+      "fishspeaker@",
+      "miniwisher@",
+      "riceball@",
+    ],
+  },
+
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["group:admins"],
+      "dst": ["*:*"],
+    },
+  ],
+}
