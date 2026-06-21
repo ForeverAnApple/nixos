@@ -38,9 +38,6 @@ in
     { pkgs, ... }:
     {
       home.packages = [ (packageFor pkgs) ];
-      # Surface the default in the shell too, so users can `echo $AGENT_…` to
-      # see what their wrapper picked, and override it ad-hoc by re-exporting.
-      home.sessionVariables.AGENT_BROWSER_EXECUTABLE_PATH = chromeBinFor pkgs;
     };
 
   # Expose the package at the flake level so `nix build .#agent-browser`
