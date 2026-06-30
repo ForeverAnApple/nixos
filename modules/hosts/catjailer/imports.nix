@@ -8,6 +8,7 @@
     nvidia
     gaming
     obs
+    sunshine
 
     sshd
     fail2ban

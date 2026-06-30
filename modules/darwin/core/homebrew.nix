@@ -87,6 +87,7 @@
           "font-iosevka-aile" # used by obsidian; no clean nixpkgs equivalent
           "macfuse"
           "malwarebytes"
+          "moonlight"
           "obs"
           "raspberry-pi-imager"
           "sf-symbols"
