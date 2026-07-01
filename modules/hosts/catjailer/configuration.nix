@@ -100,7 +100,10 @@
               rc=1
             fi
 
-            exit $rc
+            # Best-effort cosmetic: never fail activation. A non-zero exit here
+            # aborts `nh os switch` before it writes the boot generation.
+            [ "$rc" -ne 0 ] && echo "rgb-quiet: finished with warnings" >&2
+            exit 0
           '';
         };
       };
