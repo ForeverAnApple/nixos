@@ -23,6 +23,11 @@
 
         # No openFirewall: the ports stay off enp4s0 and are reachable only
         # over tailscale0 (trusted interface). Remote desktop is tailnet-only.
+
+        # The web UI is reached over the tailnet, not localhost, so its CSRF
+        # guard rejects the pairing POST unless the tailnet origins are trusted.
+        settings.csrf_allowed_origins =
+          "https://100.64.0.7:47990,https://[fd7a:115c:a1e0::7]:47990,https://catjailer:47990,https://catjailer.jura.moe:47990";
       };
 
       # Sunshine injects client input through /dev/uinput; without group access
