@@ -30,25 +30,16 @@
           "https://100.64.0.7:47990,https://[fd7a:115c:a1e0::7]:47990,https://catjailer:47990,https://catjailer.jura.moe:47990";
 
         # Declarative apps: this replaces the web-UI-managed apps.json, so app
-        # edits must happen here, not in the UI. "Low Res Desktop" flips the
-        # physical DP-1 to 1080p on connect and restores 4K on disconnect via
-        # niri IPC (xrandr is X11 and does nothing under niri).
+        # edits must happen here, not in the UI. No app mutates the live output
+        # mode — runtime mode-flips race niri's auto-scale and corrupt the
+        # output, which thrashes the capture. For a lower-res stream, set the
+        # resolution in the Moonlight client; Sunshine scales the 4K capture.
         applications = {
           env.PATH = "$(PATH):$(HOME)/.local/bin";
           apps = [
             {
               name = "Desktop";
               image-path = "desktop.png";
-            }
-            {
-              name = "Low Res Desktop";
-              image-path = "desktop.png";
-              prep-cmd = [
-                {
-                  do = "niri msg output DP-1 mode 1920x1080@60.000";
-                  undo = "niri msg output DP-1 mode 3840x2160@59.997";
-                }
-              ];
             }
             {
               name = "Steam Big Picture";
@@ -64,6 +55,10 @@
           ];
         };
       };
+
+      # Backstop: a capture reinit loop leaks FDs fast; the default 1024 soft
+      # limit exhausts in seconds and drops the client. Give it headroom.
+      systemd.user.services.sunshine.serviceConfig.LimitNOFILE = 65536;
 
       # Sunshine injects client input through /dev/uinput; without group access
       # the video streams but mouse/keyboard do nothing.
