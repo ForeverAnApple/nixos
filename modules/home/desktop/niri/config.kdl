@@ -109,6 +109,14 @@ input {
     position x=1280 y=0
 }
 
+// Pin DP-1 so its scale can't drift. Sunshine's capture thrashes if the
+// output ever advertises an inconsistent mode/scale (e.g. after a runtime
+// mode change), so the mode+scale are fixed here rather than left to auto.
+output "DP-1" {
+    mode "3840x2160@59.997"
+    scale 1.25
+}
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
