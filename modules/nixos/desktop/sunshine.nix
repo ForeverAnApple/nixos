@@ -28,6 +28,41 @@
         # guard rejects the pairing POST unless the tailnet origins are trusted.
         settings.csrf_allowed_origins =
           "https://100.64.0.7:47990,https://[fd7a:115c:a1e0::7]:47990,https://catjailer:47990,https://catjailer.jura.moe:47990";
+
+        # Declarative apps: this replaces the web-UI-managed apps.json, so app
+        # edits must happen here, not in the UI. "Low Res Desktop" flips the
+        # physical DP-1 to 1080p on connect and restores 4K on disconnect via
+        # niri IPC (xrandr is X11 and does nothing under niri).
+        applications = {
+          env.PATH = "$(PATH):$(HOME)/.local/bin";
+          apps = [
+            {
+              name = "Desktop";
+              image-path = "desktop.png";
+            }
+            {
+              name = "Low Res Desktop";
+              image-path = "desktop.png";
+              prep-cmd = [
+                {
+                  do = "niri msg output DP-1 mode 1920x1080@60.000";
+                  undo = "niri msg output DP-1 mode 3840x2160@59.997";
+                }
+              ];
+            }
+            {
+              name = "Steam Big Picture";
+              image-path = "steam.png";
+              detached = [ "setsid steam steam://open/bigpicture" ];
+              prep-cmd = [
+                {
+                  do = "";
+                  undo = "setsid steam steam://close/bigpicture";
+                }
+              ];
+            }
+          ];
+        };
       };
 
       # Sunshine injects client input through /dev/uinput; without group access
