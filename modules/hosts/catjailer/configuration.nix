@@ -22,6 +22,8 @@
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
+      nixpkgs.config.permittedInsecurePackages = [ "pnpm-10.29.2" ];
+
       # Early KMS — avoids the text-mode flash at boot on display-attached GPUs.
       boot.initrd.kernelModules = [
         "nvidia"
@@ -32,7 +34,10 @@
 
       environment.systemPackages = [
         pkgs.alcom
-        pkgs.vesktop
+        # withSystemVencord pins Vencord to the reproducible nixpkgs build so it
+        # can't silently rot against Discord's rolling web client; it forces a
+        # source build of vesktop, which needs the (build-time only) pnpm below.
+        (pkgs.vesktop.override { withSystemVencord = true; })
         pkgs.unityhub
         pkgs.vrcx
         pkgs.pwvucontrol
