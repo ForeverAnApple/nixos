@@ -31,6 +31,32 @@
         ExternalSizeMax = "256M";
       };
 
+      # Delays NVIDIA bug 5762513 (BAR1 mapping leak in the 580-610 drivers): stop
+      # niri pooling freed GPU buffers so BAR1 fills far slower, pushing out the
+      # screencast crash ("Failed to map NvKmsKapiMemory"). Mitigation, not a cure.
+      environment.etc."nvidia/nvidia-application-profiles-rc.d/50-niri-limit-buffer-pool.json".text = builtins.toJSON {
+        rules = [
+          {
+            pattern = {
+              feature = "procname";
+              matches = "niri";
+            };
+            profile = "LimitFreeBufferPool";
+          }
+        ];
+        profiles = [
+          {
+            name = "LimitFreeBufferPool";
+            settings = [
+              {
+                key = "GLVidHeapReuseRatio";
+                value = 0;
+              }
+            ];
+          }
+        ];
+      };
+
       # Early KMS — avoids the text-mode flash at boot on display-attached GPUs.
       boot.initrd.kernelModules = [
         "nvidia"
