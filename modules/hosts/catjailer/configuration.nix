@@ -24,6 +24,13 @@
 
       nixpkgs.config.permittedInsecurePackages = [ "pnpm-10.29.2" ];
 
+      # Cap core dumps: a multi-GB crash core through LUKS stalls the disk for
+      # minutes. Both keys needed — the bound is MIN(rlimit, MAX(Process, External)).
+      systemd.coredump.settings.Coredump = {
+        ProcessSizeMax = "256M";
+        ExternalSizeMax = "256M";
+      };
+
       # Early KMS — avoids the text-mode flash at boot on display-attached GPUs.
       boot.initrd.kernelModules = [
         "nvidia"
