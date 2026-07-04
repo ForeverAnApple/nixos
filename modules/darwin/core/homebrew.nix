@@ -48,7 +48,7 @@
 
         # Third-party taps for brews/casks not on homebrew-core/cask.
         taps = [
-          "felixkratz/formulae" # borders, sketchybar
+          "felixkratz/formulae" # sketchybar
           "homebrew/services" # `brew services` for sketchybar daemon
           "jackielii/tap" # skhd-zig
           "nikitabobko/tap" # aerospace cask
@@ -56,7 +56,6 @@
 
         # CLIs not in nixpkgs (or whose brew build we track upstream).
         brews = [
-          "felixkratz/formulae/borders"
           "felixkratz/formulae/sketchybar"
           "pnpm"
         ];
