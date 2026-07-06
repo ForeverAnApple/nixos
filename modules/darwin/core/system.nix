@@ -36,6 +36,13 @@
         InitialKeyRepeat = 15;
         KeyRepeat = 2;
       };
+
+      # macOS dispatches ⌘H/⌥⌘H to the app menu before Moonlight's SDL window
+      # can forward them to the stream; rebind the menu items out of the way.
+      CustomUserPreferences."com.moonlight-stream.Moonlight".NSUserKeyEquivalents = {
+        "Hide Moonlight" = "@~^h";
+        "Hide Others" = "@~^$h";
+      };
     };
   };
 }
