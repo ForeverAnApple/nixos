@@ -32,6 +32,9 @@
     services.fail2ban.jails.anki-sync.settings = {
       enabled = true;
       filter = "anki-sync";
+      # NixOS defaults fail2ban to the journal backend; the caddy access
+      # log is a file.
+      backend = "auto";
       logpath = "/var/log/caddy/access-anki.jura.moe.log";
       maxretry = 5;
     };
