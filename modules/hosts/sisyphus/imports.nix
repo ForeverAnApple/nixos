@@ -10,5 +10,6 @@
     derper
     caddy
     headscale
+    anki-sync-server
   ];
 }

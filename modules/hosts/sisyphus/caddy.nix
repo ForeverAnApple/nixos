@@ -7,6 +7,12 @@
       "derp.davec.xyz".extraConfig = ''
         reverse_proxy 127.0.0.1:8010
       '';
+      # :443 here is open to the internet; only tailnet sources reach anki.
+      "anki.jura.moe".extraConfig = ''
+        @external not remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
+        abort @external
+        reverse_proxy 127.0.0.1:27701
+      '';
     };
 
     networking.firewall.allowedTCPPorts = [ 443 ];

@@ -64,6 +64,11 @@
               type = "A";
               value = "100.64.0.8";
             }
+            {
+              name = "anki.jura.moe";
+              type = "A";
+              value = "100.64.0.5";
+            }
           ];
         };
 
