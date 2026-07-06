@@ -38,6 +38,9 @@
           ExecStartPre = [
             "${pkgs.bash}/bin/bash -c 'until [ \"$(${pkgs.docker}/bin/docker inspect -f {{.State.Health.Status}} gluetun 2>/dev/null)\" = \"healthy\" ]; do sleep 2; done'"
             "-${pkgs.docker}/bin/docker rm -f seeder"
+            # Container's random hostname changes each recreation; qBittorrent's QLockFile then
+            # can't prove the old lock is stale and refuses to start. Clear it before every run.
+            "-${pkgs.coreutils}/bin/rm -f /var/lib/qbittorrent/qBittorrent/lockfile /var/lib/qbittorrent/qBittorrent/ipc-socket"
           ];
           ExecStart = ''
             ${pkgs.docker}/bin/docker run \
