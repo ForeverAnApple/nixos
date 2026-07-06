@@ -20,8 +20,7 @@
         # No openFirewall: ports stay tailnet-only, off enp4s0.
 
         # Web UI is reached over the tailnet, so CSRF needs those origins trusted.
-        settings.csrf_allowed_origins =
-          "https://100.64.0.7:47990,https://[fd7a:115c:a1e0::7]:47990,https://catjailer:47990,https://catjailer.jura.moe:47990";
+        settings.csrf_allowed_origins = "https://100.64.0.7:47990,https://[fd7a:115c:a1e0::7]:47990,https://catjailer:47990,https://catjailer.jura.moe:47990";
 
         # Apps are declarative here, not in the web UI. "Low Res Desktop" flips
         # DP-1 to native 1080p, restoring 4K on disconnect. Only ever change the

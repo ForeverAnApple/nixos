@@ -11,7 +11,14 @@
       nhCmd = if isDarwin then "nh darwin" else "nh os";
       nhUp = pkgs.writeShellScriptBin "nh-up" ''
         export NH_CMD="${nhCmd}"
-        export PATH="${lib.makeBinPath [ pkgs.gnused pkgs.gnugrep pkgs.coreutils pkgs.git ]}:$PATH"
+        export PATH="${
+          lib.makeBinPath [
+            pkgs.gnused
+            pkgs.gnugrep
+            pkgs.coreutils
+            pkgs.git
+          ]
+        }:$PATH"
         exec ${pkgs.bash}/bin/bash ${./nh-up.sh} "$@"
       '';
     in

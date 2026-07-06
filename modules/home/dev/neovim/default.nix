@@ -13,7 +13,10 @@
 
         plugins = with pkgs.vimPlugins; [
           catppuccin-nvim
-          { plugin = blink-cmp; optional = true; }
+          {
+            plugin = blink-cmp;
+            optional = true;
+          }
           {
             plugin = nvim-treesitter.withPlugins (p: [
               p.vim
@@ -35,15 +38,42 @@
             ]);
             optional = true;
           }
-          { plugin = fzf-lua; optional = true; }
-          { plugin = conform-nvim; optional = true; }
-          { plugin = gitsigns-nvim; optional = true; }
-          { plugin = crates-nvim; optional = true; }
-          { plugin = snacks-nvim; optional = true; }
-          { plugin = render-markdown-nvim; optional = true; }
-          { plugin = plenary-nvim; optional = true; }
-          { plugin = claude-code-nvim; optional = true; }
-          { plugin = opencode-nvim; optional = true; }
+          {
+            plugin = fzf-lua;
+            optional = true;
+          }
+          {
+            plugin = conform-nvim;
+            optional = true;
+          }
+          {
+            plugin = gitsigns-nvim;
+            optional = true;
+          }
+          {
+            plugin = crates-nvim;
+            optional = true;
+          }
+          {
+            plugin = snacks-nvim;
+            optional = true;
+          }
+          {
+            plugin = render-markdown-nvim;
+            optional = true;
+          }
+          {
+            plugin = plenary-nvim;
+            optional = true;
+          }
+          {
+            plugin = claude-code-nvim;
+            optional = true;
+          }
+          {
+            plugin = opencode-nvim;
+            optional = true;
+          }
         ];
 
         extraPackages = with pkgs; [
