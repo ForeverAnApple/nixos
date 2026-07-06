@@ -7,3 +7,8 @@ cmd - return : cd ~ && kitten quick-access-terminal
 
 # Swallow cmd-h so macOS can't hide the focused window out from under aerospace.
 cmd - h : echo 'nope'
+
+# Streaming clients need every key forwarded to the remote host.
+.blacklist [
+    "moonlight"
+]
