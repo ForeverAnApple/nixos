@@ -9,6 +9,9 @@
 
       programs.steam = {
         enable = true;
+        package = pkgs.steam.override {
+          extraPkgs = pkgs: [ pkgs.gamescope ];
+        };
         extraCompatPackages = with pkgs; [ proton-ge-bin ];
         extraPackages = with pkgs; [
           gst_all_1.gstreamer
