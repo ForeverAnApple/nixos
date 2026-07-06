@@ -63,7 +63,9 @@
         # GUI apps. macOS .app bundles install cleaner via brew cask than
         # nixpkgs darwin GUI builds in most cases.
         casks = [
-          "aerospace"
+          # Fully qualified: bundle cleanup rewrites the trust store from the
+          # Brewfile, and only qualified names produce trust entries.
+          "nikitabobko/tap/aerospace"
           "android-platform-tools"
           "anki"
           "antigravity"
