@@ -5,5 +5,6 @@
     homebrew
     system-defaults
     fonts
+    power-logger
   ];
 }
