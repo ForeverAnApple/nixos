@@ -43,6 +43,11 @@
           hide_on_focus_loss = true;
           background_opacity = 0.85;
           lines = 45;
+          # The dropdown is a scratch shell, never a herdr host: its persistent
+          # singleton client would otherwise make every main kitty tab see a
+          # live client and skip its own herdr (herdr.nix). Tags the shell
+          # regardless of launcher (skhd, niri).
+          kitty_override = "env=HERDR_NO_AUTOSTART=1";
         };
       };
     };

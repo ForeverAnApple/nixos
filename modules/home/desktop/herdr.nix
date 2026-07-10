@@ -18,8 +18,8 @@
       # herdr; it rides SSH via sendEnv (see ssh.nix) so sshing from a herdr
       # pane into another workstation gets a raw shell instead of nesting
       # herdr. $TMUX means a manual tmux we shouldn't hijack;
-      # $HERDR_NO_AUTOSTART opts a window out (the niri quick-access dropdown
-      # sets it, see niri/config.kdl).
+      # $HERDR_NO_AUTOSTART opts a window out (the kitty quick-access dropdown
+      # sets it via kitty_override, see kitty.nix).
       #
       # herdr sizes one shared runtime to the last-active client and has no
       # per-client size option, so a narrow client (phone) reflows every wide

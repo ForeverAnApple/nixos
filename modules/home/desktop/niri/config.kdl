@@ -285,7 +285,7 @@ spawn-at-startup "waybar"
 spawn-at-startup "mako"
 
 // Start a kitty at startup to make opening kitty faster overall
-spawn-at-startup "sh" "-c" "HERDR_NO_AUTOSTART=1 exec kitten quick-access-terminal -o start_as_hidden=yes"
+spawn-at-startup "kitten" "quick-access-terminal"
 spawn-at-startup "kitty" "--single-instance" "--start-as" "hidden"
 //spawn-at-startup "kitty" "—class" "HeadlessKitty" "—single-instance" "—listen-on" "unix:/tmp/kitty-socket" "tail" "-f" "/dev/null"
 
