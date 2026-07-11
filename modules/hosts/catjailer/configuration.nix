@@ -26,9 +26,11 @@
 
       # Cap core dumps: a multi-GB crash core through LUKS stalls the disk for
       # minutes. Both keys needed — the bound is MIN(rlimit, MAX(Process, External)).
+      # MaxUse bounds the pool; per-core caps alone let crash-loops fill the disk.
       systemd.coredump.settings.Coredump = {
         ProcessSizeMax = "256M";
         ExternalSizeMax = "256M";
+        MaxUse = "2G";
       };
 
       # Delays NVIDIA bug 5762513 (BAR1 mapping leak in the 580-610 drivers): stop

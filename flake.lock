@@ -51,11 +51,11 @@
     "agent-browser-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1782493662,
-        "narHash": "sha256-uCLzNQ0NAeg1TtA6tcBhTu5VTyjkumsyiEpAhYLPQD0=",
+        "lastModified": 1783520190,
+        "narHash": "sha256-2x5/Nc5KCrgk9dYXur7y9Y9z4JzcJVW4WSYWarcL61k=",
         "owner": "vercel-labs",
         "repo": "agent-browser",
-        "rev": "ed2e10598c9064aecfaeb7cf21b540684db4be2c",
+        "rev": "afae698a51242166170b6fe4809dd57fe9f75798",
         "type": "github"
       },
       "original": {
@@ -141,8 +141,8 @@
     "codex-darwin-aarch64": {
       "flake": false,
       "locked": {
-        "lastModified": 1782867406,
-        "narHash": "sha256-VX0HP2FXUo281NBdciw+Ewf8m/Tl8tY906ccTMogChI=",
+        "lastModified": 1783636851,
+        "narHash": "sha256-gJuEv5TS7u8mhia6B3uS5S6BEKnMTqLQpEwAJP1mQMQ=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz"
       },
@@ -154,8 +154,8 @@
     "codex-darwin-x86_64": {
       "flake": false,
       "locked": {
-        "lastModified": 1782867406,
-        "narHash": "sha256-CvLYDyTfH6JxRAtUPaBdw47CDI2q8UDk/PQbEZc0Fg8=",
+        "lastModified": 1783636851,
+        "narHash": "sha256-C9Ub9NAG6m4V5an0Pn866XnGj4rrBq8q3CcUHwh3sdM=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz"
       },
