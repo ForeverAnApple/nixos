@@ -9,6 +9,7 @@
     }:
     let
       seed = (pkgs.formats.toml { }).generate "codex-config.toml" {
+        model = "gpt-5.6-sol";
         approval_policy = "on-request";
         check_for_update_on_startup = false;
         analytics.enabled = false;

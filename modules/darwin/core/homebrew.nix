@@ -43,7 +43,10 @@
           upgrade = true;
           # Homebrew now refuses `brew bundle --cleanup` without an explicit
           # force flag; nix-darwin doesn't pass one yet, so activation aborts.
-          extraFlags = [ "--force-cleanup" ];
+          extraFlags = [
+            "--force-cleanup"
+            "--verbose"
+          ];
         };
 
         # Third-party taps for brews/casks not on homebrew-core/cask.
@@ -57,6 +60,7 @@
         # CLIs not in nixpkgs (or whose brew build we track upstream).
         brews = [
           "felixkratz/formulae/sketchybar"
+          "mpv"
           "pnpm"
         ];
 
@@ -92,6 +96,7 @@
           "obs"
           "raspberry-pi-imager"
           "sf-symbols"
+          "spotify"
           "steam"
           "tailscale-app" # menu bar GUI (was renamed from `tailscale`; CLI bundled in this cask)
           "teamviewer"

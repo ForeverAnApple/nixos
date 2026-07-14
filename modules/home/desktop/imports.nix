@@ -3,7 +3,6 @@
   flake.modules.homeManager.desktop.imports = with config.flake.modules.homeManager; [
     anki
     imv
-    mpv
     firefox
     fuzzel
     hypridle
@@ -14,7 +13,6 @@
     niri
     obsidian
     screencast
-    spotifyPlayer
     swaybg
     waybar
     wlsunset

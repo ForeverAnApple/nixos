@@ -9,6 +9,7 @@
     let
       inherit (pkgs.stdenv) isDarwin;
       nhCmd = if isDarwin then "nh darwin" else "nh os";
+      systemPath = lib.optionalString isDarwin ":/usr/bin:/bin:/usr/sbin:/sbin";
       nhUp = pkgs.writeShellScriptBin "nh-up" ''
         export NH_CMD="${nhCmd}"
         export PATH="${
@@ -16,9 +17,14 @@
             pkgs.gnused
             pkgs.gnugrep
             pkgs.coreutils
+            pkgs.diffutils
             pkgs.git
+            pkgs.jq
+            pkgs.nh
+            pkgs.nix
+            pkgs.perl
           ]
-        }:$PATH"
+        }${systemPath}"
         exec ${pkgs.bash}/bin/bash ${./nh-up.sh} "$@"
       '';
     in
