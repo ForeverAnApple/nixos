@@ -51,8 +51,9 @@
       # declarative content changes, so per-host runtime edits survive rebuilds.
       #
       # Prefix-less nav that clears niri (Super) and kitty (Ctrl+Shift): Alt
-      # for tabs, Ctrl+Alt for workspaces. Arrays keep the ctrl+b defaults
-      # next to the direct chords. macOS maps left Option to Alt (kitty.nix).
+      # for tabs, Alt+Shift for agents, Ctrl+Alt for workspaces. Arrays keep
+      # the ctrl+b defaults next to the direct chords. macOS maps left Option
+      # to Alt (kitty.nix).
       home.activation.herdrConfig =
         let
           seed = pkgs.writeText "herdr-config.toml" ''
@@ -60,6 +61,9 @@
             next_tab = ["prefix+n", "alt+]"]
             previous_tab = ["prefix+p", "alt+["]
             switch_tab = ["prefix+1..9", "alt+1..9"]
+            next_agent = "alt+shift+]"
+            previous_agent = "alt+shift+["
+            focus_agent = "alt+shift+1..9"
             next_workspace = "ctrl+alt+]"
             previous_workspace = "ctrl+alt+["
             switch_workspace = ["prefix+shift+1..9", "ctrl+alt+1..9"]
