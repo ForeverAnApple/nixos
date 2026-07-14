@@ -5,7 +5,7 @@
     system.primaryUser = "daaaa";
     system.stateVersion = 6;
 
-    homebrew.casks = [ "chatgpt" ];
+    homebrew.casks = [ "codex-app" ];
 
     # home-manager's nixos integration reads users.users.<name>.home to seed
     # home.homeDirectory; nix-darwin doesn't auto-derive it from the username,
