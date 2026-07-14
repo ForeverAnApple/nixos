@@ -58,6 +58,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    open-interpreter-darwin-aarch64 = {
+      url = "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v0.0.23/open-interpreter-package-aarch64-apple-darwin.tar.gz";
+      flake = false;
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";

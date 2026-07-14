@@ -460,6 +460,19 @@
         "type": "github"
       }
     },
+    "open-interpreter-darwin-aarch64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784053416,
+        "narHash": "sha256-ijPePQvXHtoMvxhMh5HMr+kwGWtyNI8gxfVG3xjxbik=",
+        "type": "tarball",
+        "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v0.0.23/open-interpreter-package-aarch64-apple-darwin.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v0.0.23/open-interpreter-package-aarch64-apple-darwin.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "agent-browser-darwin-aarch64": "agent-browser-darwin-aarch64",
@@ -482,6 +495,7 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable-small": "nixpkgs-unstable-small",
+        "open-interpreter-darwin-aarch64": "open-interpreter-darwin-aarch64",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2"
       }

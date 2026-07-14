@@ -1,10 +1,31 @@
 { config, ... }:
 {
   flake.modules.homeManager."homes/wallfacer" =
-    { lib, pkgs, ... }:
+    {
+      inputs,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      open-interpreter = pkgs.symlinkJoin {
+        name = "open-interpreter-0.0.23";
+        paths = [ inputs.open-interpreter-darwin-aarch64 ];
+        meta = {
+          description = "Coding agent optimized for low-cost models";
+          homepage = "https://www.openinterpreter.com";
+          license = lib.licenses.asl20;
+          mainProgram = "interpreter";
+          platforms = [ "aarch64-darwin" ];
+          sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
+        };
+      };
+    in
     {
       home.username = "daaaa";
       home.homeDirectory = "/Users/daaaa";
+
+      home.packages = [ open-interpreter ];
 
       imports = with config.flake.modules.homeManager; [
         dev
