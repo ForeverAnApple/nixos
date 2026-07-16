@@ -19,7 +19,8 @@
               -c=/var/lib/derper/derper.key \
               -stun \
               -stun-port=3478 \
-              -verify-clients
+              -verify-client-url=https://headscale.davec.xyz/verify \
+              -verify-client-url-fail-open=false
           '';
           DynamicUser = true;
           StateDirectory = "derper";
