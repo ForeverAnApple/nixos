@@ -1,8 +1,8 @@
 {
   flake.modules.nixos."hosts/catjailer" =
     let
-      # Local DNS interception breaks Caddy's TXT propagation check; let
-      # LE's own resolver validate at the authoritative NS instead.
+      # Skip Caddy's own TXT propagation check; LE validates at the
+      # authoritative NS regardless.
       tlsBlock = ''
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}

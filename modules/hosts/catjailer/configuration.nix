@@ -22,10 +22,14 @@
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
-      nixpkgs.config.permittedInsecurePackages = [ "pnpm-10.29.2" ];
+      # vesktop pins electron_40; drop when nixpkgs bumps it.
+      nixpkgs.config.permittedInsecurePackages = [
+        "pnpm-10.29.2"
+        "electron-40.10.5"
+      ];
 
-      # Cap core dumps: a multi-GB crash core through LUKS stalls the disk for
-      # minutes. Both keys needed — the bound is MIN(rlimit, MAX(Process, External)).
+      # Cap core dumps: multi-GB crash cores stall the disk for minutes. Both
+      # keys needed — the bound is MIN(rlimit, MAX(Process, External)).
       # MaxUse bounds the pool; per-core caps alone let crash-loops fill the disk.
       systemd.coredump.settings.Coredump = {
         ProcessSizeMax = "256M";
@@ -33,9 +37,8 @@
         MaxUse = "2G";
       };
 
-      # Delays NVIDIA bug 5762513 (BAR1 mapping leak in the 580-610 drivers): stop
-      # niri pooling freed GPU buffers so BAR1 fills far slower, pushing out the
-      # screencast crash ("Failed to map NvKmsKapiMemory"). Mitigation, not a cure.
+      # Delays NVIDIA bug 5762513 (BAR1 mapping leak): stop niri pooling freed
+      # GPU buffers so BAR1 fills slower. Mitigation, not a cure.
       environment.etc."nvidia/nvidia-application-profiles-rc.d/50-niri-limit-buffer-pool.json".text =
         builtins.toJSON
           {
@@ -73,7 +76,7 @@
         pkgs.alcom
         # withSystemVencord pins Vencord to the reproducible nixpkgs build so it
         # can't silently rot against Discord's rolling web client; it forces a
-        # source build of vesktop, which needs the (build-time only) pnpm below.
+        # source build of vesktop, which needs the (build-time only) pnpm above.
         (pkgs.vesktop.override { withSystemVencord = true; })
         pkgs.unityhub
         pkgs.vrcx
@@ -89,17 +92,8 @@
         package = pkgs.openrgb-with-all-plugins;
       };
 
-      # Kill all RGB at boot:
-      #   - 3090 FE "GeForce RTX" logo  → Off mode (NVIDIA's libnvidia-api.so,
-      #     shipped by driver >=525, lets OpenRGB drive the FE illumination
-      #     controller on Linux).
-      #   - NZXT Smart Device V2 (Hue 2) case strip → Static / black. The
-      #     Hue 2 controller has no Off mode, so we use the firmware-held
-      #     Static mode at #000000 — survives if the openrgb server later
-      #     stops sending frames (unlike Direct mode).
-      # The SDK server (services.hardware.openrgb above) does the actual I/O;
-      # this service just sends the right mode to each controller once they
-      # enumerate.
+      # Kill all RGB at boot. The SDK server above does the I/O; this just
+      # sends each controller its mode once it enumerates.
       systemd.services.rgb-quiet = {
         description = "Silence GPU + case RGB via OpenRGB";
         after = [ "openrgb.service" ];
@@ -125,7 +119,6 @@
 
             rc=0
 
-            # NVIDIA 3090 FE — has a real "Off" mode.
             if wait_for "3090 FE"; then
               "$OPENRGB" --device "NVIDIA GeForce RTX 3090 FE" --mode Off || rc=1
             else
@@ -133,8 +126,8 @@
               rc=1
             fi
 
-            # NZXT Smart Device V2 — no Off mode; Static + black is the
-            # firmware-persistent equivalent.
+            # Hue 2 has no Off mode; firmware-held Static + black is the
+            # persistent equivalent (Direct mode isn't).
             if wait_for "NZXT Smart Device V2"; then
               "$OPENRGB" --device "NZXT Smart Device V2" --mode Static --color 000000 || rc=1
             else
@@ -150,8 +143,6 @@
         };
       };
 
-      # Keep large Unity/VRChat project data on the secondary disk while
-      # leaving the packages themselves in the Nix store.
       systemd.tmpfiles.rules = [
         "d /mnt/alpha-oguri/Unity 0775 faa users - -"
         "d /mnt/alpha-oguri/Unity/Hub 0775 faa users - -"
@@ -163,7 +154,6 @@
         "L+ /mnt/alpha-oguri/Unity/Hub/unityhub - - - - /run/current-system/sw/bin/unityhub"
       ];
 
-      # Keep big CUDA builds from taking the whole machine down.
       zramSwap = {
         enable = true;
         memoryPercent = 50;
@@ -183,7 +173,7 @@
       boot.kernel.sysctl."vm.swappiness" = 80;
 
       nix.settings = {
-        # vLLM/CUDA builds can spike RAM usage badly when left fully parallel.
+        # Fully parallel builds can spike RAM enough to stall the machine.
         max-jobs = lib.mkDefault 2;
         cores = lib.mkDefault 4;
       };
