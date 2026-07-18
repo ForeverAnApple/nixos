@@ -34,6 +34,10 @@
       "immich.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:2283
       '';
+
+      "git.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:3000
+      '';
     };
   };
 }

@@ -12,5 +12,6 @@
     home-assistant
     audiobookshelf
     immich
+    forgejo
   ];
 }

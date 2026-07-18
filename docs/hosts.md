@@ -26,4 +26,4 @@ nix-darwin laptop. Imports: `[workstation]` (darwin tier — bundles `dev`). mac
 NixOS service VM. Imports: `[service, endlessh, initrd-unlock, derper]`. Headless. Deploy via deploy-rs as `faa`. Initrd LUKS unlock via `ssh -p 2222 root@sisyphus.davec.xyz` (stage-1 minimal env; authorized_keys sourced from the live faa user).
 
 ### swordholder
-NixOS service bare-metal. Imports: `[service, caddy, home-assistant, audiobookshelf]`. ZFS pool, NVIDIA for transcoding. Host-local config carries the storage and media-pipeline specifics. Deploy via deploy-rs as `faa`.
+NixOS service bare-metal. Imports: `[service, nvidia, nix-ld, caddy, home-assistant, audiobookshelf, immich, forgejo]`. ZFS pool, NVIDIA for transcoding. Host-local config carries the storage and media-pipeline specifics. Deploy via deploy-rs as `faa`.
