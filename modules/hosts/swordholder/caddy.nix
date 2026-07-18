@@ -42,6 +42,10 @@
       "paperless.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:28981
       '';
+
+      "dash.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:8082
+      '';
     };
   };
 }

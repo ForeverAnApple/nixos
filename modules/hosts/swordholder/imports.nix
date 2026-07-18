@@ -14,5 +14,6 @@
     immich
     forgejo
     paperless
+    homepage
   ];
 }
