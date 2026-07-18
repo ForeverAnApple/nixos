@@ -1,7 +1,9 @@
 {
   flake.modules.homeManager.git =
-    { config, ... }:
+    { config, pkgs, ... }:
     {
+      home.packages = [ pkgs.forgejo-cli ];
+
       programs.git = {
         enable = true;
         signing = {
