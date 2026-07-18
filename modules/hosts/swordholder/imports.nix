@@ -13,5 +13,6 @@
     audiobookshelf
     immich
     forgejo
+    paperless
   ];
 }

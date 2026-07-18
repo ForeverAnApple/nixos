@@ -38,6 +38,10 @@
       "git.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:3000
       '';
+
+      "paperless.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:28981
+      '';
     };
   };
 }
