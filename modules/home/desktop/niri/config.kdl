@@ -390,7 +390,35 @@ window-rule {
     clip-to-geometry true
 }
 
+// GSM in-game Yomitan overlay: a fully transparent Electron window floated over
+// the game. niri draws the focus ring as a solid rectangle BEHIND windows, so
+// behind this transparent overlay it reads as an opaque #7fc8ff fill whenever the
+// overlay has focus. Kill the ring for this window and float it above the game.
+window-rule {
+    match app-id="^gsm-overlay$" title="^GSM Overlay$"
+    open-floating true
+    draw-border-with-background false
+    focus-ring { off; }
+    default-floating-position x=0 y=0 relative-to="top-left"
+}
+
+// GSM dialogs (PyQt6): top-level resizable windows without a transient parent,
+// so niri's auto-float (parented dialogs / fixed-size windows) doesn't catch
+// them. Float the mining "update card" confirmation and friends over the game.
+window-rule {
+    match app-id="^gamesentenceminer$" title="^Confirm Anki Card Details$"
+    match app-id="^gamesentenceminer$" title="^Select Screenshot$"
+    match app-id="^gamesentenceminer$" title="^Select Profile$"
+    match app-id="^gamesentenceminer$" title="^Discard Anki update\\?$"
+    open-floating true
+}
+
 binds {
+    // GSM in-game Yomitan overlay: toggle it onto the current workspace (over the
+    // game). niri consumes the key so it never leaks into the game. Requires the
+    // GSM overlay running; see /mnt/omega-beef/Games/gsm-nixos.
+    Mod+Y { spawn "/mnt/omega-beef/Games/gsm-nixos/scripts/overlay-toggle.sh"; }
+
     // Kitty floating
     // Super+Shift+Return { spawn "ndrop" "-i" "kitty" "--class" "dropdown"; }
     Super+Shift+Return { spawn "kitten" "quick-access-terminal"; }
