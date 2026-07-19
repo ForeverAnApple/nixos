@@ -3,6 +3,7 @@
     { config, pkgs, ... }:
     {
       home.packages = [ pkgs.forgejo-cli ];
+      home.sessionVariables.FJ_FALLBACK_HOST = "https://git.jura.moe";
 
       programs.git = {
         enable = true;
