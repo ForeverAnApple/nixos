@@ -17,6 +17,10 @@
         # remote skips its auto-start instead of nesting herdr in the pane.
         sendEnv = [ "HERDR_ENV" ];
       };
+      settings."git.jura.moe" = {
+        port = 22022;
+        user = "forgejo";
+      };
       settings.dreameater = {
         hostname = "dreameater.davec.xyz";
       };
