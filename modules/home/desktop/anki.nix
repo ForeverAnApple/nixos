@@ -49,10 +49,8 @@
               owner = "ForeverAnApple";
               repo = "ogg2mp3";
               rev = "v0.1.0";
-              hash = "sha256-ubS1uOsdMiouk34+zpNL9gi17CA2ip2k9weB7dkhfV8=";
+              hash = "sha256-ycpUr9fU9hXlMh7aM9YFSnOkX7IbF7MNFjy/qRocdUI=";
             };
-
-            sourceRoot = "source/ogg2mp3";
 
             meta = {
               description = "Convert note-referenced ogg audio to mp3 before sync";
