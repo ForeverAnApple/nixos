@@ -40,6 +40,33 @@
 
         review-heatmap = pkgs.ankiAddons.review-heatmap;
 
+        ogg2mp3 =
+          (pkgs.anki-utils.buildAnkiAddon {
+            pname = "ogg2mp3";
+            version = "0.1.0";
+
+            src = pkgs.fetchFromGitHub {
+              owner = "ForeverAnApple";
+              repo = "language";
+              rev = "v0.1.0";
+              hash = "sha256-ubS1uOsdMiouk34+zpNL9gi17CA2ip2k9weB7dkhfV8=";
+            };
+
+            sourceRoot = "source/ogg2mp3";
+
+            meta = {
+              description = "Convert note-referenced ogg audio to mp3 before sync";
+              homepage = "https://github.com/ForeverAnApple/language";
+              license = lib.licenses.asl20;
+            };
+          }).withConfig
+            {
+              config = {
+                search = "deck:General";
+                delete_originals = true;
+              };
+            };
+
         anki-beacon = pkgs.anki-utils.buildAnkiAddon {
           pname = "anki-beacon";
           version = "0-unstable-2026-05-03";
