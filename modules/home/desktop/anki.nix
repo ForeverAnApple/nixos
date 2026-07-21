@@ -47,7 +47,7 @@
 
             src = pkgs.fetchFromGitHub {
               owner = "ForeverAnApple";
-              repo = "language";
+              repo = "ogg2mp3";
               rev = "v0.1.0";
               hash = "sha256-ubS1uOsdMiouk34+zpNL9gi17CA2ip2k9weB7dkhfV8=";
             };
@@ -56,7 +56,7 @@
 
             meta = {
               description = "Convert note-referenced ogg audio to mp3 before sync";
-              homepage = "https://github.com/ForeverAnApple/language";
+              homepage = "https://github.com/ForeverAnApple/ogg2mp3";
               license = lib.licenses.asl20;
             };
           }).withConfig
