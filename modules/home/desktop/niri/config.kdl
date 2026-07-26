@@ -413,6 +413,14 @@ window-rule {
     open-floating true
 }
 
+// Limbus (gamescope nested session; sets a title but no app-id) opens at the
+// global default width, then needs two manual Mod+L presses every boot to reach
+// the width the MD automation was calibrated against. Pin it to full width.
+window-rule {
+    match title="^LimbusCompany$"
+    default-column-width { proportion 1.0; }
+}
+
 binds {
     // GSM in-game Yomitan overlay: toggle it onto the current workspace (over the
     // game). niri consumes the key so it never leaks into the game. Requires the
