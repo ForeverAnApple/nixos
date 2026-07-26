@@ -3,6 +3,12 @@ set -uo pipefail
 cd "$HOME/nixos" || exit 1
 
 read -r -a nh_cmd <<<"${NH_CMD:-nh os}"
+host=$(uname -n)
+host=${host%%.*}
+case " ${nh_cmd[*]} " in
+  *" darwin "*) toplevel=".#darwinConfigurations.\"$host\".config.system.build.toplevel" ;;
+  *) toplevel=".#nixosConfigurations.\"$host\".config.system.build.toplevel" ;;
+esac
 max=5
 attempt=0
 tmpdir=$(mktemp -d) || exit 1
@@ -329,8 +335,9 @@ lock_pending=0
 while [ "$attempt" -lt "$max" ]; do
   attempt=$((attempt + 1))
   build_log="$tmpdir/build-$attempt.log"
-  if run_logged "$build_log" "${nh_cmd[@]}" switch "$@"; then
-    exit 0
+  if run_logged "$build_log" nix build "$toplevel" --no-link; then
+    "${nh_cmd[@]}" switch "$@"
+    exit
   else
     status=$?
   fi
@@ -351,46 +358,40 @@ while [ "$attempt" -lt "$max" ]; do
   mapfile -t got < <(grep -oE 'got:[[:space:]]*sha256-[A-Za-z0-9+/=]+' "$parse_log" | grep -oE 'sha256-[A-Za-z0-9+/=]+')
 
   if [ "${#spec[@]}" -eq 0 ] && [ "${#got[@]}" -eq 0 ]; then
-    echo "nh-up: rebuild failed without a fixed-output hash mismatch" >&2
+    echo "nh-up: build failed without a fixed-output hash mismatch" >&2
     exit "$status"
   fi
-  if [ "${#spec[@]}" -ne 1 ] || [ "${#got[@]}" -ne 1 ]; then
-    echo "nh-up: expected exactly one hash mismatch pair; refusing to edit" >&2
+  if [ "${#spec[@]}" -ne "${#got[@]}" ]; then
+    echo "nh-up: unpaired hash mismatch output; refusing to edit" >&2
+    exit "$status"
+  fi
+  mapfile -t pairs < <(paste -d' ' <(printf '%s\n' "${spec[@]}") <(printf '%s\n' "${got[@]}") | sort -u)
+  if [ "${#pairs[@]}" -ne 1 ]; then
+    echo "nh-up: expected exactly one distinct hash mismatch pair; refusing to edit" >&2
+    exit "$status"
+  fi
+  read -r old_hash new_hash <<<"${pairs[0]}"
+  if [ "$old_hash" = "$new_hash" ]; then
+    echo "nh-up: hash mismatch pair is self-identical; refusing to edit" >&2
     exit "$status"
   fi
 
-  declare -a files=()
-  declare -A seen=()
-  for i in "${!spec[@]}"; do
-    s=${spec[$i]}
-    g=${got[$i]}
-    if [ "$s" = "$g" ] || [ -n "${seen[$s]:-}" ]; then
-      echo "nh-up: ambiguous or duplicate hash mismatch; refusing to edit" >&2
-      exit "$status"
-    fi
-    seen[$s]=1
-    mapfile -t matches < <(git grep -lF -e "$s" -- '*.nix')
-    mapfile -t occurrences < <(git grep -hoF -e "$s" -- '*.nix')
-    if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ]; then
-      echo "nh-up: $s appears ${#occurrences[@]} times in ${#matches[@]} tracked .nix files; refusing to edit" >&2
-      exit "$status"
-    fi
-    files+=("${matches[0]}")
-  done
+  mapfile -t matches < <(git grep -lF -e "$old_hash" -- '*.nix')
+  mapfile -t occurrences < <(git grep -hoF -e "$old_hash" -- '*.nix')
+  if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ]; then
+    echo "nh-up: $old_hash appears ${#occurrences[@]} times in ${#matches[@]} tracked .nix files; refusing to edit" >&2
+    exit "$status"
+  fi
+  fixed_file=${matches[0]}
 
   build_fixed_summary() {
     echo
     echo "FIXED-OUTPUT BYTES REQUIRE APPROVAL"
-    for i in "${!spec[@]}"; do
-      file=${files[$i]}
-      s=${spec[$i]}
-      g=${got[$i]}
-      line=$(git grep -nF -e "$s" -- "$file" | head -n1 | cut -d: -f2)
-      start=$((line > 6 ? line - 6 : 1))
-      end=$((line + 2))
-      printf '  %s:%s\n    old: %s\n    new: %s\n    source context:\n' "$file" "$line" "$s" "$g" || return
-      nl -ba "$file" | sed -n "${start},${end}p" | sed 's/^/      /' || return
-    done
+    line=$(git grep -nF -e "$old_hash" -- "$fixed_file" | head -n1 | cut -d: -f2)
+    start=$((line > 6 ? line - 6 : 1))
+    end=$((line + 2))
+    printf '  %s:%s\n    old: %s\n    new: %s\n    source context:\n' "$fixed_file" "$line" "$old_hash" "$new_hash" || return
+    nl -ba "$fixed_file" | sed -n "${start},${end}p" | sed 's/^/      /' || return
     echo "  Accepting trusts the downloaded bytes. A matching hash proves reproducibility, not who published them."
   }
   fixed_summary="$tmpdir/fixed-summary-$attempt"
@@ -404,25 +405,24 @@ while [ "$attempt" -lt "$max" ]; do
     exit "$status"
   fi
 
-  mapfile -t matches < <(git grep -lF -e "${spec[0]}" -- '*.nix')
-  mapfile -t occurrences < <(git grep -hoF -e "${spec[0]}" -- '*.nix')
-  if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ] || [ "${matches[0]:-}" != "${files[0]}" ]; then
+  mapfile -t matches < <(git grep -lF -e "$old_hash" -- '*.nix')
+  mapfile -t occurrences < <(git grep -hoF -e "$old_hash" -- '*.nix')
+  if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ] || [ "${matches[0]:-}" != "$fixed_file" ]; then
     echo "nh-up: source changed during approval; refusing to edit" >&2
     exit "$status"
   fi
 
-  fixed_file=${files[0]}
   fixed_original="$tmpdir/fixed-original-$attempt"
   fixed_edited="$tmpdir/fixed-edited-$attempt"
   if ! cp -- "$fixed_file" "$fixed_original" || ! cp -- "$fixed_file" "$fixed_edited"; then
     echo "nh-up: could not prepare the approved source edit" >&2
     exit "$status"
   fi
-  if ! sed -i "s|${spec[0]}|${got[0]}|" "$fixed_edited"; then
+  if ! sed -i "s|${old_hash}|${new_hash}|" "$fixed_edited"; then
     echo "nh-up: could not prepare the approved hash replacement" >&2
     exit "$status"
   fi
-  if grep -qF -- "${spec[0]}" "$fixed_edited" || [ "$(grep -oF -- "${got[0]}" "$fixed_edited" | wc -l | tr -d ' ')" -lt 1 ]; then
+  if grep -qF -- "$old_hash" "$fixed_edited" || [ "$(grep -oF -- "$new_hash" "$fixed_edited" | wc -l | tr -d ' ')" -lt 1 ]; then
     echo "nh-up: prepared hash replacement failed verification" >&2
     exit "$status"
   fi
