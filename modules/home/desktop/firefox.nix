@@ -18,6 +18,11 @@
           DisableTelemetry = true;
           DontCheckDefaultBrowser = true;
           ExtensionSettings = {
+            # asbplayer
+            "{e4b27483-2e73-4762-b2ec-8d988a143a40}" = {
+              installation_mode = "force_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/{e4b27483-2e73-4762-b2ec-8d988a143a40}/latest.xpi";
+            };
             # Bitwarden
             "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
               installation_mode = "force_installed";
