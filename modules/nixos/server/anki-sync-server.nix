@@ -7,7 +7,7 @@
   flake.modules.nixos.anki-sync-server =
     { config, ... }:
     {
-      sops.secrets."anki/faa_password" = { };
+      sops.secrets."anki/faa_password".restartUnits = [ "anki-sync-server.service" ];
 
       services.anki-sync-server = {
         enable = true;
