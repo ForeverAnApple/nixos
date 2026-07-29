@@ -22,12 +22,6 @@
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
-      # vesktop pins electron_40; drop when nixpkgs bumps it.
-      nixpkgs.config.permittedInsecurePackages = [
-        "pnpm-10.29.2"
-        "electron-40.10.5"
-      ];
-
       # Cap core dumps: multi-GB crash cores stall the disk for minutes. Both
       # keys needed — the bound is MIN(rlimit, MAX(Process, External)).
       # MaxUse bounds the pool; per-core caps alone let crash-loops fill the disk.
@@ -74,10 +68,7 @@
 
       environment.systemPackages = [
         pkgs.alcom
-        # withSystemVencord pins Vencord to the reproducible nixpkgs build so it
-        # can't silently rot against Discord's rolling web client; it forces a
-        # source build of vesktop, which needs the (build-time only) pnpm above.
-        (pkgs.vesktop.override { withSystemVencord = true; })
+        pkgs.discord
         pkgs.unityhub
         pkgs.vrcx
         pkgs.pwvucontrol
