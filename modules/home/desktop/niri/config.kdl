@@ -416,9 +416,12 @@ window-rule {
 // Limbus (gamescope nested session; sets a title but no app-id) opens at the
 // global default width, then needs two manual Mod+L presses every boot to reach
 // the width the MD automation was calibrated against. Pin it to full width.
+// open-focused false: md_boot parks it on workspace 2 right after it maps;
+// until then it must not steal keyboard focus from whatever's being typed.
 window-rule {
     match title="^LimbusCompany$"
     default-column-width { proportion 1.0; }
+    open-focused false
 }
 
 binds {
