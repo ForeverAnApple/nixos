@@ -104,6 +104,7 @@
           "thinkorswim"
           "ubersicht"
           "veracrypt"
+          "zoom"
         ];
       };
     };
