@@ -1,9 +1,9 @@
 # Not yabai stuff
-shift + cmd - return : kitty --single-instance -d ~
+cmd - return : kitty --single-instance -d ~
 # `cd ~` only seeds the FIRST invocation: kitten quick-access-terminal is a
 # singleton — subsequent presses just toggle visibility on the existing shell,
 # so cwd stays wherever the user last navigated to.
-cmd - return : cd ~ && kitten quick-access-terminal
+shift + cmd - return : cd ~ && kitten quick-access-terminal
 
 # Swallow cmd-h so macOS can't hide the focused window out from under aerospace.
 cmd - h : echo 'nope'

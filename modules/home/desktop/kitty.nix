@@ -43,12 +43,18 @@
           hide_on_focus_loss = true;
           background_opacity = 0.85;
           lines = 45;
-          # The dropdown is a scratch shell, never a herdr host: its persistent
-          # singleton client would otherwise make every main kitty tab see a
-          # live client and skip its own herdr (herdr.nix). Tags the shell
-          # regardless of launcher (skhd, niri).
-          kitty_override = "env=HERDR_NO_AUTOSTART=1";
+          kitty_conf = "dropdown.conf";
         };
       };
+      # The dropdown is a scratch shell, regardless of launcher (skhd, niri):
+      # no herdr (its persistent singleton client would make every main kitty
+      # tab see a live client and skip its own herdr, herdr.nix) and no host
+      # startup_session tabs. kitty_override takes one option per line and the
+      # HM attrset can't repeat a key, so both overrides ride a side conf.
+      xdg.configFile."kitty/dropdown.conf".text = ''
+        include kitty.conf
+        env HERDR_NO_AUTOSTART=1
+        startup_session none
+      '';
     };
 }
