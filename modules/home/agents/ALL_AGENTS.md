@@ -4,6 +4,12 @@
 - Readable, simple. Don't sacrifice perf or best practice.
 - Comment complex logic or data flow only. Skip the obvious.
 
+## Done means proven
+- Done is not written, committed, or deployed. Done is watched working, end to end, on the exact path that failed.
+- Proof is before-and-after, and timely: capture the failure, capture the same path passing, show both. "Should work now" is a guess wearing a suit.
+- Follow up on every fix yourself. Never hand confirmation to an assumption, a downstream system you haven't read, or a future session.
+- No proof = not done. Report it as what it is: "committed, unverified" — and keep it open.
+
 ## Communication
 - First principles when explaining.
 - Challenge me, teach me.
