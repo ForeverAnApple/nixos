@@ -281,9 +281,12 @@ layout {
 // Notification daemon
 spawn-at-startup "mako"
 
-// Start a kitty at startup to make opening kitty faster overall
+// Start a kitty at startup to make opening kitty faster overall.
+// The preload shell must not grab the first-herdr slot (herdr.nix), so scope
+// HERDR_NO_AUTOSTART to this window via its command; -o env= would apply
+// instance-wide and kill herdr in every later single-instance window.
 spawn-at-startup "kitten" "quick-access-terminal"
-spawn-at-startup "kitty" "--single-instance" "--start-as" "hidden"
+spawn-at-startup "kitty" "--single-instance" "--start-as" "hidden" "env" "HERDR_NO_AUTOSTART=1" "zsh"
 //spawn-at-startup "kitty" "—class" "HeadlessKitty" "—single-instance" "—listen-on" "unix:/tmp/kitty-socket" "tail" "-f" "/dev/null"
 
 /*workspace "hidden"
@@ -429,7 +432,7 @@ binds {
 
     // Kitty floating
     // Super+Shift+Return { spawn "ndrop" "-i" "kitty" "--class" "dropdown"; }
-    Super+Shift+Return { spawn "kitten" "quick-access-terminal"; }
+    Mod+Return hotkey-overlay-title="Dropdown Terminal: kitty" { spawn "kitten" "quick-access-terminal"; }
 
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
     // in the end. To find an XKB name for a particular key, you may use a program
@@ -446,7 +449,7 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
-    Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty" "--single-instance"; }
+    Mod+Shift+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty" "--single-instance"; }
     Mod+Space hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Super+Alt+L allow-when-locked=true hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
 
