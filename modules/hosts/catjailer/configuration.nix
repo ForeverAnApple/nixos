@@ -163,6 +163,14 @@
 
       boot.kernel.sysctl."vm.swappiness" = 80;
 
+      # Build scratch in RAM; sized so CUDA-scale builds don't overflow it.
+      boot.tmp = {
+        useTmpfs = true;
+        tmpfsSize = "24G";
+      };
+
+      services.journald.extraConfig = "SystemMaxUse=500M";
+
       nix.settings = {
         # Fully parallel builds can spike RAM enough to stall the machine.
         max-jobs = lib.mkDefault 2;
