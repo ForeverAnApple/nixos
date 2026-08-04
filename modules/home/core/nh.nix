@@ -35,6 +35,7 @@
         u = "nh-up";
         t = "${nhCmd} test";
         nrs = "${nhCmd} switch";
+        ngc = "nh clean all --keep 3 --keep-since 1d --keep-one";
         nru = "nix run \"$HOME/nixos\"#update";
         lg = "lazygit";
         oc = "opencode";
@@ -47,7 +48,7 @@
         clean = {
           enable = true;
           dates = "daily";
-          extraArgs = "--keep 6 --keep-since 8d";
+          extraArgs = "--keep 6 --keep-since 8d --keep-one";
         };
       };
     };
