@@ -84,6 +84,11 @@
               type = "A";
               value = "100.64.0.5";
             }
+            {
+              name = "notebook.jura.moe";
+              type = "A";
+              value = "100.64.0.7";
+            }
           ];
         };
 
