@@ -11,6 +11,8 @@
       # limiting, so the access log feeds a fail2ban jail below.
       # MagicDNS owns jura.moe locally, breaking Caddy's TXT propagation
       # check; let LE's own resolver validate at the authoritative NS.
+      # Caddy's default read_buffer truncates media download streams
+      # mid-body; clients see "stream failure (code=303)".
       "anki.jura.moe".extraConfig = ''
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
@@ -20,7 +22,11 @@
         log {
           output file /var/log/caddy/access-anki.jura.moe.log
         }
-        reverse_proxy 127.0.0.1:27701
+        reverse_proxy 127.0.0.1:27701 {
+          transport http {
+            read_buffer 512k
+          }
+        }
       '';
     };
 
