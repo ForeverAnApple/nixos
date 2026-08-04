@@ -62,6 +62,7 @@
           "felixkratz/formulae/sketchybar"
           "mpv"
           "pnpm"
+          "whisper-cpp" # brew build enables Metal; nixpkgs darwin build doesn't
         ];
 
         # GUI apps. macOS .app bundles install cleaner via brew cask than
