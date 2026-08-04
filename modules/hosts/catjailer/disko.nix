@@ -100,10 +100,14 @@
       };
     };
 
-    boot.initrd.luks.devices."luks-caa4b2df-d195-4fc6-b7e7-b327941722e1".device =
-      "/dev/disk/by-uuid/caa4b2df-d195-4fc6-b7e7-b327941722e1";
-    boot.initrd.luks.devices."luks-c2c6542b-5e7c-42ff-be6f-bb61e004faa9".device =
-      "/dev/disk/by-uuid/c2c6542b-5e7c-42ff-be6f-bb61e004faa9";
+    boot.initrd.luks.devices."luks-caa4b2df-d195-4fc6-b7e7-b327941722e1" = {
+      device = "/dev/disk/by-uuid/caa4b2df-d195-4fc6-b7e7-b327941722e1";
+      allowDiscards = true;
+    };
+    boot.initrd.luks.devices."luks-c2c6542b-5e7c-42ff-be6f-bb61e004faa9" = {
+      device = "/dev/disk/by-uuid/c2c6542b-5e7c-42ff-be6f-bb61e004faa9";
+      allowDiscards = true;
+    };
 
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/f2174243-7b9b-4e2c-b3d8-397836b8f321";
