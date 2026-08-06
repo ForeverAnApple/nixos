@@ -100,7 +100,6 @@
           "spotify"
           "steam"
           "tailscale-app" # menu bar GUI (was renamed from `tailscale`; CLI bundled in this cask)
-          "teamviewer"
           "telegram"
           "thinkorswim"
           "ubersicht"
