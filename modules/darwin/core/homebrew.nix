@@ -75,6 +75,7 @@
           "anki"
           "antigravity"
           "arc"
+          "audacity"
           "basictex"
           "blackhole-2ch"
           "claude"
