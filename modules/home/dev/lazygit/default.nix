@@ -6,8 +6,8 @@
         enable = true;
         settings = {
           git.overrideGpg = true;
-          git.pagers = [
-            { pager = "bat --plain --paging=never"; }
+          git.diffRenderers = [
+            { command = "bat --plain --paging=never"; }
           ];
         };
       };
