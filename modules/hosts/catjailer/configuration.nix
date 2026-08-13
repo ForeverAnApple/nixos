@@ -17,6 +17,8 @@
 
       networking.firewall.checkReversePath = "loose";
 
+      virtualisation.docker.rootless.daemon.settings.data-root = "/mnt/theta-beef/docker";
+
       networking.firewall.interfaces.enp4s0.allowedTCPPorts = [ 22022 ];
 
       # Electron apps on Wayland

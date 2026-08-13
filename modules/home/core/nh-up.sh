@@ -335,9 +335,15 @@ lock_pending=0
 while [ "$attempt" -lt "$max" ]; do
   attempt=$((attempt + 1))
   build_log="$tmpdir/build-$attempt.log"
-  if run_logged "$build_log" nix build "$toplevel" --no-link; then
-    "${nh_cmd[@]}" switch "$@"
-    exit
+  if run_logged "$build_log" nix build "$toplevel" --no-link --print-out-paths; then
+    built=$(grep -oE '^/nix/store/[a-z0-9]{32}-[^[:space:]]+' "$build_log" | tail -n1)
+    "${nh_cmd[@]}" switch "$@" || exit
+    profile=$(readlink -f /nix/var/nix/profiles/system) || profile=
+    if [ -z "$built" ] || [ "$profile" != "$built" ]; then
+      echo "nh-up: system profile (${profile:-unreadable}) is not the built closure (${built:-unknown}); boot entry did not advance" >&2
+      exit 1
+    fi
+    exit 0
   else
     status=$?
   fi

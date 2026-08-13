@@ -63,7 +63,6 @@
     {
       services.home-assistant = {
         enable = true;
-        openFirewall = false;
 
         customComponents = [ ha-wyzeapi ];
 

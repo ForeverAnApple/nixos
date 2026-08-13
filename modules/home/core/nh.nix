@@ -12,6 +12,8 @@
       systemPath = if isDarwin then ":/usr/bin:/bin:/usr/sbin:/sbin" else ":/run/wrappers/bin";
       nhUp = pkgs.writeShellScriptBin "nh-up" ''
         export NH_CMD="${nhCmd}"
+        # keep nh's out-link off /tmp: activation can mount over it (nh#659)
+        export TMPDIR=/var/tmp
         export PATH="${
           lib.makeBinPath [
             pkgs.gnused
@@ -34,7 +36,7 @@
       home.shellAliases = {
         u = "nh-up";
         t = "${nhCmd} test";
-        nrs = "${nhCmd} switch";
+        nrs = "TMPDIR=/var/tmp ${nhCmd} switch";
         ngc = "nh clean all --keep 3 --keep-since 1d --keep-one";
         nru = "nix run \"$HOME/nixos\"#update";
         lg = "lazygit";
