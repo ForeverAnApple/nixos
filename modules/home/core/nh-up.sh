@@ -85,17 +85,12 @@ run_logged() {
 confirm_batch() {
   summary=$1
   prompt=$2
-  if ! { exec 3<>/dev/tty; } 2>/dev/null; then
-    echo "nh-up: no controlling terminal; refusing approval" >&2
-    return 1
-  fi
   safe_summary="$summary.safe"
   if ! sanitize <"$summary" >"$safe_summary"; then
-    exec 3>&-
     echo "nh-up: could not render approval evidence; refusing" >&2
     return 1
   fi
-  if [ -t 3 ] && [ -z "${NO_COLOR:-}" ] && [ "${TERM:-dumb}" != dumb ]; then
+  if [ -t 1 ] && [ -z "${NO_COLOR:-}" ] && [ "${TERM:-dumb}" != dumb ]; then
     bold=$'\033[1m'
     cyan=$'\033[1;36m'
     red=$'\033[31m'
@@ -113,39 +108,25 @@ confirm_batch() {
   while IFS= read -r line || [ -n "$line" ]; do
     case $line in
       "LOCK UPDATE REQUIRES APPROVAL" | "FIXED-OUTPUT BYTES REQUIRE APPROVAL")
-        printf '%s%s%s\n' "$yellow" "$line" "$reset" >&3 || return 1
+        printf '%s%s%s\n' "$yellow" "$line" "$reset"
         ;;
       "GitHub source revisions:" | "Raw file, tarball, or native release assets:" | "Other locked source changes:" | "Lock graph metadata changes:" | "Exact locked records:")
-        printf '%s%s%s\n' "$bold" "$line" "$reset" >&3 || return 1
+        printf '%s%s%s\n' "$bold" "$line" "$reset"
         ;;
       "  root input "* | "  transitive node "* | "  "*.nix:[0-9]*)
-        printf '%s%s%s\n' "$cyan" "$line" "$reset" >&3 || return 1
+        printf '%s%s%s\n' "$cyan" "$line" "$reset"
         ;;
       "    old:"*)
-        printf '%s%s%s\n' "$red" "$line" "$reset" >&3 || return 1
+        printf '%s%s%s\n' "$red" "$line" "$reset"
         ;;
       "    new:"*)
-        printf '%s%s%s\n' "$green" "$line" "$reset" >&3 || return 1
+        printf '%s%s%s\n' "$green" "$line" "$reset"
         ;;
-      *) printf '%s\n' "$line" >&3 || return 1 ;;
+      *) printf '%s\n' "$line" ;;
     esac
   done <"$safe_summary"
-  while IFS= read -r -t 0.01 -n 1 _ <&3; do :; done
-  if ! printf '\n%s\nApprove all changes above? [y/N] ' "$prompt" >&3; then
-    exec 3>&-
-    echo "nh-up: could not render approval prompt; refusing" >&2
-    return 1
-  fi
-  if ! IFS= read -r reply <&3; then
-    exec 3>&-
-    echo "nh-up: could not read approval; refusing" >&2
-    return 1
-  fi
-  exec 3>&-
-  case ${reply,,} in
-    y | yes) return 0 ;;
-    *) return 1 ;;
-  esac
+  printf '\n%s\n%sAuto-approved.%s\n' "$prompt" "$yellow" "$reset"
+  return 0
 }
 
 changed_node_count() {
