@@ -9,13 +9,15 @@
       '';
       # Deliberately internet-facing; the sync server has no auth rate
       # limiting, so the access log feeds a fail2ban jail below.
-      # MagicDNS owns jura.moe locally, breaking Caddy's TXT propagation
-      # check; let LE's own resolver validate at the authoritative NS.
+      # MagicDNS owns jura.moe locally and NXDOMAINs SOA probes, breaking
+      # certmagic zone detection and TXT propagation checks; resolve via
+      # public DNS (docs/acme.md).
       # Caddy's default read_buffer truncates media download streams
       # mid-body; clients see "stream failure (code=303)".
       "anki.jura.moe".extraConfig = ''
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
           propagation_delay 30s
           propagation_timeout -1
         }

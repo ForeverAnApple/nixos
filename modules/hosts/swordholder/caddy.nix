@@ -1,9 +1,13 @@
 {
   flake.modules.nixos."hosts/swordholder" = {
     services.caddy.virtualHosts = {
+      # MagicDNS owns jura.moe locally and NXDOMAINs the SOA probe, so
+      # certmagic's zone detection walks up to the TLD and renewal fails;
+      # resolve via public DNS (docs/acme.md).
       "*.jura.moe".extraConfig = ''
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
         }
 
         handle {

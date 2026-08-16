@@ -7,6 +7,7 @@ Navigation catalog for this repo. Each page is atomic — one concept, no preamb
 - [dendritic.md](dendritic.md) — how modules compose into hosts
 - [tiers.md](tiers.md) — `workstation` and `service`: the two functional classes a host can be
 - [hosts.md](hosts.md) — fleet inventory with tier, platform, form factor, role
+- [acme.md](acme.md) — why DNS-01 tls blocks pin public resolvers, and the cert watchdog
 
 ## Process
 
