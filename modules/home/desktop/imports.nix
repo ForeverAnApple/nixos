@@ -2,6 +2,7 @@
 {
   flake.modules.homeManager.desktop.imports = with config.flake.modules.homeManager; [
     anki
+    cert-watch
     imv
     firefox
     fuzzel
