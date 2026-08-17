@@ -14,6 +14,7 @@
     niri
     obsidian
     screencast
+    spotify
     swaybg
     waybar
     wlsunset
