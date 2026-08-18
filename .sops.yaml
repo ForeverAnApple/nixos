@@ -4,6 +4,7 @@ keys:
   - &sisyphus age1y09h8gk5mapfy0ue0zertmyrjfem4z38ycugwrvek2zg9arafp6qp6wqhx
   - &catjailer age1x4sw5pmeeucagnylta0fmauhaeywun0yxf9szksk3wz2rt98qayquwmdhu
   - &swordholder age1cthjfwacsh0kwhnlkqgrdrgxq7qy6c0cx6m59aldgdtsxuu7ue0sn0zyka
+  - &fishspeaker age1qge4d3mqslhynm7yl6k6xvymxefgdmynhv0gngadxlj57vptc44skseha8
 
 creation_rules:
   - path_regex: modules/hosts/sisyphus/secrets\.yaml$
@@ -24,3 +25,7 @@ creation_rules:
           - *faa-catjailer
           - *faa-wallfacer
           - *swordholder
+  - path_regex: modules/hosts/fishspeaker/secrets\.yaml$
+    key_groups:
+      - age:
+          - *fishspeaker
