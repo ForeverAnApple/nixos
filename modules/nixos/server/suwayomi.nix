@@ -22,6 +22,14 @@
           basicAuthEnabled = true;
           basicAuthUsername = "faa";
           basicAuthPasswordFile = config.sops.secrets."suwayomi/basic_auth_password".path;
+          # The server deletes any store missing from this list on every boot
+          # (syncPrefsToDb); UI-added stores don't survive a restart, so the
+          # list lives here. nixpkgs' extensionRepos option is deprecated
+          # upstream — use the extensionStores key it migrated to.
+          extensionStores = [
+            "https://raw.githubusercontent.com/suwayomi/tachiyomi-extension/repo/repo.json"
+            "https://raw.githubusercontent.com/keiyoushi/extensions/repo/repo.json"
+          ];
         };
       };
     };
