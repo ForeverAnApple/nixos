@@ -15,6 +15,7 @@
     forgejo
     paperless
     komga
+    komf
     suwayomi-server
     homepage
   ];
