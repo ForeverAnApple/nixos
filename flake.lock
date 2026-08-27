@@ -3,7 +3,7 @@
     "agent-browser-darwin-aarch64": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-d3xVyv8IZTCBjwlQzP+UAG6Rb/36B6SR3XD66+yryQk=",
+        "narHash": "sha256-F5UmTmayVZ+NYM3k741EHbnOVoTqA+7qddHZOk+xKZ4=",
         "type": "file",
         "url": "https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-arm64"
       },
@@ -15,7 +15,7 @@
     "agent-browser-darwin-x86_64": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-uZ6T4VkQvh7Vz6SbKXmQsVKTDexHjJY5QVDyVkAg7vY=",
+        "narHash": "sha256-oeyk8qHeU5+aAbtzprWyH9njro7k7xOpnyiacx4QkzI=",
         "type": "file",
         "url": "https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-x64"
       },
@@ -27,7 +27,7 @@
     "agent-browser-linux-aarch64": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-QSGOYPKo0Eu/JAqFDPQYJIP+Wx/HgbHWOHDOZv6ZfMY=",
+        "narHash": "sha256-KZx1sD5SnzMVmHz5Hh1G/ZJtyY1cTbcNgPlKDY7/KBM=",
         "type": "file",
         "url": "https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-arm64"
       },
@@ -39,7 +39,7 @@
     "agent-browser-linux-x86_64": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-2J3AQJ0BFxu6+AhtRBgqc2K+I7kl0pibjKdtjuG7dM0=",
+        "narHash": "sha256-NtneMyyUASSzlqSZ9aO4cMMmLBZjNsKS6vqIiW5bbFI=",
         "type": "file",
         "url": "https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-x64"
       },
