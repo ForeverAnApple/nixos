@@ -13,6 +13,9 @@
     }:
     let
       dest = "/THICC/Backups/swordholder";
+      # local_only: caddy forwards real client IPs, so only on-host callers
+      # (the OnFailure units) can trigger it despite the id being in-repo.
+      alertWebhook = "bd6d99e96ae7cb2043bfdd0e45282fe4";
       sqliteDbs = [
         "/var/lib/komga/database.sqlite"
         "/var/lib/komga/tasks.sqlite"
@@ -82,7 +85,42 @@
           date +%s > ${dest}/LAST_SUCCESS
         '';
         serviceConfig.Type = "oneshot";
+        unitConfig.OnFailure = [ "backup-alert@%n.service" ];
       };
+
+      systemd.services."backup-alert@" = {
+        scriptArgs = "%i";
+        script = ''
+          ${lib.getExe pkgs.curl} -sf -m 10 -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"message\": \"$1 failed on swordholder\"}" \
+            http://127.0.0.1:8123/api/webhook/${alertWebhook}
+        '';
+        serviceConfig.Type = "oneshot";
+      };
+
+      services.home-assistant.config."automation manual" = [
+        {
+          alias = "backup-failure-alert";
+          triggers = [
+            {
+              trigger = "webhook";
+              webhook_id = alertWebhook;
+              local_only = true;
+              allowed_methods = [ "POST" ];
+            }
+          ];
+          actions = [
+            {
+              action = "notify.notify";
+              data = {
+                title = "swordholder backup";
+                message = "{{ trigger.json.message | default('backup failure') }}";
+              };
+            }
+          ];
+        }
+      ];
 
       systemd.services.state-backup-freshness = {
         script = ''
@@ -91,6 +129,7 @@
           [ $(( $(date +%s) - last )) -lt 172800 ]
         '';
         serviceConfig.Type = "oneshot";
+        unitConfig.OnFailure = [ "backup-alert@%n.service" ];
       };
 
       systemd.timers.state-backup-freshness = {
