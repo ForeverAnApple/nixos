@@ -1,5 +1,7 @@
-# Nightly dumps of service state from the ext4 root onto the raidz1 pool,
-# versioned by sanoid snapshots (30 daily / 24 monthly / 10 yearly).
+# Nightly dumps of service state from the ext4 root onto the raidz1 pool.
+# Snapshots: 90 dailies, monthlies/yearlies kept forever. Every run verifies
+# its own output and fails the unit on corruption; a separate freshness timer
+# fails if no successful backup landed in 48h.
 # Local-only: survives root-disk death and fat-fingers, not a house fire.
 {
   flake.modules.nixos."hosts/swordholder" =
@@ -36,9 +38,9 @@
       services.sanoid = {
         templates.backup = {
           hourly = 0;
-          daily = 30;
-          monthly = 24;
-          yearly = 10;
+          daily = 90;
+          monthly = 1200;
+          yearly = 100;
           autosnap = true;
           autoprune = true;
         };
@@ -72,8 +74,31 @@
             [ -d "$dir" ] || continue
             rsync -a --delete "$dir" ${dest}/state/
           done
+
+          for dump in ${dest}/sqlite/*; do
+            [ "$(sqlite3 "$dump" 'PRAGMA integrity_check;')" = "ok" ]
+          done
+          zstd -t -q ${dest}/postgres/pg_dumpall.sql.zst
+          date +%s > ${dest}/LAST_SUCCESS
         '';
         serviceConfig.Type = "oneshot";
+      };
+
+      systemd.services.state-backup-freshness = {
+        script = ''
+          set -euo pipefail
+          last=$(cat ${dest}/LAST_SUCCESS)
+          [ $(( $(date +%s) - last )) -lt 172800 ]
+        '';
+        serviceConfig.Type = "oneshot";
+      };
+
+      systemd.timers.state-backup-freshness = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "12:00";
+          Persistent = true;
+        };
       };
 
       systemd.timers.state-backup = {
