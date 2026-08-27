@@ -50,6 +50,14 @@
       "dash.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:8082
       '';
+
+      "manga.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:25600
+      '';
+
+      "suwayomi.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:4567
+      '';
     };
   };
 }

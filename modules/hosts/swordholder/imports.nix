@@ -14,6 +14,8 @@
     immich
     forgejo
     paperless
+    komga
+    suwayomi-server
     homepage
   ];
 }
