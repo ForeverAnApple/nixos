@@ -57,6 +57,8 @@
       home.activation.herdrConfig =
         let
           seed = pkgs.writeText "herdr-config.toml" ''
+            onboarding = false
+
             [keys]
             next_tab = ["prefix+n", "alt+]"]
             previous_tab = ["prefix+p", "alt+["]
@@ -67,6 +69,9 @@
             next_workspace = "ctrl+alt+]"
             previous_workspace = "ctrl+alt+["
             switch_workspace = ["prefix+shift+1..9", "ctrl+alt+1..9"]
+
+            [experimental]
+            kitty_graphics = true
           '';
           dir = "${config.xdg.configHome}/herdr";
         in
