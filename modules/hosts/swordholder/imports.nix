@@ -17,6 +17,9 @@
     komga
     komf
     suwayomi-server
+    bazarr
+    sonarr
+    radarr
     homepage
   ];
 }

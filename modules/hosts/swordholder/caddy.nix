@@ -58,6 +58,18 @@
       "suwayomi.jura.moe".extraConfig = ''
         reverse_proxy 127.0.0.1:4567
       '';
+
+      "bazarr.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:6767
+      '';
+
+      "sonarr.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:8989
+      '';
+
+      "radarr.jura.moe".extraConfig = ''
+        reverse_proxy 127.0.0.1:7878
+      '';
     };
   };
 }
