@@ -27,6 +27,7 @@
         skills.prose-style = ../skills/prose-style;
         skills.voice-notifications = ../skills/voice-notifications;
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
+        skills.agent-browser = "${inputs.agent-browser-src}/skills/agent-browser";
       };
 
       # config.toml is left unmanaged on purpose. Codex persists directory- and
