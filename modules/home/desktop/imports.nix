@@ -2,6 +2,7 @@
 {
   flake.modules.homeManager.desktop.imports = with config.flake.modules.homeManager; [
     anki
+    audacity
     imv
     firefox
     fuzzel
