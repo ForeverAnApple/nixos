@@ -15,20 +15,55 @@
               system = final.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             };
-            # codex from nixos-unstable-small: Hydra-built (always cached),
-            # hours behind master. Source builds aren't worth the marginal
-            # freshness for this one.
-            smallPkgs = import inputs.nixpkgs-unstable-small {
-              system = final.stdenv.hostPlatform.system;
-              config.allowUnfree = true;
-            };
+
+            arch = if final.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64";
+            codexSrc = inputs."codex-linux-${arch}";
+            codexBin = "${codexSrc}/bin/codex";
+
+            # The "latest" tarball carries no version in its name, so read it
+            # from the binary (IFD). Without this the package stays
+            # codex-latest forever and nh never reports a codex bump.
+            codexVersion = final.lib.fileContents (
+              final.runCommandLocal "codex-version" { } ''
+                export HOME=$TMPDIR
+                install -m755 ${codexBin} ./codex
+                ./codex --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d '\n' > $out
+              ''
+            );
           in
           {
             inherit (masterPkgs)
               claude-code
               opencode
               ;
-            inherit (smallPkgs) codex;
+
+            codex = final.stdenvNoCC.mkDerivation {
+              pname = "codex";
+              version = codexVersion;
+              src = codexSrc;
+              dontUnpack = true;
+              nativeBuildInputs = [ final.makeBinaryWrapper ];
+              installPhase = ''
+                runHook preInstall
+                install -Dm755 ${codexBin} $out/bin/codex
+                install -Dm755 ${codexSrc}/bin/codex-code-mode-host $out/bin/codex-code-mode-host
+                wrapProgram $out/bin/codex --prefix PATH : ${
+                  final.lib.makeBinPath [
+                    final.ripgrep
+                    final.bubblewrap
+                  ]
+                }
+                runHook postInstall
+              '';
+              meta = {
+                description = "OpenAI Codex CLI (prebuilt static musl binary, latest GitHub release)";
+                mainProgram = "codex";
+                platforms = [
+                  "x86_64-linux"
+                  "aarch64-linux"
+                ];
+              };
+            };
 
             vrcft = final.appimageTools.wrapType2 {
               pname = "VRCFaceTracking";

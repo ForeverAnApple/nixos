@@ -13,7 +13,7 @@
 
             arch = if final.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64";
             codexSrc = inputs."codex-darwin-${arch}";
-            codexBin = "${codexSrc}/codex-${arch}-apple-darwin";
+            codexBin = "${codexSrc}/bin/codex";
 
             # The "latest" tarball carries no version in its name, so read it
             # from the binary (IFD). Without this the package stays
@@ -40,6 +40,7 @@
               installPhase = ''
                 runHook preInstall
                 install -Dm755 ${codexBin} $out/bin/codex
+                install -Dm755 ${codexSrc}/bin/codex-code-mode-host $out/bin/codex-code-mode-host
                 runHook postInstall
               '';
               meta = {

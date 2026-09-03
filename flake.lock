@@ -116,27 +116,53 @@
     "codex-darwin-aarch64": {
       "flake": false,
       "locked": {
-        "lastModified": 1787996631,
-        "narHash": "sha256-xgMZ8Q4+HKAwQ+pebsqI4FU1x+ckwNlOybu4Ptk5vqY=",
+        "lastModified": 1788301322,
+        "narHash": "sha256-86t7+A+66P9yaj88QdvH4jUhngey0ibue75NuaLS6Yo=",
         "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz"
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz"
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz"
       }
     },
     "codex-darwin-x86_64": {
       "flake": false,
       "locked": {
-        "lastModified": 1787996634,
-        "narHash": "sha256-z9qB+wEUjLgC+YL7l+tcYUI2LnC8ps9x+P7WMrA2cdk=",
+        "lastModified": 1788301324,
+        "narHash": "sha256-M/R8Xfp/nSarkbnt34atI5MX0Pf6GCmD+sJ6ZiZcVS4=",
         "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz"
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz"
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz"
+      }
+    },
+    "codex-linux-aarch64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788300197,
+        "narHash": "sha256-5fKgXJ0qOmvrfX03QC9gVSccoROJO2GWrWMzqfEGMCI=",
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz"
+      }
+    },
+    "codex-linux-x86_64": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788300194,
+        "narHash": "sha256-hJXdfqSReRiR3h3PyP0yzm9pJ47A+XIwW0wpe13ST6M=",
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
       }
     },
     "deploy-rs": {
@@ -445,22 +471,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-unstable-small": {
-      "locked": {
-        "lastModified": 1788127064,
-        "narHash": "sha256-fC4A4mde4WeGSynrHUkLZtV/lmValH6Idw/QJn0MUDs=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "3633f4ab859cd646d244802286d916f107ffeda7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable-small",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "open-interpreter-darwin-aarch64": {
       "flake": false,
       "locked": {
@@ -484,6 +494,8 @@
         "anthropic-skills": "anthropic-skills",
         "codex-darwin-aarch64": "codex-darwin-aarch64",
         "codex-darwin-x86_64": "codex-darwin-x86_64",
+        "codex-linux-aarch64": "codex-linux-aarch64",
+        "codex-linux-x86_64": "codex-linux-x86_64",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "flake-parts": "flake-parts",
@@ -495,7 +507,6 @@
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "nixpkgs-master": "nixpkgs-master",
-        "nixpkgs-unstable-small": "nixpkgs-unstable-small",
         "open-interpreter-darwin-aarch64": "open-interpreter-darwin-aarch64",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2"

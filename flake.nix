@@ -11,11 +11,6 @@
     # so we prefer master for them and unstable for everything else.
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
-    # Hydra-built small channel: hours behind master, fully cached. Used for
-    # codex, which builds heavy from master and isn't worth the rebuild cost
-    # for "hours fresher" over nixos-unstable-small. See dev/overlays.nix.
-    nixpkgs-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -112,13 +107,21 @@
     # GitHub serves /releases/latest/download/<asset> as a redirect to the
     # current release. Nix follows the redirect, hashes the resolved tarball,
     # and pins it in flake.lock — so `nix flake update` is the version bump.
-    # One input per darwin arch; only the matching one is fetched at build time.
+    # One input per platform; only the matching one is fetched at build time.
     codex-darwin-aarch64 = {
-      url = "https://github.com/openai/codex/releases/latest/download/codex-aarch64-apple-darwin.tar.gz";
+      url = "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz";
       flake = false;
     };
     codex-darwin-x86_64 = {
-      url = "https://github.com/openai/codex/releases/latest/download/codex-x86_64-apple-darwin.tar.gz";
+      url = "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz";
+      flake = false;
+    };
+    codex-linux-aarch64 = {
+      url = "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz";
+      flake = false;
+    };
+    codex-linux-x86_64 = {
+      url = "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz";
       flake = false;
     };
   };
