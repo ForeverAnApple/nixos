@@ -54,7 +54,7 @@
     # Agent multiplexer (tmux-like) — built from source, no upstream cache.
     # Pinned to a release tag; bump the tag here to upgrade.
     herdr = {
-      url = "github:ogulcancelik/herdr/v0.6.8";
+      url = "github:herdrdev/herdr/v0.8.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
