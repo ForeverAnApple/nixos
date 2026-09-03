@@ -25,6 +25,7 @@
             pkgs.libnotify
             pkgs.coreutils
             pkgs.procps
+            pkgs.pulseaudio
           ];
           text = ''
             # If already recording, stop it and let the original instance handle conversion
@@ -45,7 +46,11 @@
             notify-send -t 2000 "Recording started" "Press the same key to stop"
             ${signalWaybar}
 
-            wf-recorder -g "$REGION" -f "$TEMP_VIDEO"
+            if [ "$FORMAT" = "mp4" ]; then
+                wf-recorder -g "$REGION" -f "$TEMP_VIDEO" --audio="$(pactl get-default-sink).monitor"
+            else
+                wf-recorder -g "$REGION" -f "$TEMP_VIDEO"
+            fi
 
             # wf-recorder exited (killed by toggle or finished)
             ${signalWaybar}
