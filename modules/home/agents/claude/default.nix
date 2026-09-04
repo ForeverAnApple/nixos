@@ -27,7 +27,7 @@
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
         skills.agent-browser = "${inputs.agent-browser-src}/skills/agent-browser";
         settings = {
-          model = "claude-fable-5";
+          model = "claude-fable-5-1";
           env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
           permissions.defaultMode = "auto";
           # Without this, Claude shows the "make auto mode your default?"

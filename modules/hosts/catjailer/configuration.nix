@@ -171,7 +171,7 @@
         tmpfsSize = "24G";
       };
 
-      services.journald.extraConfig = "SystemMaxUse=500M";
+      services.journald.settings.Journal.SystemMaxUse = "500M";
 
       nix.settings = {
         # Fully parallel builds can spike RAM enough to stall the machine.
