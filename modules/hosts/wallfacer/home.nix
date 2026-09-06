@@ -90,6 +90,9 @@
         name = "open-interpreter-0.0.23";
         paths = [ inputs.open-interpreter-darwin-aarch64 ];
         meta = {
+          # this codex fork ships its own codex-code-mode-host; let the
+          # version-matched copy from the codex package win the profile
+          priority = 10;
           description = "Coding agent optimized for low-cost models";
           homepage = "https://www.openinterpreter.com";
           license = lib.licenses.asl20;
