@@ -39,9 +39,9 @@ The top-level model thinks, plans, judges, and orchestrates. It delegates execut
 
 | Role | Claude | Codex |
 |---|---|---|
-| Judgement, planning, orchestration | fable | gpt-5.6-sol |
-| Coding work, given full context | opus | gpt-5.6-luna |
-| Long simple loops: scraping, verifiable test loops | sonnet | gpt-5.4-mini |
+| Judgement, planning, orchestration | fable 5.1 | gpt-6-astra |
+| Coding work, given full context | opus 5 | gpt-5.6-luna |
+| Long simple loops: scraping, verifiable test loops | sonnet 5 | gpt-5.4-mini |
 
 Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. Don't burn the coding tier on grind a small model can verify mechanically.
 
