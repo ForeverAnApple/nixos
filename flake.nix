@@ -46,11 +46,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Agent multiplexer (tmux-like) — built from source, no upstream cache.
-    # Pinned to a release tag; bump the tag here to upgrade.
-    herdr = {
-      url = "github:herdrdev/herdr/v0.8.2";
-      inputs.nixpkgs.follows = "nixpkgs";
+    # Prebuilt release binaries. To upgrade, bump the tag in both URLs and
+    # the version in modules/home/desktop/herdr/_package.nix.
+    herdr-darwin-aarch64 = {
+      url = "file+https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-macos-aarch64";
+      flake = false;
+    };
+    herdr-linux-x86_64 = {
+      url = "file+https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64";
+      flake = false;
     };
 
     open-interpreter-darwin-aarch64 = {

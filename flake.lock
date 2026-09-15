@@ -265,26 +265,28 @@
         "type": "github"
       }
     },
-    "herdr": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
-      },
+    "herdr-darwin-aarch64": {
+      "flake": false,
       "locked": {
-        "lastModified": 1787161794,
-        "narHash": "sha256-sEGIN3dLZasaHob3EHscWBCIQHflMQVchYmzgsETDk4=",
-        "owner": "herdrdev",
-        "repo": "herdr",
-        "rev": "9eb521456ac0d19d3ab3d9d7cea3cca10baa8a4c",
-        "type": "github"
+        "narHash": "sha256-ZIHb8eY+s1KsGQrY94prrDbeFBgrfaA3HJVqll93sbU=",
+        "type": "file",
+        "url": "https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-macos-aarch64"
       },
       "original": {
-        "owner": "herdrdev",
-        "ref": "v0.8.2",
-        "repo": "herdr",
-        "type": "github"
+        "type": "file",
+        "url": "https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-macos-aarch64"
+      }
+    },
+    "herdr-linux-x86_64": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-0iLPZH9js27Hdjd0DbsCbTcgxJCUsuFNbVeWX3+euGo=",
+        "type": "file",
+        "url": "https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64"
       }
     },
     "home-manager": {
@@ -500,7 +502,8 @@
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "flake-parts": "flake-parts",
-        "herdr": "herdr",
+        "herdr-darwin-aarch64": "herdr-darwin-aarch64",
+        "herdr-linux-x86_64": "herdr-linux-x86_64",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "llm-agents": "llm-agents",
@@ -511,27 +514,6 @@
         "open-interpreter-darwin-aarch64": "open-interpreter-darwin-aarch64",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2"
-      }
-    },
-    "rust-overlay": {
-      "inputs": {
-        "nixpkgs": [
-          "herdr",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1783577481,
-        "narHash": "sha256-EWMxOWrJ031f8f/lrcEmhTRs4npw1/5N3Hcjin846c8=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "4cdea398dc491b082dccdce0fad1ed0b75fa3394",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
       }
     },
     "sops-nix": {
