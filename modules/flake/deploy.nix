@@ -9,6 +9,7 @@ let
   # sshd — rebuild locally via `nh os switch` instead.
   deployHosts = [
     "catjailer"
+    "dreameater"
     "sisyphus"
     "swordholder"
   ];

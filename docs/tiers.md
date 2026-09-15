@@ -31,7 +31,7 @@ Wants:
 - Remote deploy via deploy-rs (as `faa`, same as workstation)
 - Long uptime
 
-Hosts: sisyphus, swordholder.
+Hosts: sisyphus, swordholder, dreameater.
 
 ## Form-factor addons
 
@@ -48,6 +48,8 @@ A host should be one tier. Mixing tiers (workstation that also runs services, se
 Today: `catjailer` is a workstation that also imports `sshd, fail2ban, caddy`. Those services are pending migration off catjailer. The mixed state is named honestly in `modules/hosts/catjailer/imports.nix` — first import is `workstation` (its real identity), the rest are the debt.
 
 When the migration completes, catjailer becomes pure: `[workstation, nvidia, gaming, obs]`.
+
+`dreameater` is a service host that also imports `dev`. The dev workload is its purpose, not debt. A second such host promotes the pairing to a tier.
 
 ## Adding a new host
 

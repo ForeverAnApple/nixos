@@ -7,6 +7,7 @@
 | **wallfacer** | workstation | nix-darwin (aarch64) | laptop | Apple Silicon | macOS workstation |
 | **sisyphus** | service | NixOS (x86_64) | VM | Intel, virtual disk | network utility (relay, anti-spam) |
 | **swordholder** | service | NixOS (x86_64) | bare metal | NVIDIA, ZFS pool | media / storage |
+| **dreameater** | service | NixOS (x86_64) | VM | AMD EPYC, virtio disk | remote dev |
 
 Tier aggregates: `modules/nixos/workstation/`, `modules/nixos/service/`, `modules/darwin/workstation/`.
 Per-host config: `modules/hosts/<name>/`. Each host's `imports.nix` picks one tier plus addons.
@@ -27,3 +28,6 @@ NixOS service VM. Imports: `[service, endlessh, initrd-unlock, derper]`. Headles
 
 ### swordholder
 NixOS service bare-metal. Imports: `[service, nvidia, nix-ld, caddy, home-assistant, audiobookshelf, immich, forgejo, paperless, homepage]`. ZFS pool, NVIDIA for transcoding. Host-local config carries the storage and media-pipeline specifics. Deploy via deploy-rs as `faa`.
+
+### dreameater
+NixOS service VM used as a remote dev host. Imports: `[service, dev, nix-ld, envfs]`. Legacy BIOS boot (GRUB) — the only host not on systemd-boot. sshd on :22022 is open to the public interface (key-only, fail2ban). Caddy imports vhost snippets from `/etc/caddy/sites/*.caddy`, which are host-local and not tracked here. Deploy via deploy-rs as `faa`.
