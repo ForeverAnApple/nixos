@@ -55,7 +55,3 @@ When the migration completes, catjailer becomes pure: `[workstation, nvidia, gam
 2. If both: pick the dominant one and name the impurity. If genuinely both forever, the design is wrong — split into two hosts.
 3. Import the tier in `imports.nix`. Add form-factor or service modules as siblings.
 4. The host's import list should read as a one-sentence description of what the machine is.
-
-## Why these names
-
-Function-named, not role-named. `service` names what the host *does*, not who logs into it. See [PHILOSOPHY.md](../PHILOSOPHY.md).
