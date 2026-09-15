@@ -9,6 +9,7 @@
         jq
         nixfmt
         nodejs
+        bun
         python3
         uv
         rustc
