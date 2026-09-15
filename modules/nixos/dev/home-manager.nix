@@ -18,9 +18,6 @@ topLevel@{ inputs, ... }:
 
         users.faa.imports = [
           topLevel.config.flake.modules.homeManager.core
-          # Linux-only home modules (systemd timers, Wayland services, …).
-          # Defined in modules/home/linux/; routing lives only here.
-          (topLevel.config.flake.modules.homeManager.linux or { })
           (topLevel.config.flake.modules.homeManager."homes/${hostName}" or { })
         ];
 

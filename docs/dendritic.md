@@ -29,7 +29,6 @@ Folders in `modules/home/`:
 | `core/` | every home gets these (shell, ssh, nh) |
 | `desktop/` | GUI applications |
 | `dev/` | development tools (editor, git) |
-| `linux/` | home modules that only make sense on Linux (auto-routed by the NixOS HM wiring) |
 | `darwin/` | home modules that only make sense on macOS (auto-routed by the Darwin HM wiring) |
 | `agents/` | LLM agent CLIs |
 

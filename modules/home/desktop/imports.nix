@@ -13,6 +13,7 @@
     nautilus
     niri
     obsidian
+    process-reaper
     screencast
     spotify
     swaybg
