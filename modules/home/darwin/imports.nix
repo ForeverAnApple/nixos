@@ -10,5 +10,6 @@
     skhd
     aerospace
     power-logger
+    kitty-image-paste
   ];
 }
