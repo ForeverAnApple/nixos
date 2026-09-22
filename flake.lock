@@ -51,11 +51,11 @@
     "agent-browser-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1790085002,
-        "narHash": "sha256-QJwKiWbFh2lLXDhpEvWq02aqhbneRgqi9DTdO+/4Js0=",
+        "lastModified": 1790018158,
+        "narHash": "sha256-arVZxio95/KW3KZZ7bXl7M6jrPabPR/SXRuLxa6Pcm8=",
         "owner": "vercel-labs",
         "repo": "agent-browser",
-        "rev": "d01253d9db28d75080e36da3c1c31ef89454731e",
+        "rev": "b0f3962a131292805fe7c4e276e4bf7a50a4e876",
         "type": "github"
       },
       "original": {
@@ -117,8 +117,8 @@
     "codex-darwin-aarch64": {
       "flake": false,
       "locked": {
-        "lastModified": 1790105027,
-        "narHash": "sha256-TNZpFoqsMnc3fgwJwrB9/mcpQMpgRxyb5Smls1slQzA=",
+        "lastModified": 1789760780,
+        "narHash": "sha256-xvNrGiVBenuiDU+gqVmvqW5EIWhFObtMXIxofUnOOvE=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz"
       },
@@ -130,8 +130,8 @@
     "codex-darwin-x86_64": {
       "flake": false,
       "locked": {
-        "lastModified": 1790105024,
-        "narHash": "sha256-eopJ2az000r6DibkT+PyFDAk9J13jCl/QoNQ/F1Gozc=",
+        "lastModified": 1789760777,
+        "narHash": "sha256-bPOcSuSn9DTflW8Y+6zqnGoNKid+apzmTxR1JzR6BTM=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz"
       },
@@ -143,8 +143,8 @@
     "codex-linux-aarch64": {
       "flake": false,
       "locked": {
-        "lastModified": 1790104595,
-        "narHash": "sha256-kgGuVtG49ABcmh7neg+3nPsjdtb+S23YGKFwi7HtUQ4=",
+        "lastModified": 1789759610,
+        "narHash": "sha256-Rt2xT75f9Twl8BTlMSmgssUxhdret5hZIyJ9Kg/yEEk=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz"
       },
@@ -156,8 +156,8 @@
     "codex-linux-x86_64": {
       "flake": false,
       "locked": {
-        "lastModified": 1790103611,
-        "narHash": "sha256-rdT6vvlALQF8KbWNG5VkXTyBGknU/Wtpj/GOCUU5cq4=",
+        "lastModified": 1789759527,
+        "narHash": "sha256-cE0ryrxHzaT5ojHidTs3TygFHmtcW/pPiKpH3Yii15Y=",
         "type": "tarball",
         "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
       },
@@ -296,11 +296,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790110821,
-        "narHash": "sha256-4vgPxAtYGryB/9SZVFMrcRKmNcOqcN3+MwRJPTVpb1o=",
+        "lastModified": 1790021793,
+        "narHash": "sha256-wXAdaLBAjbQK/OfESV/i0pgolkz+Uo4SbBP/MbfGLHU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a5768f1a46942657352e58037b7891bdcbc0741f",
+        "rev": "a3dfb887d40d134af29fa8e924ba85a3e3a99194",
         "type": "github"
       },
       "original": {
@@ -335,11 +335,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1790113366,
-        "narHash": "sha256-LCuRRIWKlV2gKUo2J7xQluJFxKbTKHpcEWYisBN847k=",
+        "lastModified": 1790033111,
+        "narHash": "sha256-4/8fnnLUzJVMiN/td0nN95mcQGlEbEhl6ukB4+uydOA=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "bcecdffca7ae294525c9a47241257b6a90209be2",
+        "rev": "9032892fd4d89bdad79c858a81aae1268ad2d191",
         "type": "github"
       },
       "original": {
@@ -428,11 +428,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1790046670,
-        "narHash": "sha256-MYiI+CzL0tuWgRPjGsKCDHqYs2T3OzMlMQWOYWG0qso=",
+        "lastModified": 1789921291,
+        "narHash": "sha256-Ft/BRnIqw1MywFoXydKobjjWmDFgDdYtSpJliE8+yUw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "6774f7bc253789b113a4f39285dc0fa100abeacc",
+        "rev": "44a91898084f46797b5fac650c7e8c9ac38c43d4",
         "type": "github"
       },
       "original": {
@@ -444,11 +444,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1790118339,
-        "narHash": "sha256-p3OupfzFxJPAz8zwIYv38++o561tDrBN6Ir3uUinZR0=",
+        "lastModified": 1790036125,
+        "narHash": "sha256-Qper7IPlPuWkcVBrysXegIt/RUkrVn2SDIOI3Q8YybE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a79225dda10e201b5303af38571c2fce030d7b73",
+        "rev": "1587a20310bbc468ff50171d8466e90d22eb1073",
         "type": "github"
       },
       "original": {
