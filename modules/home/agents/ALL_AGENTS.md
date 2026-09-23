@@ -41,9 +41,9 @@ The top-level model thinks, plans, judges, and orchestrates. It delegates execut
 |---|---|---|
 | Judgement, planning, orchestration | opus 5.5 | gpt-6-astra |
 | Coding work, given full context | opus 5.5 | gpt-6-sol |
-| Extremely easy tasks, rare | sonnet 5 | gpt-6-luna |
+| Mechanical work: fetching info, running a long list of already-planned steps, anything with no decision or interpretation in it | sonnet 5 | gpt-6-luna |
 
-Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is for the rare task so easy its output can be checked mechanically.
+Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is still smart. Reserve it for work where every step is already decided: gather this, run these, report back. The moment a task needs a judgement call, it belongs a tier up.
 
 ## Voice notifications
 Use the `voice-notifications` skill to announce:
