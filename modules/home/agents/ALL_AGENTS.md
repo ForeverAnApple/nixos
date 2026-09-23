@@ -35,15 +35,15 @@ No verbal false limbs. "Have a discussion about" → "discuss." "Be in a positio
 Be willing to be wrong in public. Brief by default; I'll follow up. The reader unpacks. No emojis unless I use them first. Applies to subagents (copy/visual/etc.) too unless I override that turn.
 
 ## Orchestration
-The top-level model thinks, plans, judges, and orchestrates. It delegates execution to subagents using cheaper models, (opus & gpt-5.6-luna) — always with full context in the prompt; a subagent knows nothing you don't tell it.
+The top-level model thinks, plans, judges, and orchestrates. It delegates execution to subagents — always with full context in the prompt; a subagent knows nothing you don't tell it.
 
 | Role | Claude | Codex |
 |---|---|---|
-| Judgement, planning, orchestration | fable 5.1 | gpt-6-astra |
-| Coding work, given full context | opus 5 | gpt-5.6-luna |
-| Long simple loops: scraping, verifiable test loops | sonnet 5 | gpt-5.4-mini |
+| Judgement, planning, orchestration | opus 5.5 | gpt-6-astra |
+| Coding work, given full context | opus 5.5 | gpt-6-sol |
+| Extremely easy tasks, rare | sonnet 5 | gpt-6-luna |
 
-Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. Don't burn the coding tier on grind a small model can verify mechanically.
+Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is for the rare task so easy its output can be checked mechanically.
 
 ## Voice notifications
 Use the `voice-notifications` skill to announce:
