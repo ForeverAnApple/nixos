@@ -390,10 +390,7 @@ window-rule {
     clip-to-geometry true
 }
 
-// GSM in-game Yomitan overlay: a fully transparent Electron window floated over
-// the game. niri draws the focus ring as a solid rectangle BEHIND windows, so
-// behind this transparent overlay it reads as an opaque #7fc8ff fill whenever the
-// overlay has focus. Kill the ring for this window and float it above the game.
+// The focus ring fills the transparent window's background when focused.
 window-rule {
     match app-id="^gsm-overlay$" title="^GSM Overlay$"
     open-floating true
@@ -402,9 +399,7 @@ window-rule {
     default-floating-position x=0 y=0 relative-to="top-left"
 }
 
-// GSM dialogs (PyQt6): top-level resizable windows without a transient parent,
-// so niri's auto-float (parented dialogs / fixed-size windows) doesn't catch
-// them. Float the mining "update card" confirmation and friends over the game.
+// Resizable dialogs without a transient parent do not float automatically.
 window-rule {
     match app-id="^gamesentenceminer$" title="^Confirm Anki Card Details$"
     match app-id="^gamesentenceminer$" title="^Select Screenshot$"
@@ -413,11 +408,8 @@ window-rule {
     open-floating true
 }
 
-// Limbus (gamescope nested session; sets a title but no app-id) opens at the
-// global default width, then needs two manual Mod+L presses every boot to reach
-// the width the MD automation was calibrated against. Pin it to full width.
-// open-focused false: md_boot parks it on workspace 2 right after it maps;
-// until then it must not steal keyboard focus from whatever's being typed.
+// The nested session reports a title but no app-id.
+// Workspace assignment follows initial mapping; suppress focus until then.
 window-rule {
     match title="^LimbusCompany$"
     default-column-width { proportion 1.0; }
@@ -425,9 +417,6 @@ window-rule {
 }
 
 binds {
-    // GSM in-game Yomitan overlay: toggle it onto the current workspace (over the
-    // game). niri consumes the key so it never leaks into the game. Requires the
-    // GSM overlay running; see /mnt/omega-beef/Games/gsm-nixos.
     Mod+Y { spawn "/mnt/omega-beef/Games/gsm-nixos/scripts/overlay-toggle.sh"; }
 
     // Kitty floating
