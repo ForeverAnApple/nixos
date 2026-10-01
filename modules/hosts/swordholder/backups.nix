@@ -24,20 +24,31 @@
         "/var/lib/audiobookshelf/config/absdatabase.sqlite"
         "/THICC/Forgejo/data/forgejo.db"
         "/THICC/Paperless/db.sqlite3"
+        "/var/lib/sonarr/.config/NzbDrone/sonarr.db"
+        "/var/lib/radarr/.config/Radarr/radarr.db"
+        "/var/lib/bazarr/db/bazarr.db"
       ];
       stateDirs = [
         "/var/lib/komga"
         "/var/lib/komf"
-        "/var/lib/suwayomi-server"
         "/var/lib/hass"
         "/var/lib/audiobookshelf"
         "/var/lib/qbittorrent"
+        "/var/lib/sonarr"
+        "/var/lib/radarr"
+        "/var/lib/bazarr"
         "/var/lib/tailscale"
-        "/var/lib/plex/Plex Media Server/Plug-in Support"
         "/etc/ssh"
       ];
     in
     {
+      # Remove the temporary hardening override when this declarative unit activates.
+      system.activationScripts.state-backup-hardening-cleanup = {
+        deps = [ "etc" ];
+        text = ''
+          rm -f /etc/systemd/system.control/state-backup.service.d/90-security-hardening.conf
+        '';
+      };
       services.sanoid = {
         templates.backup = {
           hourly = 0;
@@ -51,40 +62,86 @@
       };
 
       systemd.services.state-backup = {
+        unitConfig.RequiresMountsFor = [ "/THICC/Backups" ];
         path = [
           pkgs.sqlite
           pkgs.rsync
           pkgs.zstd
           pkgs.util-linux
+          pkgs.systemd
           config.services.postgresql.package
         ];
         script = ''
           set -euo pipefail
+          umask 077
+          ${pkgs.util-linux}/bin/mountpoint -q /THICC/Backups
           mkdir -p ${dest}/sqlite ${dest}/postgres ${dest}/state
           chmod 700 /THICC/Backups
 
           for db in ${lib.escapeShellArgs sqliteDbs}; do
-            [ -f "$db" ] || continue
+            [ -f "$db" ] || { echo "Missing backup database: $db" >&2; exit 1; }
             out="${dest}/sqlite/$(echo "$db" | tr / _)"
             sqlite3 "$db" ".backup '$out.tmp'"
+            [ "$(sqlite3 "$out.tmp" 'PRAGMA integrity_check;')" = "ok" ]
             mv "$out.tmp" "$out"
           done
 
           runuser -u postgres -- pg_dumpall | zstd -q -o ${dest}/postgres/pg_dumpall.sql.zst.tmp -f
+          zstd -t -q ${dest}/postgres/pg_dumpall.sql.zst.tmp
           mv ${dest}/postgres/pg_dumpall.sql.zst.tmp ${dest}/postgres/pg_dumpall.sql.zst
 
           for dir in ${lib.escapeShellArgs stateDirs}; do
-            [ -d "$dir" ] || continue
+            [ -d "$dir" ] || { echo "Missing backup directory: $dir" >&2; exit 1; }
             rsync -a --delete "$dir" ${dest}/state/
           done
 
-          for dump in ${dest}/sqlite/*; do
-            [ "$(sqlite3 "$dump" 'PRAGMA integrity_check;')" = "ok" ]
+          restartUnits=()
+          : > /run/state-backup/restart-units
+          restoreServices() {
+            status=$?
+            trap - EXIT
+            if [ "''${#restartUnits[@]}" -gt 0 ]; then
+              systemctl start "''${restartUnits[@]}" || status=1
+            fi
+            exit "$status"
+          }
+          trap restoreServices EXIT
+          for unit in suwayomi-server.service plex.service samba-smbd.service samba-nmbd.service samba-winbindd.service; do
+            if systemctl is-active --quiet "$unit"; then
+              restartUnits+=("$unit")
+              printf '%s\n' "$unit" >> /run/state-backup/restart-units
+              systemctl stop "$unit"
+            fi
           done
-          zstd -t -q ${dest}/postgres/pg_dumpall.sql.zst
-          date +%s > ${dest}/LAST_SUCCESS
+
+          for dir in /var/lib/suwayomi-server /var/lib/samba '/var/lib/plex/Plex Media Server/Plug-in Support'; do
+            [ -d "$dir" ] || { echo "Missing backup directory: $dir" >&2; exit 1; }
+            rsync -a --delete "$dir" ${dest}/state/
+          done
+
+          if [ "''${#restartUnits[@]}" -gt 0 ]; then
+            systemctl start "''${restartUnits[@]}"
+            restartUnits=()
+            : > /run/state-backup/restart-units
+          fi
+
+          date +%s > ${dest}/LAST_SUCCESS.tmp
+          mv ${dest}/LAST_SUCCESS.tmp ${dest}/LAST_SUCCESS
         '';
-        serviceConfig.Type = "oneshot";
+        serviceConfig = {
+          Type = "oneshot";
+          RuntimeDirectory = "state-backup";
+          RuntimeDirectoryMode = "0700";
+          TimeoutStartSec = "10min";
+          TimeoutStopSec = "2min";
+          ExecStopPost = pkgs.writeShellScript "state-backup-restore-services" ''
+            set -euo pipefail
+            if [ -s /run/state-backup/restart-units ]; then
+              mapfile -t units < /run/state-backup/restart-units
+              ${pkgs.systemd}/bin/systemctl start "''${units[@]}"
+            fi
+          '';
+        };
         unitConfig.OnFailure = [ "backup-alert@%n.service" ];
       };
 

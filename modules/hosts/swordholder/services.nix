@@ -55,7 +55,6 @@
           };
           Finn = {
             path = "/THICC/Finn";
-            comment = "Finn use only.";
             browseable = "yes";
             "read only" = "no";
             "guest ok" = "no";
@@ -63,7 +62,6 @@
           };
           Noah = {
             path = "/THICC/Noah";
-            comment = "Noah use only.";
             browseable = "yes";
             "read only" = "no";
             "guest ok" = "no";
