@@ -52,12 +52,11 @@
         daemon="${home}/.codex/packages/app-server-daemon"
         stamp="${home}/.codex/.daemon-pin"
         if [ -e "$daemon/current" ] && [ "$(cat "$stamp" 2>/dev/null)" != "$codex" ]; then
-          run env PATH="${pkgs.procps}/bin:$PATH" "$codex/bin/codex" app-server daemon update --from-cli -y
-          run sh -c 'printf %s "'"$codex"'" > "'"$stamp"'"'
-          current="$(readlink -f "$daemon/current")"
-          for r in "$daemon"/releases/*; do
-            [ "$(readlink -f "$r")" = "$current" ] || run rm -rf "$r"
-          done
+          if run env PATH="${pkgs.procps}/bin:$PATH" "$codex/bin/codex" app-server daemon update --from-cli -y; then
+            run sh -c 'printf %s "'"$codex"'" > "'"$stamp"'"'
+          else
+            echo "codex: daemon update failed; retaining current daemon for retry" >&2
+          fi
         fi
       '';
     };
