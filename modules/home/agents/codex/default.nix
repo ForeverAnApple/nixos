@@ -44,5 +44,21 @@
           run sh -c 'printf %s "${seed}" > "'"$stamp"'"'
         fi
       '';
+
+      # Pin the app-server daemon to this build; unpinned it self-updates from GitHub.
+      # Each pin copies a ~400M release, so drop the ones no longer current.
+      home.activation.codexDaemonPin = lib.hm.dag.entryAfter [ "codexConfig" ] ''
+        codex="${config.programs.codex.package}"
+        daemon="${home}/.codex/packages/app-server-daemon"
+        stamp="${home}/.codex/.daemon-pin"
+        if [ -e "$daemon/current" ] && [ "$(cat "$stamp" 2>/dev/null)" != "$codex" ]; then
+          run "$codex/bin/codex" app-server daemon update --from-cli -y
+          run sh -c 'printf %s "'"$codex"'" > "'"$stamp"'"'
+          current="$(readlink -f "$daemon/current")"
+          for r in "$daemon"/releases/*; do
+            [ "$(readlink -f "$r")" = "$current" ] || run rm -rf "$r"
+          done
+        fi
+      '';
     };
 }

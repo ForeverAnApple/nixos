@@ -39,8 +39,9 @@
               dontUnpack = true;
               installPhase = ''
                 runHook preInstall
-                install -Dm755 ${codexBin} $out/bin/codex
-                install -Dm755 ${codexSrc}/bin/codex-code-mode-host $out/bin/codex-code-mode-host
+                mkdir -p $out/lib $out/bin
+                cp -r ${codexSrc} $out/lib/codex
+                ln -s $out/lib/codex/bin/codex $out/bin/codex
                 runHook postInstall
               '';
               meta = {

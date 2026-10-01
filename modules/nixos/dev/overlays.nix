@@ -43,16 +43,14 @@
               src = codexSrc;
               dontUnpack = true;
               nativeBuildInputs = [ final.makeBinaryWrapper ];
+              # The app-server daemon needs the intact upstream layout (manifest
+              # beside bin/) around the real executable, so wrap from outside it.
               installPhase = ''
                 runHook preInstall
-                install -Dm755 ${codexBin} $out/bin/codex
-                install -Dm755 ${codexSrc}/bin/codex-code-mode-host $out/bin/codex-code-mode-host
-                wrapProgram $out/bin/codex --prefix PATH : ${
-                  final.lib.makeBinPath [
-                    final.ripgrep
-                    final.bubblewrap
-                  ]
-                }
+                mkdir -p $out/lib
+                cp -r ${codexSrc} $out/lib/codex
+                makeWrapper $out/lib/codex/bin/codex $out/bin/codex \
+                  --prefix PATH : ${final.lib.makeBinPath [ final.bubblewrap ]}
                 runHook postInstall
               '';
               meta = {
