@@ -15,12 +15,22 @@
       '';
     in
     {
+      config,
+      ...
+    }:
+    {
+      sops.secrets."headscale/policy" = {
+        owner = "headscale";
+        group = "headscale";
+        restartUnits = [ "headscale.service" ];
+      };
+
       services.headscale.settings = {
         server_url = "https://headscale.davec.xyz";
 
         policy = {
           mode = "file";
-          path = "${./headscale-policy.hujson}";
+          path = config.sops.secrets."headscale/policy".path;
         };
 
         prefixes = {
