@@ -5,8 +5,8 @@
       services.sunshine = {
         enable = true;
         autoStart = true;
-        # KMS capture (niri isn't wlroots) needs cap_sys_admin, else black frame.
-        capSysAdmin = true;
+        capSysAdmin = false;
+        settings.capture = "wlr";
 
         # cudaSupport drops the driver libs from LD_LIBRARY_PATH, so NVENC
         # silently falls back to x264. Re-add /run/opengl-driver/lib.
@@ -63,9 +63,6 @@
       # Sunshine feeds client input through /dev/uinput; without group access,
       # video streams but mouse/keyboard are dead.
       hardware.uinput.enable = true;
-      users.users.faa.extraGroups = [ "input" ];
-      services.udev.extraRules = ''
-        KERNEL=="uinput", MODE="0660", GROUP="input"
-      '';
+      users.users.faa.extraGroups = [ "uinput" ];
     };
 }
