@@ -10,7 +10,12 @@
       programs.steam = {
         enable = true;
         package = pkgs.steam.override {
-          extraPkgs = pkgs: [ pkgs.gamescope ];
+          # gamescope 3.16.24 links sdl2-compat, which dlopens libSDL3 at
+          # startup; SDL3 is not in its closure, so without this it core-dumps.
+          extraPkgs = pkgs: [
+            pkgs.gamescope
+            pkgs.sdl3
+          ];
         };
         extraCompatPackages = with pkgs; [ proton-ge-bin ];
         extraPackages = with pkgs; [
