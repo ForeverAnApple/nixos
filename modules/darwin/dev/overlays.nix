@@ -13,18 +13,7 @@
 
             arch = if final.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64";
             codexSrc = inputs."codex-darwin-${arch}";
-            codexBin = "${codexSrc}/bin/codex";
-
-            # The "latest" tarball carries no version in its name, so read it
-            # from the binary (IFD). Without this the package stays
-            # codex-latest forever and nh never reports a codex bump.
-            codexVersion = final.lib.fileContents (
-              final.runCommandLocal "codex-version" { } ''
-                export HOME=$TMPDIR
-                install -m755 ${codexBin} ./codex
-                ./codex --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d '\n' > $out
-              ''
-            );
+            codexVersion = (builtins.fromJSON (builtins.readFile "${codexSrc}/codex-package.json")).version;
           in
           {
             inherit (masterPkgs)
@@ -45,7 +34,7 @@
                 runHook postInstall
               '';
               meta = {
-                description = "OpenAI Codex CLI (prebuilt darwin binary, latest GitHub release)";
+                description = "OpenAI Codex CLI (prebuilt darwin binary, pinned GitHub release)";
                 mainProgram = "codex";
                 platforms = [
                   "aarch64-darwin"
