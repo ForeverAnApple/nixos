@@ -88,6 +88,9 @@ in
 
             [experimental]
             kitty_graphics = true
+
+            [ui.sound]
+            enabled = false
           '';
           dir = "${config.xdg.configHome}/herdr";
         in
