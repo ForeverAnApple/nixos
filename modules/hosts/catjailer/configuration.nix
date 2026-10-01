@@ -21,6 +21,8 @@
 
       networking.firewall.interfaces.enp4s0.allowedTCPPorts = [ 22022 ];
 
+      services.usbmuxd.enable = true;
+
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
