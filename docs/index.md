@@ -11,6 +11,7 @@ Navigation catalog for this repo. Each page is atomic — one concept, no preamb
 
 ## Process
 
+- [updating.md](updating.md) — local input updates, review, and rollback
 - [../PHILOSOPHY.md](../PHILOSOPHY.md) — principles and tradeoffs we accept
 - [../AGENTS.md](../AGENTS.md) — schema for how this wiki and the repo are maintained
 

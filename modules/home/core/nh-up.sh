@@ -1,44 +1,89 @@
 #!/usr/bin/env bash
-set -uo pipefail
-cd "$HOME/nixos" || exit 1
+set -euo pipefail
+cd "$HOME/nixos"
 
-read -r -a nh_cmd <<<"${NH_CMD:-nh os}"
+update=1
+inputs=()
+nh_args=()
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --no-update) update=0; shift ;;
+    --update | -u) update=1; shift ;;
+    --update-input | -U)
+      [ "$#" -ge 2 ] && [[ $2 =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || {
+        echo "nh-up: --update-input requires an input name" >&2
+        exit 1
+      }
+      update=1
+      inputs+=("$2")
+      shift 2
+      ;;
+    --verbose | -v | --quiet | -q | --ask | -a | --no-nom | --show-activation-logs)
+      nh_args+=("$1")
+      shift
+      ;;
+    --)
+      shift
+      [ "$#" -eq 0 ] || {
+        echo "nh-up: passthrough arguments are not supported" >&2
+        exit 1
+      }
+      ;;
+    *)
+      echo "nh-up: unsupported argument $1; use nh directly for other deployment modes" >&2
+      exit 1
+      ;;
+  esac
+done
+
+case "${NH_CMD:-nh os}" in
+  "nh os") nh_cmd=(nh os) ;;
+  "nh darwin") nh_cmd=(nh darwin) ;;
+  *) echo "nh-up: unsupported NH_CMD" >&2; exit 1 ;;
+esac
 host=$(uname -n)
 host=${host%%.*}
 case " ${nh_cmd[*]} " in
   *" darwin "*) toplevel=".#darwinConfigurations.\"$host\".config.system.build.toplevel" ;;
   *) toplevel=".#nixosConfigurations.\"$host\".config.system.build.toplevel" ;;
 esac
-max=5
-attempt=0
-tmpdir=$(mktemp -d) || exit 1
-old_lock="$tmpdir/flake.lock"
-new_lock=flake.lock
-lock_pending=0
-fixed_pending=0
-fixed_file=
-fixed_original=
-if ! cp -- flake.lock "$old_lock"; then
-  rm -rf -- "$tmpdir"
-  exit 1
-fi
-
+tmpdir=$(mktemp -d)
+targets=()
+committed=0
+remember() {
+  local file=$1 i
+  for i in "${!targets[@]}"; do
+    [ "${targets[$i]}" != "$file" ] || return 0
+  done
+  i=${#targets[@]}
+  cp -- "$file" "$tmpdir/original-$i"
+  cp -- "$file" "$tmpdir/written-$i"
+  targets+=("$file")
+}
+written() {
+  local i
+  for i in "${!targets[@]}"; do
+    if [ "${targets[$i]}" = "$1" ]; then
+      cp -- "$1" "$tmpdir/written-$i"
+      return
+    fi
+  done
+  return 1
+}
 cleanup() {
-  status=$?
+  local status=$? i keep=0
   trap - EXIT
-  if [ "$lock_pending" -eq 1 ]; then
-    if ! cp -- "$old_lock" flake.lock; then
-      echo "nh-up: failed to restore the prior flake.lock" >&2
-      status=1
-    fi
+  if [ "$committed" -eq 0 ]; then
+    for i in "${!targets[@]}"; do
+      if cmp -s -- "${targets[$i]}" "$tmpdir/written-$i"; then
+        cp -- "$tmpdir/original-$i" "${targets[$i]}" || { keep=1; status=1; echo "nh-up: restore failed; original retained at $tmpdir/original-$i" >&2; }
+      elif ! cmp -s -- "${targets[$i]}" "$tmpdir/original-$i"; then
+        printf 'nh-up: concurrent change preserved in %s; original saved at %s\n' "${targets[$i]}" "$tmpdir/original-$i" >&2
+        keep=1
+      fi
+    done
   fi
-  if [ "$fixed_pending" -eq 1 ]; then
-    if ! cp -- "$fixed_original" "$fixed_file"; then
-      echo "nh-up: failed to restore $fixed_file" >&2
-      status=1
-    fi
-  fi
-  rm -rf -- "$tmpdir"
+  [ "$keep" -eq 1 ] || rm -rf -- "$tmpdir"
   exit "$status"
 }
 trap cleanup EXIT
@@ -68,360 +113,93 @@ sanitize() {
   '
 }
 
-run_logged() {
-  log=$1
-  shift
-  log_failed=0
-  "$@" 2>&1 | tee "$log"
-  pipeline_status=("${PIPESTATUS[@]}")
-  if [ "${pipeline_status[1]}" -ne 0 ]; then
-    log_failed=1
-    echo "nh-up: could not capture command output" >&2
-    return 1
-  fi
-  return "${pipeline_status[0]}"
+approve() {
+  [ -t 0 ] || { echo "nh-up: changes require interactive review" >&2; return 1; }
+  printf 'Trust these exact changes, then rebuild and activate? Type approve: '
+  local answer
+  IFS= read -r answer
+  [ "$answer" = approve ]
 }
-
-confirm_batch() {
-  summary=$1
-  prompt=$2
-  safe_summary="$summary.safe"
-  if ! sanitize <"$summary" >"$safe_summary"; then
-    echo "nh-up: could not render approval evidence; refusing" >&2
-    return 1
-  fi
-  if [ -t 1 ] && [ -z "${NO_COLOR:-}" ] && [ "${TERM:-dumb}" != dumb ]; then
-    bold=$'\033[1m'
-    cyan=$'\033[1;36m'
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[1;33m'
-    reset=$'\033[0m'
-  else
-    bold=
-    cyan=
-    red=
-    green=
-    yellow=
-    reset=
-  fi
-  while IFS= read -r line || [ -n "$line" ]; do
-    case $line in
-      "LOCK UPDATE REQUIRES APPROVAL" | "FIXED-OUTPUT BYTES REQUIRE APPROVAL")
-        printf '%s%s%s\n' "$yellow" "$line" "$reset"
-        ;;
-      "GitHub source revisions:" | "Raw file, tarball, or native release assets:" | "Other locked source changes:" | "Lock graph metadata changes:" | "Exact locked records:")
-        printf '%s%s%s\n' "$bold" "$line" "$reset"
-        ;;
-      "  root input "* | "  transitive node "* | "  "*.nix:[0-9]*)
-        printf '%s%s%s\n' "$cyan" "$line" "$reset"
-        ;;
-      "    old:"*)
-        printf '%s%s%s\n' "$red" "$line" "$reset"
-        ;;
-      "    new:"*)
-        printf '%s%s%s\n' "$green" "$line" "$reset"
-        ;;
-      *) printf '%s\n' "$line" ;;
-    esac
-  done <"$safe_summary"
-  printf '\n%s\n%sAuto-approved.%s\n' "$prompt" "$yellow" "$reset"
-  return 0
-}
-
-changed_node_count() {
-  jq -nr --slurpfile old "$old_lock" --slurpfile new "$new_lock" '
-    [
-      ([($old[0].nodes | keys[]), ($new[0].nodes | keys[])] | unique[]) as $id
-      | select(($old[0].nodes[$id] // null) != ($new[0].nodes[$id] // null))
-    ] | length'
-}
-
-lock_top_level_unchanged() {
-  jq -ne --slurpfile old "$old_lock" --slurpfile new "$new_lock" \
-    '($old[0] | del(.nodes)) == ($new[0] | del(.nodes))' >/dev/null
-}
-
-show_lock_summary() {
-  jq -nr --slurpfile old "$old_lock" --slurpfile new "$new_lock" '
-    def rootnames($lock; $id):
-      [$lock.nodes.root.inputs | to_entries[]
-       | select(.value | type == "string")
-       | select(.value == $id)
-       | .key];
-    def node_label($change):
-      ((rootnames($new[0]; $change.id) + rootnames($old[0]; $change.id)) | unique) as $names
-      | if ($names | length) > 0
-        then "root input \($names | join(", ")) [node \($change.id)]"
-        else "transitive node \($change.id)"
-        end;
-    def shortrev($pin):
-      ($pin.rev // "<none>") as $rev
-      | if ($rev | length) > 12 then $rev[0:12] else $rev end;
-    def repository($pin):
-      if ($pin.owner and $pin.repo) then "github.com/\($pin.owner)/\($pin.repo)" else "<unknown>" end;
-    def canonical: to_entries | sort_by(.key) | from_entries | tojson;
-    def compare($change):
-      if ($change.old.owner == $change.new.owner
-          and $change.old.repo == $change.new.repo
-          and ($change.old.rev | type) == "string"
-          and ($change.new.rev | type) == "string")
-      then "\n    compare: https://github.com/\($change.new.owner)/\($change.new.repo)/compare/\($change.old.rev)...\($change.new.rev)"
-      else ""
-      end;
-    [
-      ([($old[0].nodes | keys[]), ($new[0].nodes | keys[])] | unique[]) as $id
-      | {
-          id: $id,
-          oldnode: ($old[0].nodes[$id] // {}),
-          newnode: ($new[0].nodes[$id] // {}),
-          old: ($old[0].nodes[$id].locked // {}),
-          new: ($new[0].nodes[$id].locked // {})
-        }
-      | select(.oldnode != .newnode)
-    ] as $changes
-    | ($changes | map(select(.old != .new))) as $locked
-    | ($locked | map(select(.new.type == "file" or .new.type == "tarball"
-                              or .old.type == "file" or .old.type == "tarball"))) as $raw
-    | (($locked - $raw) | map(select(.new.type == "github" or .old.type == "github"))) as $github
-    | ($locked - $github - $raw) as $other
-    | ($changes | map(select((.oldnode | del(.locked)) != (.newnode | del(.locked))))) as $metadata
-    | "\nLOCK UPDATE REQUIRES APPROVAL",
-      (if ($github | length) > 0 then
-        "\nGitHub source revisions:",
-        ($github[] |
-          "  \(node_label(.)):"
-          + "\n    old: \(shortrev(.old))"
-          + "\n    new: \(shortrev(.new))"
-          + "\n    repository: \(repository(if .new.owner then .new else .old end))\(compare(.))")
-       else empty end),
-      (if ($raw | length) > 0 then
-        "\nRaw file, tarball, or native release assets:",
-        ($raw[] |
-          "  \(node_label(.)):\n    URL: \(.new.url // .old.url // "<none>")"
-          + (if .old.url != .new.url then "\n    old URL: \(.old.url // "<none>")" else "" end)
-          + "\n    old: \(.old.narHash // "<none>")"
-          + "\n    new: \(.new.narHash // "<none>")"),
-        "  These are new unauthenticated bytes. The hash gives reproducibility, not publisher identity."
-       else empty end),
-      (if ($other | length) > 0 then
-        "\nOther locked source changes:",
-        ($other[] | "  \(node_label(.)):\n    old: \(.old | tojson)\n    new: \(.new | tojson)")
-       else empty end),
-      (if ($metadata | length) > 0 then
-        "\nLock graph metadata changes:",
-        ($metadata[] |
-          "  \(node_label(.)):\n    old: \(.oldnode | del(.locked) | tojson)\n    new: \(.newnode | del(.locked) | tojson)")
-       else empty end),
-      (if ($locked | length) > 0 then
-        "\nExact locked records:",
-        ($locked[] |
-          "  \(node_label(.)):\n    old: \(.old | canonical)\n    new: \(.new | canonical)")
-       else empty end)'
-}
-
-root_name_for_url() {
-  url=$1
-  jq -r --arg url "$url" '
-    . as $lock
-    | [.nodes.root.inputs | to_entries[]
-       | select(.value | type == "string")
-       | select(($lock.nodes[.value].locked.url // "") == $url)
-       | .key]
-    | if length == 1 then .[0] else empty end' flake.lock
-}
-
-lock_pending=1
-update_attempt=0
-while :; do
-  update_attempt=$((update_attempt + 1))
-  update_log="$tmpdir/update-$update_attempt.log"
-  if run_logged "$update_log" nix flake update; then
-    break
-  fi
-  if [ "$log_failed" -eq 1 ]; then
-    exit 1
-  fi
-
-  parse_log="$tmpdir/update-$update_attempt.parse"
-  if ! sanitize <"$update_log" >"$parse_log"; then
-    echo "nh-up: could not parse sanitized update output" >&2
-    exit 1
-  fi
-  mapfile -t rot_urls < <(
-    grep -E "mismatch in field '(narHash|lastModified)'" "$parse_log" \
-      | grep -oE '"url":"[^"]+"' \
-      | cut -d'"' -f4 \
-      | sort -u
-  )
-  if [ "${#rot_urls[@]}" -eq 0 ] || [ "$update_attempt" -ge "$max" ]; then
-    echo "nh-up: lock update failed; prior flake.lock will be restored" >&2
-    exit 1
-  fi
-
-  repaired=0
-  for url in "${rot_urls[@]}"; do
-    name=$(root_name_for_url "$url")
-    if [ -z "$name" ] || ! [[ $name =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
-      echo "nh-up: mutable URL mismatch did not identify exactly one root input" >&2
-      exit 1
-    fi
-    repair_log="$tmpdir/repair-$update_attempt-$repaired.log"
-    if ! run_logged "$repair_log" nix flake update "$name"; then
-      if [ "$log_failed" -eq 1 ]; then
-        exit 1
+remember flake.lock
+if [ "$update" -eq 1 ]; then
+  for attempt in 1 2 3 4 5; do
+    status=0
+    exec {log_fd}> >(tee "$tmpdir/update.log" | sanitize)
+    log_pid=$!
+    nix flake update "${inputs[@]}" --refresh >&"$log_fd" 2>&1 || status=$?
+    exec {log_fd}>&-
+    written flake.lock
+    wait "$log_pid" || exit 1
+    [ "$status" -ne 0 ] || break
+    [ "$attempt" -lt 5 ] || exit "$status"
+    sanitize <"$tmpdir/update.log" >"$tmpdir/update.parse"
+    mapfile -t urls < <(grep -E "^error:.*mismatch in field '(narHash|lastModified)'" "$tmpdir/update.parse" | grep -oE '"url":"[^"]+"' | cut -d'"' -f4 | sort -u)
+    [ "${#urls[@]}" -gt 0 ] || exit "$status"
+    for url in "${urls[@]}"; do
+      name=$(jq -r --arg url "$url" '[.nodes.root.inputs | to_entries[] | select(.value | type == "string") | select(.value as $node | $root.nodes[$node].locked.url == $url) | .key] | if length == 1 then .[0] else empty end' --argjson root "$(cat flake.lock)" flake.lock)
+      [[ $name =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || exit 1
+      if [ "${#inputs[@]}" -gt 0 ]; then
+        selected=0
+        for input in "${inputs[@]}"; do [ "$input" != "$name" ] || selected=1; done
+        [ "$selected" -eq 1 ] || { echo "nh-up: mismatch outside selected inputs; refusing" >&2; exit 1; }
       fi
-      echo "nh-up: could not compute a candidate lock update for $name" >&2
-      exit 1
-    fi
-    repaired=$((repaired + 1))
+      status=0
+      nix flake update "$name" --refresh || status=$?
+      written flake.lock
+      [ "$status" -eq 0 ] || exit "$status"
+    done
   done
-done
-
-if ! cmp -s -- "$old_lock" flake.lock; then
-  candidate_lock="$tmpdir/candidate.lock"
-  if ! cp -- flake.lock "$candidate_lock"; then
-    echo "nh-up: could not preserve the candidate lock update; restoring it" >&2
-    exit 1
-  fi
-  new_lock=$candidate_lock
-  if ! lock_top_level_unchanged; then
-    echo "nh-up: flake.lock changed outside its node graph; restoring it" >&2
-    exit 1
-  fi
-  if ! count=$(changed_node_count); then
-    echo "nh-up: could not inspect the candidate lock update; restoring it" >&2
-    exit 1
-  fi
-  if [ "$count" -eq 0 ]; then
-    echo "nh-up: flake.lock changed without an identifiable node change; restoring it" >&2
-    exit 1
-  fi
-  summary="$tmpdir/lock-summary"
-  if ! show_lock_summary >"$summary"; then
-    echo "nh-up: could not summarize the candidate lock update; restoring it" >&2
-    exit 1
-  fi
-  if ! confirm_batch "$summary" "This approval trusts the listed source revisions and downloaded bytes, then rebuilds and activates the host."; then
-    echo "nh-up: lock update rejected; restoring prior flake.lock" >&2
-    exit 1
-  fi
-  if ! cmp -s -- "$candidate_lock" flake.lock; then
-    echo "nh-up: flake.lock changed during approval; restoring the prior lock" >&2
-    exit 1
+  if ! cmp -s -- "$tmpdir/original-0" flake.lock; then
+    cp -- flake.lock "$tmpdir/candidate.lock"
+    diff -u -- "$tmpdir/original-0" "$tmpdir/candidate.lock" >"$tmpdir/lock.diff" || [ "$?" -eq 1 ]
+    sanitize <"$tmpdir/lock.diff"
+    approve || exit 1
+    cmp -s -- "$tmpdir/candidate.lock" flake.lock || exit 1
   fi
 fi
-lock_pending=0
 
-while [ "$attempt" -lt "$max" ]; do
-  attempt=$((attempt + 1))
-  build_log="$tmpdir/build-$attempt.log"
-  if run_logged "$build_log" nix build "$toplevel" --no-link --print-out-paths; then
-    built=$(grep -oE '^/nix/store/[a-z0-9]{32}-[^[:space:]]+' "$build_log" | tail -n1)
-    "${nh_cmd[@]}" switch "$@" || exit
-    profile=$(readlink -f /nix/var/nix/profiles/system) || profile=
-    if [ -z "$built" ] || [ "$profile" != "$built" ]; then
-      echo "nh-up: system profile (${profile:-unreadable}) is not the built closure (${built:-unknown}); boot entry did not advance" >&2
-      exit 1
-    fi
-    exit 0
-  else
-    status=$?
-  fi
-  if [ "$log_failed" -eq 1 ]; then
-    exit 1
-  fi
-  if [ "$attempt" -ge "$max" ]; then
-    echo "nh-up: giving up after $attempt rebuild attempts" >&2
-    exit "$status"
-  fi
-
-  parse_log="$tmpdir/build-$attempt.parse"
-  if ! sanitize <"$build_log" >"$parse_log"; then
-    echo "nh-up: could not parse sanitized rebuild output" >&2
-    exit 1
-  fi
-  mapfile -t spec < <(grep -oE 'specified:[[:space:]]*sha256-[A-Za-z0-9+/=]+' "$parse_log" | grep -oE 'sha256-[A-Za-z0-9+/=]+')
-  mapfile -t got < <(grep -oE 'got:[[:space:]]*sha256-[A-Za-z0-9+/=]+' "$parse_log" | grep -oE 'sha256-[A-Za-z0-9+/=]+')
-
-  if [ "${#spec[@]}" -eq 0 ] && [ "${#got[@]}" -eq 0 ]; then
-    echo "nh-up: build failed without a fixed-output hash mismatch" >&2
-    exit "$status"
-  fi
-  if [ "${#spec[@]}" -ne "${#got[@]}" ]; then
-    echo "nh-up: unpaired hash mismatch output; refusing to edit" >&2
-    exit "$status"
-  fi
-  mapfile -t pairs < <(paste -d' ' <(printf '%s\n' "${spec[@]}") <(printf '%s\n' "${got[@]}") | sort -u)
-  if [ "${#pairs[@]}" -ne 1 ]; then
-    echo "nh-up: expected exactly one distinct hash mismatch pair; refusing to edit" >&2
-    exit "$status"
-  fi
+for attempt in 1 2 3 4 5; do
+  status=0
+  exec {log_fd}> >(tee "$tmpdir/build.err" | sanitize >&2)
+  log_pid=$!
+  nix build "$toplevel" --no-link --print-out-paths --no-update-lock-file >"$tmpdir/build.out" 2>&"$log_fd" || status=$?
+  exec {log_fd}>&-
+  wait "$log_pid" || exit 1
+  [ "$status" -ne 0 ] || break
+  [ "$attempt" -lt 5 ] || exit "$status"
+  sanitize <"$tmpdir/build.err" >"$tmpdir/build.parse"
+  mapfile -t pairs < <(perl -0777 -ne 'while (/^error: hash mismatch in fixed-output derivation \x27([^\x27\n]+\.drv)\x27:\n[ \t]+specified:[ \t]*(sha256-[A-Za-z0-9+\/]{43}=)\n[ \t]+got:[ \t]*(sha256-[A-Za-z0-9+\/]{43}=)/mg) { print "$2 $3\n" }' "$tmpdir/build.parse" | sort -u)
+  [ "${#pairs[@]}" -eq 1 ] || { echo "nh-up: no unambiguous Nix fixed-output mismatch; refusing to edit" >&2; exit "$status"; }
   read -r old_hash new_hash <<<"${pairs[0]}"
-  if [ "$old_hash" = "$new_hash" ]; then
-    echo "nh-up: hash mismatch pair is self-identical; refusing to edit" >&2
-    exit "$status"
-  fi
-
-  mapfile -t matches < <(git grep -lF -e "$old_hash" -- '*.nix')
-  mapfile -t occurrences < <(git grep -hoF -e "$old_hash" -- '*.nix')
-  if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ]; then
-    echo "nh-up: $old_hash appears ${#occurrences[@]} times in ${#matches[@]} tracked .nix files; refusing to edit" >&2
-    exit "$status"
-  fi
-  fixed_file=${matches[0]}
-
-  build_fixed_summary() {
-    echo
-    echo "FIXED-OUTPUT BYTES REQUIRE APPROVAL"
-    line=$(git grep -nF -e "$old_hash" -- "$fixed_file" | head -n1 | cut -d: -f2)
-    start=$((line > 6 ? line - 6 : 1))
-    end=$((line + 2))
-    printf '  %s:%s\n    old: %s\n    new: %s\n    source context:\n' "$fixed_file" "$line" "$old_hash" "$new_hash" || return
-    nl -ba "$fixed_file" | sed -n "${start},${end}p" | sed 's/^/      /' || return
-    echo "  Accepting trusts the downloaded bytes. A matching hash proves reproducibility, not who published them."
-  }
-  fixed_summary="$tmpdir/fixed-summary-$attempt"
-  if ! build_fixed_summary >"$fixed_summary"; then
-    echo "nh-up: could not construct approval evidence" >&2
-    exit "$status"
-  fi
-
-  if ! confirm_batch "$fixed_summary" "This approval applies the fixed-output hash change above, then retries the rebuild and activation."; then
-    echo "nh-up: hash changes rejected; no source files were edited" >&2
-    exit "$status"
-  fi
-
-  mapfile -t matches < <(git grep -lF -e "$old_hash" -- '*.nix')
-  mapfile -t occurrences < <(git grep -hoF -e "$old_hash" -- '*.nix')
-  if [ "${#matches[@]}" -ne 1 ] || [ "${#occurrences[@]}" -ne 1 ] || [ "${matches[0]:-}" != "$fixed_file" ]; then
-    echo "nh-up: source changed during approval; refusing to edit" >&2
-    exit "$status"
-  fi
-
-  fixed_original="$tmpdir/fixed-original-$attempt"
-  fixed_edited="$tmpdir/fixed-edited-$attempt"
-  if ! cp -- "$fixed_file" "$fixed_original" || ! cp -- "$fixed_file" "$fixed_edited"; then
-    echo "nh-up: could not prepare the approved source edit" >&2
-    exit "$status"
-  fi
-  if ! sed -i "s|${old_hash}|${new_hash}|" "$fixed_edited"; then
-    echo "nh-up: could not prepare the approved hash replacement" >&2
-    exit "$status"
-  fi
-  if grep -qF -- "$old_hash" "$fixed_edited" || [ "$(grep -oF -- "$new_hash" "$fixed_edited" | wc -l | tr -d ' ')" -lt 1 ]; then
-    echo "nh-up: prepared hash replacement failed verification" >&2
-    exit "$status"
-  fi
-
-  fixed_pending=1
-  if ! cp -- "$fixed_edited" "$fixed_file" || ! cmp -s -- "$fixed_edited" "$fixed_file"; then
-    echo "nh-up: hash replacement failed; restoring the source" >&2
-    exit "$status"
-  fi
-  fixed_pending=0
-  echo "nh-up: approved hashes written; retrying rebuild ($attempt/$max)" >&2
+  [ "$old_hash" != "$new_hash" ] || exit 1
+  mapfile -t files < <(git grep -lF -e "$old_hash" -- '*.nix')
+  mapfile -t hits < <(git grep -hoF -e "$old_hash" -- '*.nix')
+  [ "${#files[@]}" -eq 1 ] && [ "${#hits[@]}" -eq 1 ] || { echo "nh-up: hash does not identify one source occurrence; refusing" >&2; exit 1; }
+  file=${files[0]}
+  cp -- "$file" "$tmpdir/review-source"
+  line=$(git grep -nF -e "$old_hash" -- "$file" | cut -d: -f2)
+  start=$((line > 8 ? line - 8 : 1))
+  printf 'Source: %s:%s\nOld hash: %s\nDownloaded hash: %s\n' "$file" "$line" "$old_hash" "$new_hash"
+  nl -ba "$file" | sed -n "${start},$((line + 8))p" | sanitize
+  echo 'Approval trusts downloaded bytes; it does not prove who published them.'
+  approve || exit 1
+  cmp -s -- "$tmpdir/review-source" "$file" || exit 1
+  mapfile -t hits < <(git grep -hoF -e "$old_hash" -- '*.nix')
+  [ "${#hits[@]}" -eq 1 ] || exit 1
+  remember "$file"
+  OLD_HASH=$old_hash NEW_HASH=$new_hash perl -pe 's/\Q$ENV{OLD_HASH}\E/$ENV{NEW_HASH}/g' "$file" >"$tmpdir/edited-source"
+  cp -- "$tmpdir/edited-source" "$file"
+  written "$file"
 done
-
-echo "nh-up: giving up after $attempt rebuild attempts" >&2
-exit 1
+cat "$tmpdir/build.out"
+mapfile -t closures < "$tmpdir/build.out"
+if [ "${#closures[@]}" -ne 1 ] || ! [[ "${closures[0]}" =~ ^/nix/store/[a-z0-9]{32}-[^/[:space:]]+$ ]]; then
+  echo "nh-up: build did not return exactly one store closure" >&2
+  exit 1
+fi
+built=${closures[0]}
+unset NH_FILE NH_ATTRP NH_NO_VALIDATE
+"${nh_cmd[@]}" switch "${nh_args[@]}" "$built"
+profile=$(readlink -f /nix/var/nix/profiles/system)
+[ "$profile" = "$built" ] || { echo "nh-up: system profile did not advance to built closure" >&2; exit 1; }
+committed=1
