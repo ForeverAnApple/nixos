@@ -24,7 +24,11 @@
         '';
         "notebook.jura.moe".extraConfig = ''
           ${tlsBlock}
-          reverse_proxy 127.0.0.1:3000
+          @tailnet remote_ip 100.64.0.0/10 fd7a:115c:a1e0::/48
+          handle @tailnet {
+            reverse_proxy 127.0.0.1:3000
+          }
+          respond "tailnet only" 403
         '';
       };
     };
