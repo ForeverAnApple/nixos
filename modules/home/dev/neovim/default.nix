@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.neovim =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       programs.neovim = {
         enable = true;
@@ -10,6 +10,7 @@
         withPython3 = false;
         withRuby = false;
         withNodeJs = false;
+        initLua = lib.mkAfter (builtins.readFile ./init.lua);
 
         plugins = with pkgs.vimPlugins; [
           catppuccin-nvim
