@@ -24,7 +24,7 @@
             wget
             ;
         }
-        ++ lib.optionals pkgs.stdenv.isLinux [ pkgs.mpv ];
+        ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.mpv ];
       programs = {
         ripgrep = {
           enable = true;

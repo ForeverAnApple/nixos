@@ -21,7 +21,7 @@
         # macOS sends Option as a compose key by default, which would swallow
         # herdr's Alt-based nav chords. Map left Option to Alt; right
         # Option still types special characters. No-op on Linux.
-        // lib.optionalAttrs pkgs.stdenv.isDarwin {
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
           macos_option_as_alt = "left";
         };
         # The default new_window / new_tab / new_os_window actions ignore

@@ -8,7 +8,7 @@
         # nixpkgs builds fastfetch without libzfs by default, so its Zpool
         # module errors out. Re-enable on Linux; Darwin has no pkgs.zfs.
         package =
-          if pkgs.stdenv.isLinux then pkgs.fastfetch.override { zfsSupport = true; } else pkgs.fastfetch;
+          if pkgs.stdenv.hostPlatform.isLinux then pkgs.fastfetch.override { zfsSupport = true; } else pkgs.fastfetch;
 
         settings.modules = [
           "title"
@@ -43,7 +43,7 @@
         ]
         # zpool module silently skips when no pools exist; only include
         # it on Linux because Darwin's fastfetch build lacks libzfs.
-        ++ lib.optional pkgs.stdenv.isLinux "zpool"
+        ++ lib.optional pkgs.stdenv.hostPlatform.isLinux "zpool"
         ++ [
           "localip"
           "battery"

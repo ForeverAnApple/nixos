@@ -7,7 +7,7 @@
       ...
     }:
     let
-      inherit (pkgs.stdenv) isDarwin;
+      inherit (pkgs.stdenv.hostPlatform) isDarwin;
       nhCmd = if isDarwin then "nh darwin" else "nh os";
       systemPath = if isDarwin then ":/usr/bin:/bin:/usr/sbin:/sbin" else ":/run/wrappers/bin";
       nhUp = pkgs.writeShellScriptBin "nh-up" ''
