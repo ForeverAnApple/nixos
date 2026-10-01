@@ -19,6 +19,7 @@
 
       services.caddy = {
         enable = true;
+        enableReload = false;
 
         package = pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
@@ -29,12 +30,15 @@
         # caddy from binding :80 just to serve HTTP→HTTPS bounces — under
         # tailnet-only DNS that listener is pure surface, no callers.
         globalConfig = ''
+          admin unix//run/caddy/admin.sock|0600
           acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           auto_https disable_redirects
         '';
       };
 
       systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.templates."caddy.env".path;
+      systemd.services.caddy.serviceConfig.RuntimeDirectory = "caddy";
+      systemd.services.caddy.serviceConfig.RuntimeDirectoryMode = "0700";
 
       # tailscale0 is in trustedInterfaces; the explicit allow keeps :443
       # reachable from tailnet even after we tighten the trust model later.
