@@ -52,7 +52,7 @@
         daemon="${home}/.codex/packages/app-server-daemon"
         stamp="${home}/.codex/.daemon-pin"
         if [ -e "$daemon/current" ] && [ "$(cat "$stamp" 2>/dev/null)" != "$codex" ]; then
-          run "$codex/bin/codex" app-server daemon update --from-cli -y
+          run env PATH="${pkgs.procps}/bin:$PATH" "$codex/bin/codex" app-server daemon update --from-cli -y
           run sh -c 'printf %s "'"$codex"'" > "'"$stamp"'"'
           current="$(readlink -f "$daemon/current")"
           for r in "$daemon"/releases/*; do
