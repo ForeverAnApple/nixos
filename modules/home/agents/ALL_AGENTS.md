@@ -46,11 +46,11 @@ The top-level model thinks, plans, judges, and orchestrates. It delegates execut
 Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is still smart. Reserve it for work where every step is already decided: gather this, run these, report back. The moment a task needs a judgement call, it belongs a tier up.
 
 ## Voice notifications
-Use the `voice-notifications` skill to announce:
-- End of long running tasks
-- Blockers needing human input
-- Errors that cannot be resolved well by agents alone
-- When the human asks for it
+Use the `voice-notifications` skill sparingly, only for:
+- Catastrophic failures that need my action: something is down, broken, or at risk, and no agent can fix it
+- When I ask for it
+
+Everything else (finished tasks, routine blockers, questions) goes in the terminal. The same rule covers monitoring of this machine and the servers.
 
 ## Git commits
 No AI attribution — no `Co-Authored-By: <AI>` trailer, no "Generated with <tool>" footer, no "🤖" line — ever, including squash/amend/rebase — unless I ask that turn.

@@ -1,21 +1,20 @@
 ---
 name: voice-notifications
-description: Announce important things out loud via the `voice` CLI so the user doesn't have to keep watching the terminal. Use whenever a long-running task (deployment, build, large refactor, research run, anything that takes more than a couple of minutes) is finishing, whenever an error or blocker needs the user's attention, and whenever the next move requires user action (a decision, a credential, a manual step). Trigger even if the user didn't ask — the whole point is they're doing something else. Skip only if the work is fast enough that they're obviously still watching.
+description: Announce catastrophic failures out loud via the `voice` CLI. Use only when something is down, broken, or at risk, the user must act, and no agent can fix it; or when the user explicitly asks for voice. Do NOT use it for finished tasks, routine blockers, questions, or successful deploys; those go in the terminal.
 ---
 
 # Voice notifications
 
-The user runs `voice`, a TTS client that streams audio from a local model. You use it to interrupt them when something important happens while they're away from the terminal.
+The user runs `voice`, a TTS client that streams audio from a local model. A voice line interrupts whatever they're doing, so it is reserved for emergencies.
 
 ## When to fire one
 
-Three situations:
+Two situations only:
 
-1. **End of long-running work.** Deployments, builds, research, large refactors — anything where the user walked away. Fire one when it finishes, regardless of success or failure.
-2. **Mid-stream interruptions the user must hear.** Errors that block progress, decisions only they can make, prompts for credentials, anything where you'd otherwise be sitting waiting in silence.
-3. **Voice-initiated conversation.** If the user opened with a voice ask ("voice announce X", "read this out to me", the `/voice` slash command), they're not watching the terminal. Keep voicing every substantive follow-up in that conversation by default — not just the first answer. Drop back to text-only when they signal it: asking you to edit code, paste a URL, run a command they need to see, or explicitly saying stop. A small-looking follow-up question ("tl;dr that one") still gets voiced.
+1. **Catastrophe that needs the user.** A service, host, or the user's data is down, broken, or at risk; it won't recover on its own; and no agent can fix it. Examples: a server unreachable after a deploy, a backup chain broken, the machine's audio or network stack dead and not restarting. This rule covers monitoring of this machine and of the servers alike.
+2. **Voice-initiated conversation.** If the user opened with a voice ask ("voice announce X", "read this out to me", the `/voice` slash command), they're not watching the terminal. Keep voicing every substantive follow-up in that conversation by default — not just the first answer. Drop back to text-only when they signal it: asking you to edit code, paste a URL, run a command they need to see, or explicitly saying stop. A small-looking follow-up question ("tl;dr that one") still gets voiced.
 
-Don't fire one for fast work outside those situations. If the task took ten seconds and they're at the keyboard, they're still looking at the screen.
+Never fire one for finished tasks (even long ones), successful deploys, routine blockers like a sudo prompt or a pending decision, or questions. Those go in the terminal; the user will read them when they come back.
 
 ## How to fire one
 
@@ -38,10 +37,11 @@ The readout is the whole message. The user is in another room, hands full, not l
 - **Stop.** One sentence. Maybe two.
 
 Good:
-- "Nix deployment to wallfacer resulted in repeated failures due to a missing kernel module."
-- "Research finished on tailscale ACL syntax, navigate to the terminal to see next steps."
-- "Build succeeded on sisyphus, ready to deploy."
-- "I'm blocked on a sudo password for the home-assistant container, come check the terminal."
+- "Swordholder is unreachable after the deploy and didn't roll back. It needs a console."
+- "Audio is down on catjailer and keeps getting killed on restart. Check the terminal."
+- "Tonight's backup to THICC failed twice. The chain is broken until you look."
+
+Not worth a voice line (terminal only): "Build succeeded, ready to deploy." "Research finished." "Blocked on a sudo password."
 
 Bad (no context):
 - "Task complete."
