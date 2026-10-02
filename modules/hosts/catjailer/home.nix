@@ -8,6 +8,7 @@
         gaming
         dev
         ssh
+        unit-alert
       ];
 
       xdg.configFile."hypr/hypridle.conf".source = lib.mkForce ./hypridle.conf;

@@ -9,6 +9,7 @@
     gaming
     obs
     sunshine
+    unit-alert
 
     sshd
     fail2ban

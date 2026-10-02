@@ -23,6 +23,21 @@
 
       services.usbmuxd.enable = true;
 
+      services.unit-alert.watched = [
+        "user:pipewire.service"
+        "user:pipewire-pulse.service"
+        "user:wireplumber.service"
+        "user:xdg-desktop-portal.service"
+        "user:waybar.service"
+        "user:hypridle.service"
+        "user:swaybg.service"
+        "user:wlsunset.service"
+        "system:tailscaled.service"
+        "system:NetworkManager.service"
+        "system:sshd.service"
+        "system:keyd.service"
+      ];
+
       # Electron apps on Wayland
       environment.sessionVariables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
