@@ -77,3 +77,4 @@ fi
 
 notify-send -u critical -a unit-alert "$unit failed" "$body" || true
 systemd-run --user --quiet --collect --no-block --on-active=3min -- "$0" "$instance" recheck || true
+systemctl --user start --no-block "unit-triage@$instance.service" || true

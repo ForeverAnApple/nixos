@@ -30,6 +30,28 @@
         text = builtins.readFile ./alert.sh;
       };
 
+      triage = pkgs.writeShellApplication {
+        name = "unit-triage";
+        runtimeInputs = [
+          config.programs.claude-code.finalPackage
+        ]
+        ++ (with pkgs; [
+          coreutils
+          gnugrep
+          gnused
+          iproute2
+          jq
+          libnotify
+          pipewire
+          procps
+          systemd
+          util-linux
+          wireplumber
+        ]);
+        runtimeEnv.PROMPT = ./prompt.md;
+        text = builtins.readFile ./triage.sh;
+      };
+
       # A drop-in with the same filename as the global one replaces it for this unit.
       noOnFailure = ''
         [Unit]
@@ -43,6 +65,7 @@
           OnFailure=unit-alert@%n.service
         '';
         "systemd/user/unit-alert@.service.d/10-unit-alert.conf".text = noOnFailure;
+        "systemd/user/unit-triage@.service.d/10-unit-alert.conf".text = noOnFailure;
       };
 
       systemd.user.services."unit-alert@" = {
@@ -50,6 +73,21 @@
         Service = {
           Type = "oneshot";
           ExecStart = "-${alert}/bin/unit-alert %i";
+        };
+      };
+
+      systemd.user.services."unit-triage@" = {
+        Unit.Description = "Diagnose failure of %i";
+        Service = {
+          Type = "oneshot";
+          ExecStart = "-${triage}/bin/unit-triage %i";
+          WorkingDirectory = "${config.home.homeDirectory}/nixos";
+          TimeoutStartSec = 900;
+          Nice = 10;
+          Environment = [
+            "ENABLE_CLAUDEAI_MCP_SERVERS=false"
+            "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1"
+          ];
         };
       };
     };
