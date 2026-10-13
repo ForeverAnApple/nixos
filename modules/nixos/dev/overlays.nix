@@ -15,10 +15,6 @@
               system = final.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             };
-
-            arch = if final.stdenv.hostPlatform.isAarch64 then "aarch64" else "x86_64";
-            codexSrc = inputs."codex-linux-${arch}";
-            codexVersion = (builtins.fromJSON (builtins.readFile "${codexSrc}/codex-package.json")).version;
           in
           {
             inherit (masterPkgs)
@@ -26,31 +22,7 @@
               opencode
               ;
 
-            codex = final.stdenvNoCC.mkDerivation {
-              pname = "codex";
-              version = codexVersion;
-              src = codexSrc;
-              dontUnpack = true;
-              nativeBuildInputs = [ final.makeBinaryWrapper ];
-              # The app-server daemon needs the intact upstream layout (manifest
-              # beside bin/) around the real executable, so wrap from outside it.
-              installPhase = ''
-                runHook preInstall
-                mkdir -p $out/lib
-                cp -r ${codexSrc} $out/lib/codex
-                makeWrapper $out/lib/codex/bin/codex $out/bin/codex \
-                  --prefix PATH : ${final.lib.makeBinPath [ final.bubblewrap ]}
-                runHook postInstall
-              '';
-              meta = {
-                description = "OpenAI Codex CLI (prebuilt static musl binary, pinned GitHub release)";
-                mainProgram = "codex";
-                platforms = [
-                  "x86_64-linux"
-                  "aarch64-linux"
-                ];
-              };
-            };
+            codex = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.codex;
 
             vrcft = final.appimageTools.wrapType2 {
               pname = "VRCFaceTracking";

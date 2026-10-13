@@ -114,58 +114,6 @@
         "type": "github"
       }
     },
-    "codex-darwin-aarch64": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790807122,
-        "narHash": "sha256-Eb0qy4PG7Kzmj6IJ+ygEoq+tvSkhxRrPzi6M41bm0BA=",
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-apple-darwin.tar.gz"
-      }
-    },
-    "codex-darwin-x86_64": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790807166,
-        "narHash": "sha256-pxKA7Qq755AjEsv0IfwYNZWHr1uyswboWq/Lg0wZNCg=",
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-apple-darwin.tar.gz"
-      }
-    },
-    "codex-linux-aarch64": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790806103,
-        "narHash": "sha256-9jiWjGscYNnU/UEisnjoms2WaqANh2dG1YugLqHCkNY=",
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-aarch64-unknown-linux-musl.tar.gz"
-      }
-    },
-    "codex-linux-x86_64": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790805736,
-        "narHash": "sha256-F7AMHmDPo/PgQmTMj/92rqvCxk90DyZAwnH0m6vC3y8=",
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/openai/codex/releases/latest/download/codex-package-x86_64-unknown-linux-musl.tar.gz"
-      }
-    },
     "deploy-rs": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -495,10 +443,6 @@
         "agent-browser-linux-x86_64": "agent-browser-linux-x86_64",
         "agent-browser-src": "agent-browser-src",
         "anthropic-skills": "anthropic-skills",
-        "codex-darwin-aarch64": "codex-darwin-aarch64",
-        "codex-darwin-x86_64": "codex-darwin-x86_64",
-        "codex-linux-aarch64": "codex-linux-aarch64",
-        "codex-linux-x86_64": "codex-linux-x86_64",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "flake-parts": "flake-parts",

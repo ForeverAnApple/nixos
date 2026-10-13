@@ -4,7 +4,7 @@
 
 Use `nh-up --no-update` to rebuild the pinned configuration. `--update` is an alias for the default. `nh-up --update-input NAME` updates only the named input; repeat the flag for several inputs.
 
-Release inputs use their original latest-release URLs. The lock pins the downloaded bytes. When a release changes those URLs, a targeted input refresh computes a new candidate lock. A cold cache can make the old lock fail before it is refreshed. The moving browser source and release binaries can also diverge.
+Codex comes from `llm-agents` and moves with `nix flake update`; numtide's cache serves it. The agent-browser release inputs use moving latest-release URLs. Their lock entries pin downloaded bytes, but a cold cache can fail when a URL moves before the lock is refreshed. The moving browser source and release binaries can also diverge.
 
 A fixed-output mismatch is repaired only when one old hash identifies one occurrence in a tracked Nix file. The helper shows its source context and both hashes, then requires another `approve`. Approval trusts the downloaded bytes. It does not prove who published them. Ambiguous diagnostics stop the update.
 
