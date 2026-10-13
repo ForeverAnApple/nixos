@@ -15,6 +15,7 @@
             inherit (masterPkgs)
               claude-code
               opencode
+              typescript-language-server
               ;
 
             codex = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.codex;
