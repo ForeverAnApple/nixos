@@ -15,14 +15,19 @@ let
       publicKey = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
       priority = 3;
     }
+    {
+      url = "https://cache.numtide.com";
+      publicKey = "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";
+      priority = 4;
+    }
   ];
+
+  settings.nix.settings = {
+    trusted-public-keys = builtins.catAttrs "publicKey" substituters;
+    substituters = builtins.map (def: "${def.url}?priority=${toString def.priority}") substituters;
+  };
 in
 {
-  flake.modules.nixos.substituters = {
-    nix.settings = {
-      trusted-public-keys = builtins.catAttrs "publicKey" substituters;
-
-      substituters = builtins.map (def: "${def.url}?priority=${toString def.priority}") substituters;
-    };
-  };
+  flake.modules.nixos.substituters = settings;
+  flake.modules.darwin.substituters = settings;
 }
