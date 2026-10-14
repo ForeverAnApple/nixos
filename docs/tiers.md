@@ -1,8 +1,8 @@
 # Tiers
 
-A host is one of two functional classes: **workstation** or **service**. The tier is the primary axis of the fleet — every other classification (form factor, hardware, services) is a modifier on top.
+A host is one of three functional classes: **workstation**, **service**, or **development**. The tier is the primary axis of the fleet — every other classification (form factor, hardware, services) is a modifier on top.
 
-## The two tiers
+## The tiers
 
 Every NixOS host gets the interactive `faa` user via `core/human-user.nix`: zsh, wheel/sudo NOPASSWD, the operator ssh keys. Tier on top of that.
 
@@ -31,7 +31,13 @@ Wants:
 - Remote deploy via deploy-rs (as `faa`, same as workstation)
 - Long uptime
 
-Hosts: sisyphus, swordholder, dreameater.
+Hosts: sisyphus, swordholder.
+
+### `development` — headless development
+
+Combines `service`, `dev`, `nix-ld`, and `envfs`. Provides remote shells, development tools, agent CLIs through Home Manager, and compatibility for prebuilt Linux binaries.
+
+Hosts: dreameater, moonsnatcher.
 
 ## Form-factor addons
 
@@ -49,7 +55,7 @@ Today: `catjailer` is a workstation that also imports `sshd, fail2ban, caddy`. T
 
 When the migration completes, catjailer becomes pure: `[workstation, nvidia, gaming, obs]`.
 
-`dreameater` is a service host that also imports `dev`. The dev workload is its purpose, not debt. A second such host promotes the pairing to a tier.
+`development` names the shared composition used by dreameater and moonsnatcher.
 
 ## Adding a new host
 

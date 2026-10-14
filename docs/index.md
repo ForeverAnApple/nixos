@@ -5,12 +5,13 @@ Navigation catalog for this repo. Each page is atomic — one concept, no preamb
 ## Architecture
 
 - [dendritic.md](dendritic.md) — how modules compose into hosts
-- [tiers.md](tiers.md) — `workstation` and `service`: the two functional classes a host can be
+- [tiers.md](tiers.md) — `workstation`, `service`, and `development`: host functions
 - [hosts.md](hosts.md) — fleet inventory with tier, platform, form factor, role
 - [acme.md](acme.md) — why DNS-01 tls blocks pin public resolvers, and the cert watchdog
 
 ## Process
 
+- [../infra/moonsnatcher/README.md](../infra/moonsnatcher/README.md) — EC2 provisioning and access
 - [updating.md](updating.md) — local input updates, review, and rollback
 - [../PHILOSOPHY.md](../PHILOSOPHY.md) — principles and tradeoffs we accept
 - [../AGENTS.md](../AGENTS.md) — schema for how this wiki and the repo are maintained
