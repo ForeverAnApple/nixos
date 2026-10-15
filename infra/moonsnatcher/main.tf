@@ -20,7 +20,7 @@ variable "ssh_cidr" { type = string }
 variable "public_key_path" { type = string }
 variable "instance_type" {
   type    = string
-  default = "m8a.12xlarge"
+  default = "r7i.8xlarge"
 }
 variable "bootstrap_ssh" {
   type    = bool
