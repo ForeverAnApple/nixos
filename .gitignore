@@ -20,3 +20,12 @@ kubeconfig
 
 # Direnv
 .direnv/
+
+# Local infrastructure state
+.terraform/
+.migration/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+crash.log

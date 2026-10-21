@@ -31,7 +31,7 @@
       # `herdr`; `herdr server` is the daemon, so drop the server line first.
       # `command grep` bypasses the interactive grep=batgrep alias (zsh.nix).
       programs.zsh.initContent = lib.mkAfter ''
-        if [[ $- == *i* && -z "$HERDR_ENV" && -z "$TMUX" && -z "$HERDR_NO_AUTOSTART" ]] \
+        if [[ $- == *i* && -t 0 && -t 1 && -z "$HERDR_ENV" && -z "$TMUX" && -z "$HERDR_NO_AUTOSTART" ]] \
            && [[ -n "$KITTY_WINDOW_ID" || -n "$SSH_CONNECTION" ]] \
            && command -v herdr >/dev/null 2>&1; then
           if [[ -n "$KITTY_WINDOW_ID" ]] \

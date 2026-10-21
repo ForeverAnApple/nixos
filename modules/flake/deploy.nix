@@ -10,6 +10,7 @@ let
   deployHosts = [
     "catjailer"
     "dreameater"
+    "moonsnatcher"
     "sisyphus"
     "swordholder"
   ];
@@ -48,7 +49,7 @@ in
           host="$(${pkgs.coreutils}/bin/uname -n)"
           kernel="$(${pkgs.coreutils}/bin/uname -s)"
 
-          if [ "$host" != "catjailer" ] && [ "$kernel" != "Darwin" ]; then
+          if [ "$host" != "catjailer" ] && [ "$host" != "moonsnatcher" ] && [ "$kernel" != "Darwin" ]; then
             export NIX_CONFIG='max-jobs = 0'
           fi
 

@@ -17,6 +17,7 @@ Folders in `modules/nixos/`:
 | `core/` | universal NixOS bits every host gets via the top-level builder |
 | `workstation/` | tier aggregate: human-accessible host |
 | `service/` | tier aggregate: unattended host |
+| `development/` | tier aggregate: headless development host |
 | `desktop/` | GUI/Wayland leaves a workstation host pulls in |
 | `dev/` | development tooling + the interactive `human-user` |
 | `hardware/` | driver/firmware leaves that cross tiers (e.g. `nvidia` — shared by a desktop and a service host) |

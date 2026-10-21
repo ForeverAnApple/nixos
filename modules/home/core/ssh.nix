@@ -12,9 +12,8 @@
         port = 2222;
         user = "root";
       };
-      # Real sshd on these hosts lives on :22022 — endlessh holds :22.
       settings.nixos-fleet = {
-        host = "catjailer catjailer.* dreameater dreameater.* sisyphus sisyphus.* swordholder swordholder.*";
+        host = "catjailer catjailer.* moonsnatcher moonsnatcher.* dreameater dreameater.* sisyphus sisyphus.* swordholder swordholder.*";
         port = 22022;
         user = "faa";
         # Forward the herdr marker (only set inside a herdr pane) so the

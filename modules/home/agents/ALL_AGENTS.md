@@ -45,6 +45,12 @@ The top-level model thinks, plans, judges, and orchestrates. It delegates execut
 
 Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is still smart. Reserve it for work where every step is already decided: gather this, run these, report back. The moment a task needs a judgement call, it belongs a tier up.
 
+## Browser automation
+
+- Default to an isolated named session: `agent-browser --session <task> open <url>` launches managed headless Chrome.
+- Reuse the same session for every browser command in the task.
+- Use `--auto-connect` or `--cdp` only when the user explicitly requests an existing browser or a specific endpoint. A missing endpoint is no reason to ask the user to change their daily browser settings for ordinary automation.
+
 ## Voice notifications
 Use the `voice-notifications` skill sparingly, only for:
 - Catastrophic failures that need my action: something is down, broken, or at risk, and no agent can fix it
