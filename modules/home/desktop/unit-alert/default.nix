@@ -79,10 +79,10 @@
       systemd.user.services."unit-triage@" = {
         Unit.Description = "Diagnose failure of %i";
         Service = {
-          Type = "oneshot";
+          Type = "exec";
           ExecStart = "-${triage}/bin/unit-triage %i";
           WorkingDirectory = "${config.home.homeDirectory}/nixos";
-          TimeoutStartSec = 900;
+          RuntimeMaxSec = 900;
           Nice = 10;
           Environment = [
             "ENABLE_CLAUDEAI_MCP_SERVERS=false"

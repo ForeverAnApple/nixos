@@ -1,13 +1,18 @@
 {
   flake.modules.homeManager.niri =
     {
-      inputs,
+      osConfig,
       pkgs,
+      lib,
       ...
     }:
     {
-      programs.niri = {
-        config = builtins.readFile ./config.kdl;
+      xdg.configFile."niri/config.kdl".source = pkgs.writeTextFile {
+        name = "niri-config.kdl";
+        text = builtins.readFile ./config.kdl;
+        checkPhase = ''
+          ${lib.getExe osConfig.programs.niri.package} validate --config "$target"
+        '';
       };
     };
 }

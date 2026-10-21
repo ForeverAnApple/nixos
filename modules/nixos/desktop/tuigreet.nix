@@ -1,6 +1,11 @@
 {
   flake.modules.nixos.tuigreet =
-    { pkgs, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     {
       services = {
         greetd = {
@@ -8,7 +13,7 @@
           settings = rec {
             tuigreet_session =
               let
-                session = "${pkgs.niri-unstable}/bin/niri-session";
+                session = "${config.programs.niri.package}/bin/niri-session";
                 tuigreet = "${lib.getExe pkgs.tuigreet}";
               in
               {

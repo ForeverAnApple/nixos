@@ -23,7 +23,7 @@
 
         package = pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
-          hash = "sha256-Oirb6ZtU/c6C/SfICWpfBAEGDTepWShPQdWW0LlhF20=";
+          hash = "sha256-5a5cpFl90pEWt0lUC4ZJQ7g+1//ZvsRhee64Dt9vh5o=";
         };
 
         # All certs issue via Cloudflare DNS-01. disable_redirects keeps

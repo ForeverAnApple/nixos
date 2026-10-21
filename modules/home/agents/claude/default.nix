@@ -25,7 +25,7 @@
         skills.prose-style = ../skills/prose-style;
         skills.voice-notifications = ../skills/voice-notifications;
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
-        skills.agent-browser = "${inputs.agent-browser-src}/skills/agent-browser";
+        skills.agent-browser = "${pkgs.agent-browser}/skills/agent-browser";
         settings = {
           model = "claude-opus-5-5";
           env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";

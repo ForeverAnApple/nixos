@@ -20,8 +20,6 @@
         };
       };
 
-      # hwaccel renders the console via DRM; the new kmscon assert refuses it
-      # without a userspace GL stack.
       hardware.graphics.enable = true;
 
       # Also add the pretty fonts

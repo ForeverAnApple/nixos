@@ -3,12 +3,14 @@ set -euo pipefail
 cd "$HOME/nixos"
 
 update=1
+review=0
 inputs=()
 nh_args=()
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --no-update) update=0; shift ;;
     --update | -u) update=1; shift ;;
+    --review) review=1; shift ;;
     --update-input | -U)
       [ "$#" -ge 2 ] && [[ $2 =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || {
         echo "nh-up: --update-input requires an input name" >&2
@@ -114,6 +116,7 @@ sanitize() {
 }
 
 approve() {
+  [ "$review" -eq 1 ] || return 0
   [ -t 0 ] || { echo "nh-up: changes require interactive review" >&2; return 1; }
   printf 'Trust these exact changes, then rebuild and activate? Type approve: '
   local answer
@@ -162,7 +165,7 @@ for attempt in 1 2 3 4 5; do
   status=0
   exec {log_fd}> >(tee "$tmpdir/build.err" | sanitize >&2)
   log_pid=$!
-  nix build "$toplevel" --no-link --print-out-paths --no-update-lock-file >"$tmpdir/build.out" 2>&"$log_fd" || status=$?
+  nix build "$toplevel" --keep-going --no-link --print-out-paths --no-update-lock-file >"$tmpdir/build.out" 2>&"$log_fd" || status=$?
   exec {log_fd}>&-
   wait "$log_pid" || exit 1
   [ "$status" -ne 0 ] || break
@@ -180,9 +183,11 @@ for attempt in 1 2 3 4 5; do
   line=$(git grep -nF -e "$old_hash" -- "$file" | cut -d: -f2)
   start=$((line > 8 ? line - 8 : 1))
   printf 'Source: %s:%s\nOld hash: %s\nDownloaded hash: %s\n' "$file" "$line" "$old_hash" "$new_hash"
-  nl -ba "$file" | sed -n "${start},$((line + 8))p" | sanitize
-  echo 'Approval trusts downloaded bytes; it does not prove who published them.'
-  approve || exit 1
+  if [ "$review" -eq 1 ]; then
+    nl -ba "$file" | sed -n "${start},$((line + 8))p" | sanitize
+    echo 'Approval trusts downloaded bytes; it does not prove who published them.'
+    approve || exit 1
+  fi
   cmp -s -- "$tmpdir/review-source" "$file" || exit 1
   mapfile -t hits < <(git grep -hoF -e "$old_hash" -- '*.nix')
   [ "${#hits[@]}" -eq 1 ] || exit 1

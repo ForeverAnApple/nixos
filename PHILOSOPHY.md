@@ -46,3 +46,9 @@ Aim for blunt, short, no padding. Bauhaus the doc too — if you find yourself p
 
 - **2026-05-18** — Trimmed. First draft of this file listed three principles: *form follows function*, *one purpose per object*, *honest substrate*. The second and third were derivative — special cases of the first, dressed as parallel rules. Stripped back to one. The examples that lived under those two principles still appear in the body of the surviving one, where they belong.
 - **2026-05-18** — Initial draft. Recorded the tier introduction (workstation/service) and the rename chain (worker → service, users → human-user) as the first applications.
+
+## Upstream packages — 2026-10-21
+
+Use maintained upstream packages. Customizations should express features or preferences, not repair package installation. When a current package breaks, prefer a maintained release with a cached build over a local source patch or a false dependency version. Verify the required features before replacing it.
+
+Do not bypass upstream checks or allow insecure packages automatically to make an update pass. A fallback trades newer changes for fewer local repairs; it still needs updates and verification.

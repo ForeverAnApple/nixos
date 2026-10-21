@@ -4,11 +4,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
-    # Bleeding-edge channel used *only* for fast-moving AI CLIs
-    # (claude-code, opencode) via modules/nixos/dev/overlays.nix.
-    # Unstable lags master by days on these and the AI tools ship daily,
-    # so we prefer master for them and unstable for everything else.
+    # Current agent tools use master via modules/nixos/dev/overlays.nix.
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     flake-parts = {
@@ -18,11 +16,6 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    niri = {
-      url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -43,18 +36,6 @@
 
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Prebuilt release binaries. To upgrade, bump the tag in both URLs and
-    # the version in modules/home/desktop/herdr/_package.nix.
-    herdr-darwin-aarch64 = {
-      url = "file+https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-macos-aarch64";
-      flake = false;
-    };
-    herdr-linux-x86_64 = {
-      url = "file+https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64";
-      flake = false;
     };
 
     open-interpreter-darwin-aarch64 = {
@@ -73,35 +54,6 @@
     };
 
     import-tree.url = "github:vic/import-tree";
-
-    # Source tree only supplies the version, skills/, and skill-data/ dirs —
-    # the executable comes from the prebuilt release binaries below. `nix flake
-    # update` bumps both. See modules/home/agents/agent-browser/.
-    agent-browser-src = {
-      url = "github:vercel-labs/agent-browser";
-      flake = false;
-    };
-
-    # Prebuilt release binaries, one input per platform. `file+https` fetches
-    # the raw executable without tarball unpacking; the hash lands in
-    # flake.lock, so `nix flake update` is the version bump — no hashes to
-    # hand-edit. Only the matching platform's input is fetched at build time.
-    agent-browser-darwin-aarch64 = {
-      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-arm64";
-      flake = false;
-    };
-    agent-browser-darwin-x86_64 = {
-      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-darwin-x64";
-      flake = false;
-    };
-    agent-browser-linux-aarch64 = {
-      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-arm64";
-      flake = false;
-    };
-    agent-browser-linux-x86_64 = {
-      url = "file+https://github.com/vercel-labs/agent-browser/releases/latest/download/agent-browser-linux-musl-x64";
-      flake = false;
-    };
 
     anthropic-skills = {
       url = "github:anthropics/skills";

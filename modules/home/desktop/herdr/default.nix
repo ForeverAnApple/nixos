@@ -1,20 +1,4 @@
-{ inputs, ... }:
-let
-  binaryFor =
-    pkgs:
-    let
-      inherit (pkgs.stdenv.hostPlatform) system;
-      input =
-        {
-          aarch64-darwin = "herdr-darwin-aarch64";
-          x86_64-linux = "herdr-linux-x86_64";
-        }
-        .${system} or (throw "herdr: no prebuilt binary for ${system}");
-    in
-    inputs.${input};
-
-  packageFor = pkgs: pkgs.callPackage ./_package.nix { binary = binaryFor pkgs; };
-in
+{ ... }:
 {
   # herdr rides with kitty: the kitty module is imported by exactly the
   # workstation hosts, so attaching here scopes herdr to them without
@@ -27,7 +11,7 @@ in
       ...
     }:
     {
-      home.packages = [ (packageFor pkgs) ];
+      home.packages = [ pkgs.herdr ];
 
       # Auto-start herdr on a local kitty window or an SSH login, the same two
       # surfaces tmux used to own. HERDR_ENV=1 marks a pane already inside

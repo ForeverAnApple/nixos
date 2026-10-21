@@ -96,7 +96,7 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
                 'HOME': directory, 'PATH': str(bin_dir) + ':' + os.environ['PATH'],
                 'SCENARIO': scenario, 'CLOSURE': CLOSURE, 'NH_CMD': nh_cmd,
             }
-            command = ['bash', str(SCRIPT), *args]
+            command = ['bash', str(SCRIPT), *(['--review'] if approve else []), *args]
             if approve:
                 master, slave = pty.openpty()
                 process = subprocess.Popen(command, env=env, stdin=slave,
@@ -148,6 +148,7 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
         self.assertFalse(changed)
         self.assertEqual(calls[0][0], 'build')
         self.assertIn('--no-update-lock-file', calls[0])
+        self.assertIn('--keep-going', calls[0])
         self.assertEqual(calls[-1], ['nh', 'os', 'switch', CLOSURE])
 
     def test_default_updates_and_activates_approved_closure(self):
@@ -157,8 +158,15 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
         self.assertEqual(calls[0], ['flake', 'update', '--refresh'])
         self.assertEqual(calls[-1], ['nh', 'os', 'switch', CLOSURE])
 
-    def test_noninteractive_update_refused(self):
-        code, changed, calls = self.run_script('success', ['--update-input', 'example'])
+    def test_default_update_and_hash_repair_need_no_approval(self):
+        code, changed, calls = self.run_script('repair-success', expected_source='repaired')
+        self.assertEqual(code, 0)
+        self.assertTrue(changed)
+        self.assertEqual(sum(c[0] == 'build' for c in calls), 2)
+        self.assertEqual(calls[-1], ['nh', 'os', 'switch', CLOSURE])
+
+    def test_noninteractive_review_refused(self):
+        code, changed, calls = self.run_script('success', ['--review', '--update-input', 'example'])
         self.assertNotEqual(code, 0)
         self.assertFalse(changed)
         self.assertEqual(calls, [['flake', 'update', 'example', '--refresh']])
@@ -184,7 +192,7 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
         self.assertFalse(changed)
 
     def test_hash_mismatch_does_not_repair_source(self):
-        code, changed, calls = self.run_script('hash-mismatch', ['--no-update'])
+        code, changed, calls = self.run_script('hash-mismatch', ['--review', '--no-update'])
         self.assertNotEqual(code, 0)
         self.assertFalse(changed)
         self.assertEqual(len(calls), 1)
@@ -231,7 +239,7 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
     def test_ambiguous_diagnostics_and_duplicate_source_refuse_edits(self):
         for scenario in ['repair-ambiguous', 'repair-duplicate']:
             with self.subTest(scenario=scenario):
-                code, changed, calls = self.run_script(scenario, ['--no-update'])
+                code, changed, calls = self.run_script(scenario, ['--review', '--no-update'])
                 self.assertNotEqual(code, 0)
                 self.assertFalse(changed)
                 self.assertEqual(len(calls), 1)
@@ -252,8 +260,8 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
                 self.assertFalse(changed)
                 self.assertEqual(calls, [])
 
-    def test_short_update_flag_still_requires_review(self):
-        code, changed, calls = self.run_script('success', ['-u'])
+    def test_short_update_flag_with_review_requires_tty(self):
+        code, changed, calls = self.run_script('success', ['-u', '--review'])
         self.assertNotEqual(code, 0)
         self.assertFalse(changed)
         self.assertEqual(calls, [['flake', 'update', '--refresh']])

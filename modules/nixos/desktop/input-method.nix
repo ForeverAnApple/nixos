@@ -1,7 +1,11 @@
 {
   flake.modules.nixos.desktop =
-    { pkgs, ... }:
+    { inputs, pkgs, ... }:
     let
+      stablePkgs = import inputs.nixpkgs-stable {
+        system = pkgs.stdenv.hostPlatform.system;
+      };
+
       # Catppuccin Frappé theme for fcitx5 candidate popup
       fcitx5-catppuccin-frappe = pkgs.writeTextDir "share/fcitx5/themes/catppuccin-frappe/theme.conf" ''
         [Metadata]
@@ -90,7 +94,7 @@
       nixpkgs.overlays = [
         (_: prev: {
           qt6Packages = prev.qt6Packages // {
-            fcitx5-with-addons = prev.qt6Packages.fcitx5-with-addons.override {
+            fcitx5-with-addons = stablePkgs.qt6Packages.fcitx5-with-addons.override {
               withConfigtool = false;
             };
           };
@@ -108,7 +112,7 @@
           waylandFrontend = true;
           ignoreUserConfig = true;
 
-          addons = with pkgs; [
+          addons = with stablePkgs; [
             fcitx5-mozc # Japanese
             qt6Packages.fcitx5-chinese-addons # Chinese (Pinyin)
             fcitx5-catppuccin-frappe

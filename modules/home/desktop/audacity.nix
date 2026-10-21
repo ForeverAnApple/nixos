@@ -1,7 +1,12 @@
 {
   flake.modules.homeManager.audacity =
-    { pkgs, ... }:
+    { inputs, pkgs, ... }:
+    let
+      stablePkgs = import inputs.nixpkgs-stable {
+        system = pkgs.stdenv.hostPlatform.system;
+      };
+    in
     {
-      home.packages = [ pkgs.audacity ];
+      home.packages = [ stablePkgs.audacity ];
     };
 }

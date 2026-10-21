@@ -6,11 +6,6 @@
         (
           final: _prev:
           let
-            # Pull AI CLIs from nixpkgs/master — they ship daily and
-            # nixos-unstable lags by several days. Everything else stays
-            # on unstable. Keep this list tight: each entry doubles the
-            # eval cost of touching nixpkgs-master, so only packages
-            # where "freshness now" beats "tested a bit" belong here.
             masterPkgs = import inputs.nixpkgs-master {
               system = final.stdenv.hostPlatform.system;
               config.allowUnfree = true;
@@ -19,7 +14,10 @@
           {
             inherit (masterPkgs)
               claude-code
+              agent-browser
+              herdr
               opencode
+              typescript-language-server
               ;
 
             codex = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.codex;

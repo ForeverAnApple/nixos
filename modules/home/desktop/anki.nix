@@ -1,7 +1,11 @@
+{ inputs, ... }:
 {
   flake.modules.homeManager.anki =
     { lib, pkgs, ... }:
     let
+      stablePkgs = import inputs.nixpkgs-stable {
+        system = pkgs.stdenv.hostPlatform.system;
+      };
       # Attr name must match the addon pname — it's the install dir name.
       addons = {
         anki-vrc = pkgs.anki-utils.buildAnkiAddon {
@@ -37,25 +41,7 @@
           };
         };
 
-        # Prebuilt from AnkiWeb: nixpkgs builds it from source via aab, whose
-        # pyqt5 dependency doesn't build on python 3.14.
-        review-heatmap = pkgs.anki-utils.buildAnkiAddon {
-          pname = "review-heatmap";
-          version = "1.0.1";
-
-          src = pkgs.fetchzip {
-            url = "https://ankiweb.net/shared/download/1771074083?v=2.1&p=250200";
-            extension = "zip";
-            stripRoot = false;
-            hash = "sha256-4fh9x4w8fkDJcy/TROtXolKn2EBvJeJ11ht7l945nWI=";
-          };
-
-          meta = {
-            description = "Anki review activity heatmap";
-            homepage = "https://ankiweb.net/shared/info/1771074083";
-            license = lib.licenses.agpl3Plus;
-          };
-        };
+        review-heatmap = stablePkgs.ankiAddons.review-heatmap;
 
         ogg2mp3 =
           (pkgs.anki-utils.buildAnkiAddon {

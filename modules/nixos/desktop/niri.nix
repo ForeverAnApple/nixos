@@ -1,31 +1,29 @@
 {
   flake.modules.nixos.niri =
-    { inputs, pkgs, ... }:
+    { lib, pkgs, ... }:
     {
-      nixpkgs.overlays = [
-        # nixpkgs removed libdisplay-info_0_2; niri builds against 0.3 but
-        # niri-flake still asserts version 0.2.0. Drop when upstream catches up.
-        (final: prev: {
-          libdisplay-info_0_2 = final.libdisplay-info_0_3 // {
-            version = "0.2.0";
-          };
-        })
-        inputs.niri.overlays.niri
-      ];
-
-      imports = [
-        inputs.niri.nixosModules.niri
-      ];
-
       programs = {
         niri = {
           enable = true;
-          package = pkgs.niri-unstable;
+        };
+      };
+
+      systemd.user.services.niri-polkit = {
+        description = "PolicyKit Authentication Agent";
+        wantedBy = [ "niri.service" ];
+        after = [ "graphical-session.target" ];
+        partOf = [ "graphical-session.target" ];
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
         };
       };
 
       xdg.portal.config = {
-        niri.default = [
+        niri.default = lib.mkForce [
           "gtk"
           "gnome"
         ];

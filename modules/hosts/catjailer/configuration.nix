@@ -182,7 +182,6 @@
 
       boot.kernel.sysctl."vm.swappiness" = 80;
 
-      # Build scratch in RAM; sized so CUDA-scale builds don't overflow it.
       boot.tmp = {
         useTmpfs = true;
         tmpfsSize = "24G";
@@ -191,9 +190,18 @@
       services.journald.settings.Journal.SystemMaxUse = "500M";
 
       nix.settings = {
+        build-dir = "/mnt/theta-beef/nix-builds";
         # Fully parallel builds can spike RAM enough to stall the machine.
         max-jobs = lib.mkDefault 2;
         cores = lib.mkDefault 4;
+      };
+
+      systemd.services.nix-daemon = {
+        unitConfig.RequiresMountsFor = [ "/mnt/theta-beef" ];
+        preStart = lib.mkBefore ''
+          ${pkgs.util-linux}/bin/mountpoint -q /mnt/theta-beef
+          ${pkgs.coreutils}/bin/install -d -m 0755 -o root -g root /mnt/theta-beef/nix-builds
+        '';
       };
 
       # No built-in laptop keyboard on a desktop

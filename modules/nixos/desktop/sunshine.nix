@@ -1,21 +1,12 @@
 {
   flake.modules.nixos.sunshine =
-    { lib, pkgs, ... }:
+    { ... }:
     {
       services.sunshine = {
         enable = true;
         autoStart = true;
         capSysAdmin = false;
         settings.capture = "wlr";
-
-        # cudaSupport drops the driver libs from LD_LIBRARY_PATH, so NVENC
-        # silently falls back to x264. Re-add /run/opengl-driver/lib.
-        package = (pkgs.sunshine.override { cudaSupport = true; }).overrideAttrs (_: {
-          postFixup = ''
-            wrapProgram $out/bin/sunshine \
-              --set LD_LIBRARY_PATH ${lib.makeLibraryPath [ pkgs.vulkan-loader ]}:/run/opengl-driver/lib
-          '';
-        });
 
         # No openFirewall: ports stay tailnet-only, off enp4s0.
 
@@ -59,6 +50,7 @@
 
       # Backstop: a capture-reinit FD leak blows past the 1024 default and drops the client.
       systemd.user.services.sunshine.serviceConfig.LimitNOFILE = 65536;
+      systemd.user.services.sunshine.environment.LD_LIBRARY_PATH = "/run/opengl-driver/lib";
 
       # Sunshine feeds client input through /dev/uinput; without group access,
       # video streams but mouse/keyboard are dead.
