@@ -28,7 +28,10 @@
         shellWrapperName = "y";
         keymap.mgr.prepend_keymap = [
           {
-            on = [ "c" "i" ];
+            on = [
+              "c"
+              "i"
+            ];
             run = "shell -- ${lib.getExe copyFile} %h";
             desc = "Copy file contents";
           }
