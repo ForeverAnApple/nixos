@@ -16,7 +16,6 @@
               claude-code
               agent-browser
               herdr
-              opencode
               typescript-language-server
               ;
 
