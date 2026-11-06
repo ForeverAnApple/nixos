@@ -20,6 +20,7 @@
               ;
 
             codex = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.codex;
+            opencode = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.opencode;
           }
         )
       ];
