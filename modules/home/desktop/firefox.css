@@ -1,0 +1,12 @@
+/* FF 159 dropped this var; csshacks' hover width goes invalid without it */
+sidebar-main { --tab-pinned-container-margin-inline-expanded: 0px; }
+
+/* Toolbox spans only the area right of the sidebar, tracking its width */
+#navigator-toolbox {
+  left: calc(var(--tab-collapsed-width) + 1px) !important;
+  right: 0 !important;
+  width: auto !important;
+}
+:root:has(sidebar-main[expanded]:hover) #navigator-toolbox {
+  left: calc(5 * var(--tab-pinned-min-width-expanded) + 2px) !important;
+}
