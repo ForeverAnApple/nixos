@@ -1,6 +1,12 @@
+{ inputs, ... }:
 {
   flake.modules.homeManager.firefox =
-    { config, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       programs.firefox = {
         enable = true;
@@ -61,7 +67,16 @@
             settings."toolkit.legacyUserProfileCustomizations.stylesheets" = true;
             settings."browser.ctrlTab.sortByRecentlyUsed" = true;
             settings."browser.tabs.closeWindowWithLastTab" = false;
-            userChrome = "";
+            settings."sidebar.verticalTabs" = true;
+            settings."sidebar.visibility" = "always-show";
+            settings."browser.compactmode.show" = true;
+            settings."browser.uidensity" = 1;
+            userChrome = lib.concatMapStrings (f: builtins.readFile "${inputs.firefox-csshacks}/chrome/${f}") [
+              "autohide_toolbox.css"
+              "autohide_tabstoolbar_v2.css"
+            ]
+            # FF 159 dropped this var; csshacks' hover width goes invalid without it
+            + "sidebar-main { --tab-pinned-container-margin-inline-expanded: 0px; }\n";
             userContent = "";
           };
           vpn = {

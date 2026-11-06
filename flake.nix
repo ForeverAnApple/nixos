@@ -55,6 +55,11 @@
 
     import-tree.url = "github:vic/import-tree";
 
+    firefox-csshacks = {
+      url = "github:MrOtherGuy/firefox-csshacks";
+      flake = false;
+    };
+
     anthropic-skills = {
       url = "github:anthropics/skills";
       flake = false;
