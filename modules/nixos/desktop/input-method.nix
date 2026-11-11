@@ -123,6 +123,7 @@
           # global config — can't remove addon descriptors because the core
           # binary has its install prefix compiled in and ignores symlinkJoin.
           settings.globalOptions = {
+            "Hotkey/TriggerKeys"."0" = "Control+Super+space";
             "Behavior/DisabledAddons" = {
               "0" = "notificationitem";
               "1" = "cloudpinyin";
