@@ -27,7 +27,7 @@
         skills.skill-creator = "${inputs.anthropic-skills}/skills/skill-creator";
         skills.agent-browser = "${pkgs.agent-browser}/skills/agent-browser";
         settings = {
-          model = "claude-opus-5-5";
+          model = "claude-fable-5-2";
           env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
           permissions.defaultMode = "auto";
           # Without this, Claude shows the "make auto mode your default?"
