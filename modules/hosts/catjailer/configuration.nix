@@ -86,7 +86,6 @@
       ];
 
       environment.systemPackages = [
-        pkgs.alcom
         pkgs.discord
         pkgs.unityhub
         pkgs.vrcx
