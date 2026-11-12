@@ -1,7 +1,6 @@
 {
   flake.modules.homeManager.hyprlock =
     {
-      lib,
       pkgs,
       ...
     }:
@@ -17,5 +16,19 @@
 
       xdg.configFile."hypr/hyprlock.conf".source = ./hyprlock.conf;
       xdg.configFile."hypr/hyprlock.png".source = ./hyprlock.png;
+
+      systemd.user.services.hyprlock = {
+        Unit = {
+          Description = "Hyprlock screen locker";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          X-SwitchMethod = "keep-old";
+        };
+        Service = {
+          ExecStart = "${pkgs.hyprlock}/bin/hyprlock";
+          Restart = "on-failure";
+          RestartSec = 1;
+        };
+      };
     };
 }

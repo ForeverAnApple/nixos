@@ -286,6 +286,8 @@ spawn-at-startup "mako"
 // HERDR_NO_AUTOSTART to this window via its command; -o env= would apply
 // instance-wide and kill herdr in every later single-instance window.
 spawn-at-startup "kitten" "quick-access-terminal"
+// HayaJi popup dictionary: resident daemon, starts hidden so the first show is instant.
+spawn-at-startup "/home/faa/.local/bin/hayaji"
 spawn-at-startup "kitty" "--single-instance" "--start-as" "hidden" "env" "HERDR_NO_AUTOSTART=1" "zsh"
 //spawn-at-startup "kitty" "—class" "HeadlessKitty" "—single-instance" "—listen-on" "unix:/tmp/kitty-socket" "tail" "-f" "/dev/null"
 
@@ -440,7 +442,8 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Shift+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty" "--single-instance"; }
     Mod+Space hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Super+Alt+L allow-when-locked=true hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+    Mod+Ctrl+D hotkey-overlay-title="HayaJi dictionary" { spawn "/home/faa/.local/bin/hayaji" "toggle"; }
+    Super+Alt+L allow-when-locked=true hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "systemctl" "--user" "start" "hyprlock.service"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.

@@ -20,6 +20,8 @@
       home = config.home.homeDirectory;
     in
     {
+      home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.bubblewrap ];
+
       programs.codex = {
         enable = true;
         # Writes to ~/.codex/AGENTS.md.
