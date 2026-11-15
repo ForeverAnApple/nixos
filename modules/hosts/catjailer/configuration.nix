@@ -189,6 +189,8 @@
       services.journald.settings.Journal.SystemMaxUse = "500M";
 
       nix.settings = {
+        min-free = lib.mkForce (10 * 1024 * 1024 * 1024);
+        max-free = lib.mkForce (20 * 1024 * 1024 * 1024);
         build-dir = "/mnt/theta-beef/nix-builds";
         # Fully parallel builds can spike RAM enough to stall the machine.
         max-jobs = lib.mkDefault 2;

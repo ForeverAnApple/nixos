@@ -6,6 +6,7 @@
         (
           final: _prev:
           let
+            opencode2 = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.opencode2;
             masterPkgs = import inputs.nixpkgs-master {
               system = final.stdenv.hostPlatform.system;
               config.allowUnfree = true;
@@ -20,7 +21,16 @@
               ;
 
             codex = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.codex;
-            opencode = inputs.llm-agents.packages.${final.stdenv.hostPlatform.system}.opencode;
+            opencode = final.symlinkJoin {
+              name = "opencode-${opencode2.version}";
+              paths = [ opencode2 ];
+              postBuild = ''
+                ln -s $out/bin/opencode2 $out/bin/opencode
+              '';
+              meta = opencode2.meta // {
+                mainProgram = "opencode";
+              };
+            };
           }
         )
       ];
