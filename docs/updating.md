@@ -8,6 +8,8 @@ The base follows `nixos-unstable`; Audacity, the fcitx5/Mozc stack, and review-h
 
 Selected tools use master. `llm-agents` retains its own upstream Nixpkgs dependency and supplies Codex through numtide's cache. Agent-browser uses the Nixpkgs package.
 
+On Darwin, Home Manager synchronizes an existing managed Codex daemon with the configured CLI package on activation, including rollbacks. Changing the daemon package can restart it and interrupt active sessions. Activation does not install a daemon if none exists.
+
 Build the full host closure for each candidate. Builds finish independent packages after a failure, so a retry can reuse their outputs. On catjailer, the Nix daemon uses HDD build scratch and requires that filesystem to be mounted. The store remains on the system disk; downloads and completed outputs still need space there.
 
 A fixed-output mismatch is repaired only when one old hash identifies one occurrence in a tracked Nix file. The helper prints both hashes and trusts the downloaded bytes; nobody can verify them by eye. Ambiguous diagnostics stop the update.

@@ -46,5 +46,14 @@
           run sh -c 'printf %s "${seed}" > "'"$stamp"'"'
         fi
       '';
+
+      home.activation.codexDaemon = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
+        lib.hm.dag.entryAfter [ "codexConfig" ] ''
+          daemonPackage="${home}/.codex/packages/app-server-daemon/current"
+          if [ -L "$daemonPackage" ] && [ "$(readlink "$daemonPackage")" != "${config.programs.codex.package}/libexec/codex" ]; then
+            run env CODEX_HOME="${home}/.codex" "${lib.getExe config.programs.codex.package}" app-server daemon update --from-cli --yes
+          fi
+        ''
+      );
     };
 }
