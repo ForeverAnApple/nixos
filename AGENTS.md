@@ -8,6 +8,7 @@ This file is the *schema* — how the wiki and the repo are maintained — not t
 - **How do hosts compose?** → [docs/dendritic.md](docs/dendritic.md)
 - **Why are there `workstation` and `service` tiers?** → [docs/tiers.md](docs/tiers.md)
 - **Why is the repo shaped the way it is?** → [PHILOSOPHY.md](PHILOSOPHY.md)
+- **How do agents divide work?** → [modules/home/agents/README.md](modules/home/agents/README.md)
 - **What changed and when?** → `git log`
 
 ## Host cohesion (the central rule)

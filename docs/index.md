@@ -11,6 +11,7 @@ Navigation catalog for this repo. Each page is atomic — one concept, no preamb
 
 ## Process
 
+- [Agent orchestration](../modules/home/agents/README.md) — roles, handoffs, and runtime defaults
 - [../infra/moonsnatcher/README.md](../infra/moonsnatcher/README.md) — EC2 provisioning and access
 - [updating.md](updating.md) — local input updates, review, and rollback
 - [../PHILOSOPHY.md](../PHILOSOPHY.md) — principles and tradeoffs we accept

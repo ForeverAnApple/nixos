@@ -39,9 +39,11 @@ The top-level model thinks, plans, judges, and orchestrates. It delegates execut
 
 | Role | Claude | Codex |
 |---|---|---|
-| Judgement, planning, orchestration | fable 5.2 | gpt-6-astra |
-| Coding work, given full context | opus 5.5 | gpt-6.1-sol |
-| Mechanical work: fetching info, running a long list of already-planned steps, anything with no decision or interpretation in it | sonnet 5.5 | gpt-6-luna |
+| Judgement, planning, orchestration | fable 5.2 | gpt-6.2-astra |
+| Coding work, given full context | opus 5.5 | gpt-6.2-sol |
+| Mechanical work: fetching info, running a long list of already-planned steps, anything with no decision or interpretation in it | haiku 5.5 | gpt-6-luna |
+
+Use only models exposed by the current runtime. If a listed model is unavailable, use the nearest available capable model and disclose the fallback. Never invent model IDs.
 
 Don't code directly in the top-level loop when the task is well-specified — spec it, hand it to the coding tier, review the result. The bottom tier is still smart. Reserve it for work where every step is already decided: gather this, run these, report back. The moment a task needs a judgement call, it belongs a tier up.
 

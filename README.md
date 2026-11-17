@@ -83,6 +83,7 @@ modules/
 
 ## More
 
+- [Agent orchestration](modules/home/agents/README.md) — roles, handoffs, and runtime defaults
 - [PHILOSOPHY.md](PHILOSOPHY.md) — the one principle the repo is structured around
 - [docs/](docs/) — short pages on dendritic, tiers, hosts, and the change log
 - [AGENTS.md](AGENTS.md) — how the repo and wiki are kept consistent
