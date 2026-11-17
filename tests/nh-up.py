@@ -81,9 +81,14 @@ class UpdateSafety(unittest.TestCase):
             commands = {
                 'nix': NIX,
                 'nh': '''#!/usr/bin/env python3
-import json,os,sys
+import json,os,pathlib,sys
 with open("calls", "a") as f:
     f.write(json.dumps(["nh", *sys.argv[1:]]) + "\\n")
+    if sys.argv[1] == "darwin":
+        if "--file" not in sys.argv:
+            sys.exit(1)
+        source = pathlib.Path(sys.argv[sys.argv.index("--file") + 1]).read_text()
+        f.write(json.dumps(["activation-source", source]) + "\\n")
 sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
 ''',
                 'readlink': '#!/bin/sh\nprintf "%s\\n" "$CLOSURE"\n',
@@ -271,7 +276,14 @@ sys.exit(1 if os.environ["SCENARIO"] == "activation-failure" else 0)
         self.assertEqual(code, 0)
         self.assertFalse(changed)
         self.assertIn('darwinConfigurations', calls[0][1])
-        self.assertEqual(calls[-1], ['nh', 'darwin', 'switch', CLOSURE])
+        self.assertEqual(calls[-2][:4], ['nh', 'darwin', 'switch', '--file'])
+        self.assertEqual(calls[-1], ['activation-source',
+            '{ config.system.build.toplevel = builtins.storePath "' + CLOSURE + '"; }\n'])
+
+    def test_darwin_activation_failure_restores_lock(self):
+        code, changed, _ = self.run_script('activation-failure', nh_cmd='nh darwin')
+        self.assertNotEqual(code, 0)
+        self.assertFalse(changed)
 
     def test_safe_flags_activate_only_prebuilt_closure(self):
         code, changed, calls = self.run_script('success', ['--no-update', '--verbose', '--ask'])

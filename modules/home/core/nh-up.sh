@@ -204,7 +204,12 @@ if [ "${#closures[@]}" -ne 1 ] || ! [[ "${closures[0]}" =~ ^/nix/store/[a-z0-9]{
 fi
 built=${closures[0]}
 unset NH_FILE NH_ATTRP NH_NO_VALIDATE
-"${nh_cmd[@]}" switch "${nh_args[@]}" "$built"
+if [ "${nh_cmd[1]}" = darwin ]; then
+  printf '{ config.system.build.toplevel = builtins.storePath "%s"; }\n' "$built" >"$tmpdir/activation.nix"
+  "${nh_cmd[@]}" switch "${nh_args[@]}" --file "$tmpdir/activation.nix"
+else
+  "${nh_cmd[@]}" switch "${nh_args[@]}" "$built"
+fi
 profile=$(readlink -f /nix/var/nix/profiles/system)
 [ "$profile" = "$built" ] || { echo "nh-up: system profile did not advance to built closure" >&2; exit 1; }
 committed=1
