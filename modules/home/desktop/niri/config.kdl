@@ -53,6 +53,10 @@ input {
         // scroll-method "no-scroll"
     }
 
+    trackball {
+        accel-profile "flat"
+    }
+
     trackpoint {
         // off
         // natural-scroll
